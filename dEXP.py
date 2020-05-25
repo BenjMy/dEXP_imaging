@@ -20,6 +20,9 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+from fatiando.gravmag import imaging, transform
+from fatiando.gravmag.imaging import _makemesh
+
 
 def cor_field_B(x,y,z,u,B,rho=100):
 	"""
@@ -145,8 +148,7 @@ def dEXP(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0, SI=1):
 	"""
 	mesh = _makemesh(x, y, shape, zmin, zmax, nlayers)
 	# This way, if z is not an array, it is now
-	z = z * numpy.ones_like(x)
-	freq, dataft = _getdataft(x, y, data, shape)
+	z = z * np.ones_like(x)
 	# Remove the last z because I only want depths to the top of the layers
 	depths = mesh.get_zs()[:-1]
 	weights = (np.abs(depths)) ** ((SI+qorder)/2)
@@ -155,16 +157,17 @@ def dEXP(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0, SI=1):
 	for depth, weight in zip(depths - z[0], weights):
 
 		# continued field calculation
-		upw_f= transform.upcontinue(xp, yp, gz, shape, depth)
+		upw_f= transform.upcontinue(x, y, data, shape, depth)
 
 		# qorder vertical derivate of the continued field
-		upw_f_dq = transform.derivz(xp, yp, upw_f, shape,order=qorder)
+		upw_f_dq = transform.derivz(x, y, upw_f, shape,order=qorder)
 		
 		# the continued field weigted (=DEXP)
 		upw_f_dq_w= upw_f_dq*weight
+		density.extend(upw_f_dq_w)
 
-	mesh.addprop('density', numpy.array(upw_f_dq_w))
-	return mesh
+	mesh.addprop('density', np.array(density))
+	return mesh, np.array(density)
 
 # def auto_dEXP():
 
