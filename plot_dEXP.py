@@ -7,6 +7,10 @@ import matplotlib.pyplot as plt
 import numpy as np 
 from fatiando import gridder, mesher, utils
 
+from collections import OrderedDict
+from scipy.optimize import curve_fit
+
+
 def plot_z(mesh):
 
     # ------------------------------- Plot the data
@@ -39,7 +43,10 @@ def plot_z(mesh):
 
     return
 
-def plot_xy(mesh,scaled=0,label=None, ax=None):
+def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False):
+
+    if label not in mesh.props:
+        raise ValueError("mesh doesn't have a '%s' property." % (label))
 
     image = mesh.props[label].reshape(mesh.shape)
 
@@ -62,23 +69,32 @@ def plot_xy(mesh,scaled=0,label=None, ax=None):
     ax.set_title('Model slice at y={} m'.format(y[len(y)//2]))
     ax.set_aspect('equal')
     
-    ax.pcolormesh(x, z, image[:, :, mesh.shape[1]//2], vmin=mins, vmax=maxs)
+    cmap = ax.pcolormesh(x, z, image[:, :, mesh.shape[1]//2])
     # square([x1, x2, z1, z2])
     
-    # search for the max
-    ind = np.unravel_index(np.argmax(image[:, :, mesh.shape[1]//2], axis=None), 
-                           image[:, :, mesh.shape[1]//2].shape)
-    image[:, :, mesh.shape[1]//2][ind]
-    zmax = z[ind[0]]
-    #ymax = y[ind[1]]
-    xmax = -x[ind[1]]
+    if markerMax == True:
+        # search for the max
+        ind = np.unravel_index(np.argmax(image[:, :, mesh.shape[1]//2], axis=None), 
+                               image[:, :, mesh.shape[1]//2].shape)
+        image[:, :, mesh.shape[1]//2][ind]
+        zmax = z[ind[0]]
+        #ymax = y[ind[1]]
+        xmax = -x[ind[1]]
+        
+        ax.scatter(xmax,zmax, s=70, c='r', marker='v')
     
-    ax.scatter(xmax,zmax, s=70, c='r', marker='v')
+
+
+
     ax.set_ylim(z.max(), z.min())
     ax.set_xlim(x.min(), x.max())
-    ax.set_xlabel('x (km)')
-    ax.set_ylabel('z (km)')
+    ax.set_xlabel('x (m)')
+    ax.set_ylabel('z (m)')
+    ax.set_title(label)
     
+    if 'upwc' in label:
+        plt.gca().invert_yaxis()
+
     #ax = plt.subplot(1, 2, 2)
     #ax.set_title('Model slice at x={} m'.format(x[len(x)//2]))
     #ax.set_aspect('equal')
@@ -97,7 +113,7 @@ def plot_xy(mesh,scaled=0,label=None, ax=None):
     # plt.suptitle(strname + '_xy_' + str(ZZ), fontsize=15)
     # plt.savefig(pathFig +strname + '_xy_' + str(ZZ) + '.png')
 
-    return
+    return plt, cmap
 
 # def plot_line_mesh(mesh, lnb= 0, p1,p2,ax=None):
     
@@ -127,7 +143,7 @@ def plot_xy(mesh,scaled=0,label=None, ax=None):
 
 #     return ax
 
-def plot_line(x,y,data,p1,p2,ax=None):
+def plot_line(x,y,data,p1,p2,ax=None,**kwargs):
     
     # Extract a profile between points 1 and 2
     xx, yy, distance, profile = gridder.profile(x, y, data, p1, p2, 1000)
@@ -150,13 +166,21 @@ def plot_line(x,y,data,p1,p2,ax=None):
     plt.legend(loc='lower right')
     plt.tight_layout()
     plt.show()
-    #plt.suptitle(strname + '_ztop' + str(za) +'_zbot'+ str(zb), fontsize=15)
-    # plt.savefig(pathFig+ strname + '_data' + str(ZZ) + '.png')
+
+    for key, value in kwargs.items():
+        print("{0} = {1}".format(key, value))
+        
+        if key == 'title':
+            plt.suptitle(value, fontsize=15)
+        if key == 'savefig':
+            if value == True:
+            # plt.savefig(pathFig+ strname + '_data' + str(ZZ) + '.png')
+                plt.savefig('fig2d.png', r=400)
 
     return ax
 
 
-def plot_ridges_harmonic(R,ax=None):
+def plot_ridges_harmonic(RI=None,RII=None,RIII=None,ax=None):
     """
     Plot ridges in the harmonic domain
 
@@ -171,33 +195,38 @@ def plot_ridges_harmonic(R,ax=None):
         Text here
 
     """
-    depths = R[:,:][i][1]
+    # depths = R[:,:][i][1]
 
     if ax == None:
         fig = plt.subplots()
         ax = plt.gca()
-        
-    # plt.contourf(X, Y, sec)
-    # plt.colorbar()
-    plt.xlabel('position (m)',size=20)
-    for i, nl in enumerate(depths):
-        plt.scatter(R[:,:][i][1],nl*np.ones(len(R[:,:][i][1])), color='red', label='R')
-        plt.ylim(min(depths),max(depths))
-    plt.axis('equal')
-    plt.ylim(min(depths),max(depths))
+    
+    if RI is not None:
+        for i, cl in enumerate([datacol for datacol in RI.columns if datacol != 'depth']):
+            RI.plot(x=cl, y='depth', kind="scatter", ax=ax,label='Ridge I',c='r')
+    if RII is not None:
+        for i, cl in enumerate([datacol for datacol in RII.columns if datacol != 'depth']):
+            RII.plot(x=cl, y='depth', kind="scatter", ax=ax,label='Ridge II',c='b')
+    if RIII is not None:
+        for i, cl in enumerate([datacol for datacol in RIII.columns if datacol != 'depth']):
+            RIII.plot(x=cl, y='depth', kind="scatter", ax=ax,label='Ridge III',c='g')
+    
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = OrderedDict(zip(labels, handles))
+    plt.legend(by_label.values(), by_label.keys())
 
 
-   return ax
+    return ax
 
 
-def plot_ridges_sources(mesh, Rfit, ax=None):
+def plot_ridges_sources(df, ax=None, zlim=[-25,25]):
     """
     Plot ridges in the source domain and observe intersection point
 
     Parameters:
 
-    * a
-        Text here
+    * df
+        Ridge dataframe
 
     Returns:
 
@@ -205,8 +234,20 @@ def plot_ridges_sources(mesh, Rfit, ax=None):
         Text here
 
     """
-    depths = mesh.get_zs()[:-1]
-
+    def f(x, A, B): # this is your 'straight line' y=f(x)
+        return A*x + B
+    
+    for i in range(len(df)):
+        popt_Ri, pcov_Ri = curve_fit(f,df[i]['EX_xpos1'],df[i]['depth']) # your data x, y to fit
+        x_min = min(df[0]['EX_xpos1'])  
+        x_max = max(df[0]['EX_xpos1']) - x_min 
+        x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
+    
+        plt.plot(x_fit,f(x_fit, *popt_Ri) , 'k--',
+                  label='fit')
+        # plt.scatter(df[i]['EX_xpos1'],df[i]['depth'],marker='*')
+    
+    plt.ylim([zlim[0],zlim[1]])
     return ax
 
 

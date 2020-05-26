@@ -11,22 +11,24 @@ import plot_dEXP as pEXP
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+# -------------------------------  Graphical parameters
 scaled=0 
 
-# -------------------------------  Model parameters
+# -------------------------------  Imaging parameters
+shape = (50, 50) # data interpolation
 SI = 2 # structural index
-ZZ = -3.75 # depth of the synthetic anomaly
-x1, x2, y1, y2, z1, z2 = -5,5,-5,5,ZZ-2.5/2,ZZ+2.5/2
-Rsoil = 1000
-
+zp=0  # initial depth (conditionned upward or downward)
+qorder = 1 # derivative order of the continuated field
 # ---- z-discretisation - Upward continuation parameters parameters
 maxdepth=20
 nlay = 25
 #square([y1, y2, x1, x2])
 
-shape = (50, 50) # data interpolation
 
+# ------------------------------  Model parametes
+ZZ = -13.75 # depth of the synthetic anomaly
+x1, x2, y1, y2, z1, z2 = -5,5,-5,5,ZZ-2.5/2,ZZ+2.5/2
+Rsoil = 1000
 
 # ------------------------------- Load data
 filename = 'MSoilR' + str(Rsoil) + 'AnoR1Z'+ str(ZZ) +'L5h2.5'
@@ -53,62 +55,80 @@ pEXP.plot_line(xp, yp, U,p1,p2)
 
 #%% ------------------------------- Pad the edges of grids
 
-
+# not implemented yet
 
 #%% ------------------------------- Plot the derivatives
 xderiv = transform.derivx(xp, yp, U, shape,order=1)
 yderiv = transform.derivy(xp, yp, U, shape,order=1)
 zderiv = transform.derivz(xp, yp, U, shape,order=1)
 
+ax1 = pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=True)
 
+#%% ------- upward continuation of the field data
 
-ax1 = pEXP.plot_line(xp, yp, zderiv ,p1,p2)
-
-#%% ------- dEXP continuation of the field data
-mesh = dEXP.upwc(xp, yp, zp, U, shape, 
+mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
                  zmin=0, zmax=maxdepth, nlayers=nlay, 
-                 qorder=0)
+                 qorder=qorder)
 
-#%% ------- dEXP continuation of the field data
-zp= [0]
-mesh, density = dEXP.dEXP(xp, yp, zp, U, shape, 
-                          zmin=0, zmax=maxdepth, nlayers=nlay, 
-                          qorder=0, SI=1)
-# pEXP.plot_z(mesh)
-pEXP.plot_xy(mesh) #, ldg=)
+plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
+plt.colorbar(cmap)
 
-
-#%% ------------------------------- ridges identification
-RI_minmax, R_fit = dEXP.ridges_minmax(xp, yp, mesh, p1, p2)
-
-#%% ------------------------------- plot ridges
+#%% sum up plot
 
 fig = plt.figure()
 ax = plt.gca()
-pEXP.plot_xy(mesh, label='upwc', ax=ax) #, ldg=)
-pEXP.plot_ridges_harmonic(mesh,RI_minmax,ax=ax)
-pEXP.plot_ridges_source(R_fit,ax=ax)
 
-RI_minmax
-plt.scatter(RI_minmax[0,1],nl*np.ones(len(RI_minmax[:,:][i][1])), color='red', label='R')
-
-import _prism
-
-upw_u = np.reshape(upw_u, [mesh.shape[0], mesh.shape[1]*mesh.shape[2]])
-up_f_d1z = transform.derivz(x, y, upw_u[1,:], upw_u[1,:].shape,order=1)
-len(x)
-len(y)
-len(upw_u[1,:])
-pEXP.plot_line(xp, yp, upw_u[4,:],p1,p2)
-
-xx, yy, distance, p_up_f = gridder.profile(xp, yp, upw_u[1,:], p1, p2, 1000)
-plt.figure()
-plt.plot(yy,p_up_f)
-plt.show()
-
-upw_u.shape
-plt.plot(upw_u[1,:])
-plt.plot(upw_u[24,:])
-
+for orderi in range(3):
+    i = orderi +1
+    axupwc = plt.subplot(2, 3, i)
+    mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
+                     zmin=0, zmax=maxdepth, nlayers=nlay, 
+                     qorder=orderi) 
+    plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=axupwc)
+    plt.colorbar(cmap)
+    axdexp = plt.subplot(2, 3, i+3)
+    mesh, label_prop = dEXP.dEXP(xp, yp, zp, U, shape, 
+                                  zmin=0, zmax=maxdepth, nlayers=nlay, 
+                                  qorder=orderi, SI=1)
+    pEXP.plot_xy(mesh, label=label_prop,markerMax=True, ax=axdexp) 
+    plt.colorbar(cmap)
         
+#%% ------------------------------- ridges identification
+dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+                                     label=label_prop)
+
+#%% ------------------------------- plot ridges over continuated section
+
+
+fig = plt.figure()
+ax = plt.gca()
+pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
+# pEXP.plot_ridges_source(R_fit,ax=ax)
+
+#%% ------------------------------- filter ridges regionally constrainsted)
+
+minDepth = 5
+maxDepth = 15
+dfI_f,dfII_f, dfIII_f = dEXP.filter_Ridges(dfI,dfII,dfIII,minDepth,maxDepth)
+df = [dfI_f, dfII_f, dfIII_f]
+
+
+fig = plt.figure()
+ax = plt.gca()
+pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax)
+pEXP.plot_ridges_sources(df,ax=ax,zlim=[-45,20])
+
+#%% ------------------------------- ridges analysis
+
+
+
+
+#%% ------- dEXP continuation of the field data
+mesh, label_prop = dEXP.dEXP(xp, yp, zp, U, shape, 
+                          zmin=0, zmax=maxdepth, nlayers=nlay, 
+                          qorder=qorder, SI=1)
+# pEXP.plot_z(mesh)
+pEXP.plot_xy(mesh, label=label_prop,markerMax=True)      
         
