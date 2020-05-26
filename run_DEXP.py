@@ -18,7 +18,7 @@ scaled=0
 shape = (50, 50) # data interpolation
 SI = 2 # structural index
 zp=0  # initial depth (conditionned upward or downward)
-qorder = 1 # derivative order of the continuated field
+qorder = 0 # derivative order of the continuated field
 # ---- z-discretisation - Upward continuation parameters parameters
 maxdepth=20
 nlay = 25
@@ -72,33 +72,12 @@ mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape,
 
 plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
 plt.colorbar(cmap)
-
-#%% sum up plot
-
-fig = plt.figure()
-ax = plt.gca()
-
-for orderi in range(3):
-    i = orderi +1
-    axupwc = plt.subplot(2, 3, i)
-    mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
-                     zmin=0, zmax=maxdepth, nlayers=nlay, 
-                     qorder=orderi) 
-    plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=axupwc)
-    plt.colorbar(cmap)
-    axdexp = plt.subplot(2, 3, i+3)
-    mesh, label_prop = dEXP.dEXP(xp, yp, zp, U, shape, 
-                                  zmin=0, zmax=maxdepth, nlayers=nlay, 
-                                  qorder=orderi, SI=1)
-    pEXP.plot_xy(mesh, label=label_prop,markerMax=True, ax=axdexp) 
-    plt.colorbar(cmap)
         
 #%% ------------------------------- ridges identification
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                      label=label_prop)
 
 #%% ------------------------------- plot ridges over continuated section
-
 
 fig = plt.figure()
 ax = plt.gca()
@@ -122,6 +101,45 @@ pEXP.plot_ridges_sources(df,ax=ax,zlim=[-45,20])
 
 #%% ------------------------------- ridges analysis
 
+# points, fit = dEXP.scalFUN(dfI_f,EXTnb=[1],z0=-10000)
+points, fit = dEXP.scalFUN(dfII_f,EXTnb=[1],z0=0)
+
+# q = 1./dfII_f['depth']
+
+
+plt.figure()
+# plt.subplot(1,3,1)
+plt.plot(fit[:,0], fit[:,1], 'g--',
+         label='fit')
+plt.scatter(points[:,0], points[:,1],marker='*')
+plt.xlim([0,max(points[:,0])])
+plt.ylim([-5,5])
+plt.xlabel('q (m)', size=20)
+plt.ylabel('$\\tau_{f}$', size=20)
+# plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
+plt.grid()
+
+# dfI_f.head(5)
+# EXTnb=[1,2]
+
+
+
+
+#Tau = np.log(up_f_Centralridge)/ np.log(z_r)
+
+
+# Tau = np.gradient(np.log(up_f_Centralridge)) / np.gradient(np.log(z_r))
+# Tau_d1 = np.gradient(np.log(up_f_d1_Centralridge)) / np.gradient(np.log(z_r))
+# Tau_d2 = np.gradient(np.log(up_f_d2_Centralridge)) / np.gradient(np.log(z_r))
+
+# #plt.figure()
+# #plt.plot(z_r)
+
+# Tau = Tau*factor
+# Tau_d1 = Tau_d1*factor
+# Tau_d2 = Tau_d2*factor
+
+# #q = q - 1/z0
 
 
 
@@ -131,4 +149,26 @@ mesh, label_prop = dEXP.dEXP(xp, yp, zp, U, shape,
                           qorder=qorder, SI=1)
 # pEXP.plot_z(mesh)
 pEXP.plot_xy(mesh, label=label_prop,markerMax=True)      
-        
+
+
+
+#%% sum up plot
+
+# fig = plt.figure()
+# ax = plt.gca()
+
+# for orderi in range(3):
+#     i = orderi +1
+#     axupwc = plt.subplot(2, 3, i)
+#     mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
+#                      zmin=0, zmax=maxdepth, nlayers=nlay, 
+#                      qorder=orderi) 
+#     plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=axupwc)
+#     plt.colorbar(cmap)
+#     axdexp = plt.subplot(2, 3, i+3)
+#     mesh, label_prop = dEXP.dEXP(xp, yp, zp, U, shape, 
+#                                   zmin=0, zmax=maxdepth, nlayers=nlay, 
+#                                   qorder=orderi, SI=1)
+#     pEXP.plot_xy(mesh, label=label_prop,markerMax=True, ax=axdexp) 
+#     plt.colorbar(cmap)
+    

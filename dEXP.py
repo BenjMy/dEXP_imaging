@@ -28,6 +28,7 @@ from scipy.interpolate import UnivariateSpline
 from scipy.signal import find_peaks # useful for ridges detection
 
 import pandas as pd
+from scipy.optimize import curve_fit
 
 
 def cor_field_B(x,y,z,u,B,rho=100):
@@ -187,6 +188,15 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
         upw_u = mesh.props[label]
     upw_u = np.reshape(upw_u, [mesh.shape[0], mesh.shape[1]*mesh.shape[2]])      
 
+    plt.figure()
+
+    for i, depth in enumerate(depths - z[0]):
+        upw_u_l = upw_u[i,:]    # analysing extrema layers by layers
+        xx, yy, distance, p_up_f = gridder.profile(x, y, upw_u_l, p1, p2, 1000)
+
+        plt.scatter(xx,p_up_f)
+    
+        
     for i, depth in enumerate(depths - z[0]):
         
     
@@ -194,13 +204,12 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
         # y = mesh.get_ys()[:-1]
         # print(len(x))
 
-        upw_u_l = upw_u[i,:]    
+        upw_u_l = upw_u[i,:]    # analysing extrema layers by layers
         
         xx, yy, distance, p_up_f = gridder.profile(x, y, upw_u_l, p1, p2, 1000)
         Max_peaks, _ = find_peaks(p_up_f)
         Min_peaks, _ = find_peaks(-p_up_f)
-        # print(upw_u_l)
-
+        
 
         if np.array(Max_peaks).any():
             RIII_minmax.append(np.hstack([[depth], xx[Max_peaks]]))
@@ -212,8 +221,9 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
             plt.subplot(3,1,1)
             plt.plot(xx,p_up_f,label='u')
             for ind in range(len(Max_peaks)):
-                plt.scatter(xx[Max_peaks[ind]],Max_peaks[ind],color='r')
-                
+                plt.scatter(xx[Max_peaks[ind]],p_up_f[Max_peaks[ind]],color='r')
+            plt.legend()
+ 
         # 1st vertical derivate of the continued field
         up_f_d1z = transform.derivz(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
         xx, yy, distance, p_up_f_d1z = gridder.profile(x, y, up_f_d1z, p1, p2, 1000)
@@ -230,7 +240,8 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
             plt.plot(xx,p_up_f_d1z,label='dz')
             for ind in range(len(Max_peaks)):
                 plt.scatter(xx[Max_peaks[ind]],p_up_f_d1z[Max_peaks[ind]],color='g')
-            
+            plt.legend()
+
         # 1st horizontal derivate of the continued field
         up_f_d1x = transform.derivx(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
         xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, 1000)
@@ -247,7 +258,6 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
             plt.plot(xx,p_up_f_d1x,label='dx')
             for ind in range(len(Max_peaks)):
                 plt.scatter(xx[Max_peaks[ind]],p_up_f_d1x[Max_peaks[ind]],color='b')
-            
             plt.legend()
             
     # R = [np.array(RI_minmax), np.array(RII_minmax), np.array(RIII_minmax)]
@@ -300,7 +310,7 @@ def geom_Z0():
     """
     return
 
-def scalFUN():
+def scalFUN(df, EXTnb=[1], z0=0):
     """
     Analysis (Euler deconvolution of ridges)
 
@@ -315,7 +325,25 @@ def scalFUN():
         Text here
 
     """
-    return Tau, q, SI
+    
+    for i in enumerate(EXTnb):
+        print(df['EX_xpos'+str(i[1])])
+        
+        num = np.gradient(np.log(np.abs(df['EX_xpos'+str(i[1])])))
+        den = np.gradient(np.log(df['depth']))
+        # print(den)
+        Tau = num/den
+        q = 1./df['depth']
+        
+    factor = (df['depth'] - z0)/df['depth']
+    Tau = Tau*factor
+    
+    points = np.array([q,Tau]).T
+    
+    x_fit, f = _fit(q,Tau)
+    fit = np.array([x_fit, f]).T
+
+    return  points, fit #, SI
 
 def upwc(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0):
     """
@@ -434,6 +462,24 @@ def dEXP(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0, SI=1):
 
 # def auto_dEXP():
 
+def _fit(x,y,kwargs**):
+    def f(x, A, B): # this is your 'straight line' y=f(x)
+        return A*x + B
+    
+    popt, pcov = curve_fit(f,x,y) # your data x, y to fit
+    
+    x_min = min(x) 
+    x_max = max(x)                                #min/max values for x axis
+    x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
+
+        if key == 'title':
+            plt.suptitle(value, fontsize=15)
+        if key == 'savefig':
+            if value == True:
+            # plt.savefig(pathFig+ strname + '_data' + str(ZZ) + '.png')
+                plt.savefig('fig2d.png', r=400)
+                
+    return x_fit, f(x_fit, *popt)
 
 def _build_ridge(RI_minmax,RII_minmax,RIII_minmax):
     # Once extreme points are determined at different altitudes, 
