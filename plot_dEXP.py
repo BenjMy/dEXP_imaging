@@ -219,23 +219,47 @@ def plot_ridges_harmonic(RI=None,RII=None,RIII=None,ax=None):
     return ax
 
 
-def plot_ridges_sources(df, ax=None, zlim=[-25,25]):
+def plot_ridges_sources(points, fit, ax=None, ridge_nb=None, z_max_source=None):
     """
     Plot ridges in the source domain and observe intersection point
 
     Parameters:
 
-    * df
-        Ridge dataframe
-
+    * points
+        points
+    * fit
+        fit
     Returns:
 
     * BB : 
         Text here
 
     """
-    def f(x, A, B): # this is your 'straight line' y=f(x)
-        return A*x + B
+    if ax == None:
+        fig = plt.subplots()
+        ax = plt.gca()
+
+    if ridge_nb is None:
+        ridge_nb = np.arange(1,len(points))
+        
+    for i in enumerate(ridge_nb):
+        ax.plot(fit[i[0]][:,0], fit[i[0]][:,1], 'g--')
+        # ax.scatter(points[i[0]][:,0], points[i[0]][:,1],marker='*')
+        
+        ymin, ymax = ax.get_ylim()
+
+        if z_max_source is None:
+            ax.set_ylim([-ymax*3,ymax])   
+        else:
+            ax.set_ylim([z_max_source,ymax])   
+
+        # ax.set_xlabel('x (m)', size=20)
+        # ax.set_ylabel('depth (m)', size=20)
+        # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
+        plt.grid()
+        # plt.legend()
+    
+    return ax
     
     for i in range(len(df)):
         popt_Ri, pcov_Ri = curve_fit(f,df[i]['EX_xpos1'],df[i]['depth']) # your data x, y to fit

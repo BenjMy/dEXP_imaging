@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 scaled=0 
 
 # -------------------------------  Imaging parameters
-shape = (50, 50) # data interpolation
+# shape = (50, 50) # data interpolation
 SI = 2 # structural index
 zp=0  # initial depth (conditionned upward or downward)
 qorder = 0 # derivative order of the continuated field
@@ -23,41 +23,37 @@ qorder = 0 # derivative order of the continuated field
 maxdepth=20
 nlay = 25
 #square([y1, y2, x1, x2])
+minDepth = 5
+maxDepth = 15
 
+# # ------------------------------  Model parametes
+# ZZ = -3.75 # depth of the synthetic anomaly
+# x1, x2, y1, y2, z1, z2 = -5,5,-5,5,ZZ-2.5/2,ZZ+2.5/2
+# Rsoil = 1000
 
-# ------------------------------  Model parametes
-ZZ = -3.75 # depth of the synthetic anomaly
-x1, x2, y1, y2, z1, z2 = -5,5,-5,5,ZZ-2.5/2,ZZ+2.5/2
-Rsoil = 1000
+# # ------------------------------- Load data
+# filename = 'MSoilR' + str(Rsoil) + 'AnoR1Z'+ str(ZZ) +'L5h2.5'
+# MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
+# #MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
+# os.chdir(MainPath)
+# x,y,z,gz=np.loadtxt('3d_SENS_FAT.txt', unpack=True)
 
-# ------------------------------- Load data
-filename = 'MSoilR' + str(Rsoil) + 'AnoR1Z'+ str(ZZ) +'L5h2.5'
-MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
-#MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
-os.chdir(MainPath)
-x,y,z,gz=np.loadtxt('3d_SENS_FAT.txt', unpack=True)
+# # ------------------------------- remove B return electrode effects 
+# B = [-104.16666666666667, -104.16666666666667, 0]
+# U = dEXP.cor_field_B(x,y,z,gz,B,rho=100)
 
-# ------------------------------- remove B return electrode effects 
-B = [-104.16666666666667, -104.16666666666667, 0]
-U = dEXP.cor_field_B(x,y,z,gz,B,rho=100)
-
-# U_cor = U
-xp,yp,U = gridder.interp(x,y,U,shape)
-# xp,yp,gz_cor= gridder.interp(x,y,gz_cor,shape)
+# # U_cor = U
+# xp,yp,U = gridder.interp(x,y,U,shape)
+# # xp,yp,gz_cor= gridder.interp(x,y,gz_cor,shape)
 
 #%% ------------------------------- GRAVITY DATA
 # -------------------------------  Model
-za= 2000
-zb= 4000
-# model = [mesher.Prism(-1000, 1000, -1000, 1000, za, zb, {'density': 1200})]
-model = [mesher.Prism(-4000, 0, -4000, -2000, za, zb, {'density': 1200})]#,
-#         mesher.Prism(-1000, 1000, -1000, 1000, 5, 7000, {'density': -800})]
-
-shape = (30, 30)
-# xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), shape[0]*shape[1], z=0)
-xp, yp, zp = gridder.regular((-6000, 6000, -6000, 6000), shape, z=0)
-
-U = utils.contaminate(prism.gz(xp, yp, zp, model), 0.01)
+name = '3000_zbot5000_data'
+xp, yp, zp, U= np.loadtxt('./grav_models/' + name + '.txt', unpack=True)
+shape = (25,25) # data interpolation
+maxdepth=10000 # max depth for upward continuation
+minAlt_ridge = 1000
+maxAlt_ridge = 5000
 
 #%% ------------------------------- Plot the data
 p1, p2 = [min(xp), 0], [max(xp), 0]
@@ -115,7 +111,10 @@ plt.colorbar(cmap)
         
 #%% ------------------------------- ridges identification
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
-                                     label=label_prop)
+                                      label=label_prop) 
+dfI.head(5)
+dfII.head(5)
+dfIII.head(5)
 
 #%% ------------------------------- plot ridges over continuated section
 
@@ -127,17 +126,37 @@ pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
 
 #%% ------------------------------- filter ridges regionally constrainsted)
 
-minDepth = 5
-maxDepth = 15
-dfI_f,dfII_f, dfIII_f = dEXP.filter_Ridges(dfI,dfII,dfIII,minDepth,maxDepth)
+minAlt_ridge = 500
+maxAlt_ridge = 3000
+dfI_f,dfII_f, dfIII_f = dEXP.filter_Ridges(dfI,dfII,dfIII,minAlt_ridge,maxAlt_ridge)
 df = [dfI_f, dfII_f, dfIII_f]
-
 
 fig = plt.figure()
 ax = plt.gca()
 pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax)
-pEXP.plot_ridges_sources(df,ax=ax,zlim=[-45,20])
+points, fit = dEXP.fit_ridges(df) # fit ridges
+pEXP.plot_ridges_sources(points, fit, ax=ax, z_max_source=-3000)
+
+# from scipy.optimize import curve_fit
+
+# def f(x, A, B): # this is your 'straight line' y=f(x)
+#     return A*x + B
+
+# df = [dfI_f,dfII_f]
+
+# plt.figure()
+
+
+   
+#         plt.plot(df[i][k[1]],df[i]['depth'] , 'b.',
+#                   label='points')
+#         plt.plot(x_fit,y_fit, 'k--',
+#                   label='fit')
+#     # plt.scatter(df[i]['EX_xpos1'],df[i]['depth'],marker='*')
+
+# # plt.ylim([zlim[0],zlim[1]])
+    
 
 #%% ------------------------------- ridges analysis
 
@@ -188,8 +207,8 @@ pEXP.plot_xy(mesh, label=label_prop,markerMax=True)
 #     i = orderi +1
 #     axupwc = plt.subplot(2, 3, i)
 #     mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
-#                      zmin=0, zmax=maxdepth, nlayers=nlay, 
-#                      qorder=orderi) 
+#                       zmin=0, zmax=maxdepth, nlayers=nlay, 
+#                       qorder=orderi) 
 #     plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=axupwc)
 #     plt.colorbar(cmap)
 #     axdexp = plt.subplot(2, 3, i+3)

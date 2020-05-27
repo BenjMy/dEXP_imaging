@@ -27,7 +27,7 @@ from fatiando import gridder, mesher, utils
 from scipy.interpolate import UnivariateSpline
 from scipy.signal import find_peaks # useful for ridges detection
 
-# import pandas as pd
+import pandas as pd
 from scipy.optimize import curve_fit
 
 
@@ -210,9 +210,10 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
         Max_peaks, _ = find_peaks(p_up_f)
         Min_peaks, _ = find_peaks(-p_up_f)
         
+        MinMax_peaks= np.hstack([Min_peaks,Max_peaks])
 
-        if np.array(Max_peaks).any():
-            RIII_minmax.append(np.hstack([[depth], xx[Max_peaks]]))
+        if np.array(MinMax_peaks).any():
+            RIII_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
         else:
             RIII_minmax.append(np.hstack([[depth],[]]))
         
@@ -221,7 +222,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
             plt.subplot(3,1,1)
             plt.plot(xx,p_up_f,label='u')
             for ind in range(len(Max_peaks)):
-                plt.scatter(xx[Max_peaks[ind]],p_up_f[Max_peaks[ind]],color='r')
+                plt.scatter(xx[Max_peaks[ind]],p_up_f[Max_peaks[ind]],color='g')
             plt.legend()
  
         # 1st vertical derivate of the continued field
@@ -230,8 +231,10 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
         Max_peaks, _ = find_peaks(p_up_f_d1z)
         Min_peaks, _ = find_peaks(-p_up_f_d1z)
 
-        if np.array(Max_peaks).any():
-            RII_minmax.append(np.hstack([[depth], xx[Max_peaks]]))
+        MinMax_peaks= np.hstack([Min_peaks,Max_peaks])
+
+        if np.array(MinMax_peaks).any():
+            RII_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
         else:
             RII_minmax.append(np.hstack([[depth],[]]))
 
@@ -239,7 +242,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
             plt.subplot(3,1,2)
             plt.plot(xx,p_up_f_d1z,label='dz')
             for ind in range(len(Max_peaks)):
-                plt.scatter(xx[Max_peaks[ind]],p_up_f_d1z[Max_peaks[ind]],color='g')
+                plt.scatter(xx[Max_peaks[ind]],p_up_f_d1z[Max_peaks[ind]],color='b')
             plt.legend()
 
         # 1st horizontal derivate of the continued field
@@ -247,9 +250,11 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
         xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, 1000)
         Max_peaks, _ = find_peaks(p_up_f_d1x)
         Min_peaks, _ = find_peaks(-p_up_f_d1x)
+        
+        MinMax_peaks= np.hstack([Min_peaks,Max_peaks])
 
-        if np.array(Max_peaks).any():
-            RI_minmax.append(np.hstack([[depth], xx[Max_peaks]]))
+        if np.array(MinMax_peaks).any():
+            RI_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
         else:
             RI_minmax.append(np.hstack([[depth],[]]))
 
@@ -257,7 +262,8 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
             plt.subplot(3,1,3)
             plt.plot(xx,p_up_f_d1x,label='dx')
             for ind in range(len(Max_peaks)):
-                plt.scatter(xx[Max_peaks[ind]],p_up_f_d1x[Max_peaks[ind]],color='b')
+                plt.scatter(xx[Max_peaks[ind]],p_up_f_d1x[Max_peaks[ind]],color='r')
+                plt.scatter(xx[Min_peaks[ind]],p_up_f_d1x[Min_peaks[ind]],color='r')
             plt.legend()
             
     # R = [np.array(RI_minmax), np.array(RII_minmax), np.array(RIII_minmax)]
@@ -267,7 +273,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
     return dfI,dfII, dfIII #, R, R_fit
 
 
-def filter_Ridges(dfI,dfII,dfIII,minDepth,maxDepth):
+def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth):
     """
     Filter non-rectiligne ridges (denoising)
 
@@ -291,6 +297,43 @@ def filter_Ridges(dfI,dfII,dfIII,minDepth,maxDepth):
         dfIII = dfIII.loc[(dfIII['depth'] > minDepth) & (dfIII['depth'] < maxDepth)]
 
     return dfI, dfII, dfII
+
+
+def fit_ridges(df):
+    """
+    Fit ridges and return points and fit equations to plot
+
+    Parameters:
+
+    * df
+        dataframe including all tree types of ridges
+
+    Returns:
+
+    * BB : 
+        points and fit equations to plot
+
+    """
+    points = []
+    fit = []
+    for i in range(len(df)):
+        for k in enumerate(df[i].columns[1:]):
+            # check if line is close to vertical
+            if np.diff(df[i][k[1]]).all() == 0:
+                y_fit = np.linspace(-max(df[i]['depth'])*2,max(df[i]['depth']),100)                                       
+                x_fit = df[i][k[1]].iloc[[0]].to_numpy()*np.ones(len(y_fit))
+            else:
+                x_min = min(df[0][k[1]])  
+                x_max = max(df[0][k[1]]) - x_min 
+                x_fit, y_fit = _fit(df[i][k[1]],df[i]['depth'],xmin=x_min, xmax=x_max)
+                # popt_Ri, pcov_Ri = curve_fit(f,df[i][k[1]],df[i]['depth']) # your data x, y to fit
+                # x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
+                # y_fit = f(x_fit, *popt_Ri)
+                
+            fit.append(np.array([x_fit,y_fit]).T)
+            points.append(np.array([df[i][k[1]],df[i]['depth']]).T)
+
+    return points, fit
 
 
 def geom_Z0():
@@ -510,7 +553,8 @@ def _fit(x,y,**kwargs):
     for key, value in kwargs.items():
         if key == 'xmin':
            x_min = value 
-
+        if key == 'xmax':
+           x_max = value 
     x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
               
     return x_fit, f(x_fit, *popt)
@@ -519,6 +563,7 @@ def _build_ridge(RI_minmax,RII_minmax,RIII_minmax):
     # Once extreme points are determined at different altitudes, 
     # ridges can be obtained by linking each of them, at a given altitude, 
     # to the nearest one computed at the altitude just above.
+    fit_ridges()
     
     return
 
