@@ -168,7 +168,7 @@ def plot_line(x,y,data,p1,p2,ax=None,**kwargs):
     plt.show()
 
     for key, value in kwargs.items():
-        print("{0} = {1}".format(key, value))
+        # print("{0} = {1}".format(key, value))
         
         if key == 'title':
             plt.suptitle(value, fontsize=15)
@@ -251,7 +251,7 @@ def plot_ridges_sources(df, ax=None, zlim=[-25,25]):
     return ax
 
 
-def plot_scalFUN(mesh, Rfit, ax=None):
+def plot_scalFUN(points, fit, ax=None, z0=None):
     """
     Plot scalfun function analysis
 
@@ -267,6 +267,22 @@ def plot_scalFUN(mesh, Rfit, ax=None):
 
     """
 
+    if ax == None:
+        fig = plt.subplots()
+        ax = plt.gca()
+    
+    for z in enumerate(z0):
+        ax.plot(fit[z[0]][:,0], fit[z[0]][:,1], 'g--',
+                 label='fit_z0=' + str(z[1]))
+        ax.scatter(points[z[0]][:,0], points[z[0]][:,1],marker='*')
+        ax.set_xlim([0,max(points[z[0]][:,0])])
+    # ax.set_ylim([-5,5])        
+    ax.set_xlabel('q (m)', size=20)
+    ax.set_ylabel('$\\tau_{f}$', size=20)
+    # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
+    plt.grid()
+    plt.legend()
+    
     return ax
 
 

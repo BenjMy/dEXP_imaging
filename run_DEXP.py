@@ -26,7 +26,7 @@ nlay = 25
 
 
 # ------------------------------  Model parametes
-ZZ = -13.75 # depth of the synthetic anomaly
+ZZ = -3.75 # depth of the synthetic anomaly
 x1, x2, y1, y2, z1, z2 = -5,5,-5,5,ZZ-2.5/2,ZZ+2.5/2
 Rsoil = 1000
 
@@ -45,6 +45,20 @@ U = dEXP.cor_field_B(x,y,z,gz,B,rho=100)
 xp,yp,U = gridder.interp(x,y,U,shape)
 # xp,yp,gz_cor= gridder.interp(x,y,gz_cor,shape)
 
+#%% ------------------------------- GRAVITY DATA
+# -------------------------------  Model
+za= 1000
+zb= 1500
+model = [mesher.Prism(-1000, 1000, -1000, 1000, za, zb, {'density': 1200})]
+#model = [mesher.Prism(-4000, 0, -4000, -2000, za, zb, {'density': 1200}),
+#         mesher.Prism(-1000, 1000, -1000, 1000, 5, 7000, {'density': -800})]
+
+shape = (30, 30)
+#xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), shape[0]*shape[1], z=0)
+xp, yp, zp = gridder.regular((-6000, 6000, -6000, 6000), shape, z=0)
+
+U = utils.contaminate(prism.gz(xp, yp, zp, model), 0.1)
+
 #%% ------------------------------- Plot the data
 p1, p2 = [min(xp), 0], [max(xp), 0]
 pEXP.plot_line(xp, yp, U,p1,p2)
@@ -55,7 +69,33 @@ pEXP.plot_line(xp, yp, U,p1,p2)
 
 #%% ------------------------------- Pad the edges of grids
 
-# not implemented yet
+# padtypes = ['0', 'mean', 'edge', 'lintaper', 'reflection', 'oddreflection',
+#             'oddreflectiontaper']
+# fig = plt.figure()
+# ax = plt.gca()
+
+# xs = xp.reshape(shape)
+# ys = yp.reshape(shape)
+# data = U.reshape(shape)
+
+# padtype = padtypes[3]
+# padded_data, nps = gridder.pad_array(data, padtype=padtype)
+# # Get coordinate vectors
+# pad_x, pad_y = gridder.pad_coords([xs, ys], shape, nps)
+# padshape = padded_data.shape
+# ax.set_title(padtype)
+# ax.pcolormesh(pad_y.reshape(padshape), pad_x.reshape(padshape),
+#               padded_data, cmap='RdBu_r')
+# ax.set_xlim(pad_y.min(), pad_y.max())
+# ax.set_ylim(pad_x.min(), pad_x.max())
+    
+# shape = padded_data.shape
+# U = padded_data.reshape(shape[0]*shape[1])
+# xp = pad_x
+# yp = pad_y
+
+# p1, p2 = [min(xp), 0], [max(xp), 0]
+
 
 #%% ------------------------------- Plot the derivatives
 xderiv = transform.derivx(xp, yp, U, shape,order=1)
@@ -102,44 +142,31 @@ pEXP.plot_ridges_sources(df,ax=ax,zlim=[-45,20])
 #%% ------------------------------- ridges analysis
 
 # points, fit = dEXP.scalFUN(dfI_f,EXTnb=[1],z0=-10000)
-points, fit = dEXP.scalFUN(dfII_f,EXTnb=[1],z0=0)
+z0est = [0,3,6]
+P = []
+F = []
+for zi in z0est:
+    points, fit = dEXP.scalFUN(dfII_f,EXTnb=[1],z0=zi)
+    P.append(points)
+    F.append(fit)
+    
+points2, fit = dEXP.scalFUN(dfII_f,EXTnb=[1],z0=3)
 
-# q = 1./dfII_f['depth']
+fig = plt.figure()
+ax = plt.gca()
+ax1 = plt.subplot(3,1,1)
+pEXP.plot_scalFUN(P, F, ax=ax1, z0=z0est)
 
 
-plt.figure()
-# plt.subplot(1,3,1)
-plt.plot(fit[:,0], fit[:,1], 'g--',
-         label='fit')
-plt.scatter(points[:,0], points[:,1],marker='*')
-plt.xlim([0,max(points[:,0])])
-plt.ylim([-5,5])
-plt.xlabel('q (m)', size=20)
-plt.ylabel('$\\tau_{f}$', size=20)
-# plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
-plt.grid()
+# plt.subplot(3,1,2)
+# plot_scalFUN(points, fit, ax=ax, z0=z0est)
+# plt.subplot(3,1,2)
+# plot_scalFUN(points, fit, ax=ax, z0=z0est)
+
 
 # dfI_f.head(5)
 # EXTnb=[1,2]
 
-
-
-
-#Tau = np.log(up_f_Centralridge)/ np.log(z_r)
-
-
-# Tau = np.gradient(np.log(up_f_Centralridge)) / np.gradient(np.log(z_r))
-# Tau_d1 = np.gradient(np.log(up_f_d1_Centralridge)) / np.gradient(np.log(z_r))
-# Tau_d2 = np.gradient(np.log(up_f_d2_Centralridge)) / np.gradient(np.log(z_r))
-
-# #plt.figure()
-# #plt.plot(z_r)
-
-# Tau = Tau*factor
-# Tau_d1 = Tau_d1*factor
-# Tau_d2 = Tau_d2*factor
-
-# #q = q - 1/z0
 
 
 

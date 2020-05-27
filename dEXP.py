@@ -340,7 +340,7 @@ def scalFUN(df, EXTnb=[1], z0=0):
     
     points = np.array([q,Tau]).T
     
-    x_fit, f = _fit(q,Tau)
+    x_fit, f = _fit(q,Tau,xmin=0)
     fit = np.array([x_fit, f]).T
 
     return  points, fit #, SI
@@ -462,7 +462,7 @@ def dEXP(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0, SI=1):
 
 # def auto_dEXP():
 
-def _fit(x,y,kwargs**):
+def _fit(x,y,**kwargs):
     def f(x, A, B): # this is your 'straight line' y=f(x)
         return A*x + B
     
@@ -470,15 +470,13 @@ def _fit(x,y,kwargs**):
     
     x_min = min(x) 
     x_max = max(x)                                #min/max values for x axis
-    x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
 
-        if key == 'title':
-            plt.suptitle(value, fontsize=15)
-        if key == 'savefig':
-            if value == True:
-            # plt.savefig(pathFig+ strname + '_data' + str(ZZ) + '.png')
-                plt.savefig('fig2d.png', r=400)
-                
+    for key, value in kwargs.items():
+        if key == 'xmin':
+           x_min = value 
+
+    x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
+              
     return x_fit, f(x_fit, *popt)
 
 def _build_ridge(RI_minmax,RII_minmax,RIII_minmax):
