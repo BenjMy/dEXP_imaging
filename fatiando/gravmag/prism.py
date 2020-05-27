@@ -83,7 +83,7 @@ doi: 10.1007/s001900000116.
 
 ----
 """
-from __future__ import division, absolute_import
+from __future__ import division
 
 import numpy
 
@@ -91,9 +91,7 @@ from .. import utils
 from ..constants import G, SI2EOTVOS, CM, T2NT, SI2MGAL
 try:
     from . import _prism
-    # from . import _prism_numpy as _prism
 except ImportError:
-    print('No prism :(')
     _prism = None
 
 

@@ -47,17 +47,17 @@ xp,yp,U = gridder.interp(x,y,U,shape)
 
 #%% ------------------------------- GRAVITY DATA
 # -------------------------------  Model
-za= 1000
-zb= 1500
-model = [mesher.Prism(-1000, 1000, -1000, 1000, za, zb, {'density': 1200})]
-#model = [mesher.Prism(-4000, 0, -4000, -2000, za, zb, {'density': 1200}),
+za= 2000
+zb= 4000
+# model = [mesher.Prism(-1000, 1000, -1000, 1000, za, zb, {'density': 1200})]
+model = [mesher.Prism(-4000, 0, -4000, -2000, za, zb, {'density': 1200})]#,
 #         mesher.Prism(-1000, 1000, -1000, 1000, 5, 7000, {'density': -800})]
 
 shape = (30, 30)
-#xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), shape[0]*shape[1], z=0)
+# xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), shape[0]*shape[1], z=0)
 xp, yp, zp = gridder.regular((-6000, 6000, -6000, 6000), shape, z=0)
 
-U = utils.contaminate(prism.gz(xp, yp, zp, model), 0.1)
+U = utils.contaminate(prism.gz(xp, yp, zp, model), 0.01)
 
 #%% ------------------------------- Plot the data
 p1, p2 = [min(xp), 0], [max(xp), 0]

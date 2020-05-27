@@ -27,7 +27,7 @@ from fatiando import gridder, mesher, utils
 from scipy.interpolate import UnivariateSpline
 from scipy.signal import find_peaks # useful for ridges detection
 
-import pandas as pd
+# import pandas as pd
 from scipy.optimize import curve_fit
 
 
@@ -312,6 +312,41 @@ def geom_Z0():
 
 def scalFUN(df, EXTnb=[1], z0=0):
     """
+    Analysis of ridges
+
+    Parameters:
+
+    * a
+        Text here
+
+    Returns:
+
+    * BB : 
+        Text here
+
+    """
+    
+    for i in enumerate(EXTnb):
+        print(df['EX_xpos'+str(i[1])])
+        
+        num = np.gradient(np.log(np.abs(df['EX_xpos'+str(i[1])])))
+        den = np.gradient(np.log(df['depth']))
+        # print(den)
+        Tau = num/den
+        q = 1./df['depth']
+        
+    factor = (df['depth'] - z0)/df['depth']
+    Tau = Tau*factor
+    
+    points = np.array([q,Tau]).T
+    
+    x_fit, f = _fit(q,Tau,xmin=0)
+    fit = np.array([x_fit, f]).T
+
+    return  points, fit #, SI
+
+def scalEULER(df, EXTnb=[1], z0=0):
+    """
     Analysis (Euler deconvolution of ridges)
 
     Parameters:
@@ -344,6 +379,7 @@ def scalFUN(df, EXTnb=[1], z0=0):
     fit = np.array([x_fit, f]).T
 
     return  points, fit #, SI
+
 
 def upwc(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0):
     """
