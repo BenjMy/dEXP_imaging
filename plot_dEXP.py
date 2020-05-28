@@ -143,7 +143,7 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False):
 
 #     return ax
 
-def plot_line(x,y,data,p1,p2,ax=None,**kwargs):
+def plot_line(x,y,data,p1,p2,ax=None):
     
     # Extract a profile between points 1 and 2
     xx, yy, distance, profile = gridder.profile(x, y, data, p1, p2, 1000)
@@ -180,7 +180,7 @@ def plot_line(x,y,data,p1,p2,ax=None,**kwargs):
     return ax
 
 
-def plot_ridges_harmonic(RI=None,RII=None,RIII=None,ax=None):
+def plot_ridges_harmonic(RI=None,RII=None,RIII=None,ax=None,label=False,**kwargs):
     """
     Plot ridges in the harmonic domain
 
@@ -201,16 +201,26 @@ def plot_ridges_harmonic(RI=None,RII=None,RIII=None,ax=None):
         fig = plt.subplots()
         ax = plt.gca()
     
+    bbox = {'fc': '0.8', 'pad': 0}
+
     if RI is not None:
-        for i, cl in enumerate([datacol for datacol in RI.columns if datacol != 'depth']):
-            RI.plot(x=cl, y='depth', kind="scatter", ax=ax,label='Ridge I',c='r')
+        for i, cl in enumerate([datacol for datacol in RI.columns if datacol != 'elevation']):
+            RI.plot(x=cl, y='elevation', kind="scatter", ax=ax,label='Ridge I',c='r')
+            if label==True:
+                ax.text(RI[cl].iloc[0], max(RI['elevation']), 'RI'+str(i),rotation=90, bbox= bbox)
     if RII is not None:
-        for i, cl in enumerate([datacol for datacol in RII.columns if datacol != 'depth']):
-            RII.plot(x=cl, y='depth', kind="scatter", ax=ax,label='Ridge II',c='b')
+        for i, cl in enumerate([datacol for datacol in RII.columns if datacol != 'elevation']):
+            RII.plot(x=cl, y='elevation', kind="scatter", ax=ax,label='Ridge II',c='b')
+            if label==True:
+                ax.text(RII[cl].iloc[0], max(RII['elevation']), 'RII'+str(i),rotation=90, bbox= bbox)
     if RIII is not None:
-        for i, cl in enumerate([datacol for datacol in RIII.columns if datacol != 'depth']):
-            RIII.plot(x=cl, y='depth', kind="scatter", ax=ax,label='Ridge III',c='g')
-    
+        for i, cl in enumerate([datacol for datacol in RIII.columns if datacol != 'elevation']):
+            RIII.plot(x=cl, y='elevation', kind="scatter", ax=ax,label='Ridge III',c='g')
+            if label==True:
+                ax.text(RIII[cl].iloc[0], max(RIII['elevation']), 'RIII'+str(i),rotation=90, bbox= bbox)
+# plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+
+            
     handles, labels = plt.gca().get_legend_handles_labels()
     by_label = OrderedDict(zip(labels, handles))
     plt.legend(by_label.values(), by_label.keys())
@@ -238,9 +248,10 @@ def plot_ridges_sources(points, fit, ax=None, ridge_nb=None, z_max_source=None):
     if ax == None:
         fig = plt.subplots()
         ax = plt.gca()
+    plt.rcParams['font.size'] = 15
 
     if ridge_nb is None:
-        ridge_nb = np.arange(1,len(points))
+        ridge_nb = np.arange(0,len(points))
         
     for i in enumerate(ridge_nb):
         ax.plot(fit[i[0]][:,0], fit[i[0]][:,1], 'g--')
@@ -253,27 +264,19 @@ def plot_ridges_sources(points, fit, ax=None, ridge_nb=None, z_max_source=None):
         else:
             ax.set_ylim([z_max_source,ymax])   
 
-        # ax.set_xlabel('x (m)', size=20)
-        # ax.set_ylabel('depth (m)', size=20)
+        ax.set_xlabel('x (m)', size=20)
+        # ax.set_ylabel('depth (m)')
         # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
         plt.grid()
         # plt.legend()
-    
-    return ax
-    
-    for i in range(len(df)):
-        popt_Ri, pcov_Ri = curve_fit(f,df[i]['EX_xpos1'],df[i]['depth']) # your data x, y to fit
-        x_min = min(df[0]['EX_xpos1'])  
-        x_max = max(df[0]['EX_xpos1']) - x_min 
-        x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
-    
-        plt.plot(x_fit,f(x_fit, *popt_Ri) , 'k--',
-                  label='fit')
-        # plt.scatter(df[i]['EX_xpos1'],df[i]['depth'],marker='*')
-    
-    plt.ylim([zlim[0],zlim[1]])
-    return ax
+        # the text bounding box
+        plt.ylabel(" ")
+        bbox = {'fc': '0.8', 'pad': 0}
+        ax.text(-0.15, 0.3, 'depth', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
+        ax.text(-0.15, 0.8, 'altitude', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
 
+    return ax
+    
 
 def plot_scalFUN(points, fit, ax=None, z0=None):
     """
@@ -296,7 +299,7 @@ def plot_scalFUN(points, fit, ax=None, z0=None):
         ax = plt.gca()
     
     for z in enumerate(z0):
-        ax.plot(fit[z[0]][:,0], fit[z[0]][:,1], 'g--',
+        ax.plot(fit[z[0]][:,0], fit[z[0]][:,1], '--',
                  label='fit_z0=' + str(z[1]))
         ax.scatter(points[z[0]][:,0], points[z[0]][:,1],marker='*')
         ax.set_xlim([0,max(points[z[0]][:,0])])

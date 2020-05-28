@@ -151,7 +151,7 @@ def ridges_0(x, y, mesh, p1, p2, qorder=0, z=0):
     return RIII_0
 
 
-def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
+def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc', **kwargs):
     """
     Form a multiridge set
     RI and RII : zeros of the first horizontal and first vertical derivatives of the potential field
@@ -165,6 +165,9 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
     * mesh
         The upward continuated field mesh (of order-q derivative). 
         Read the property label 'upwc' of the mesh by default
+    
+    **kwargs
+        prominence for peak detection
 
     Returns:
 
@@ -172,7 +175,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
         Panda dataframe containing RI, RII and RII
 
     """
-    
+    prom = 0.1
     # This way, if z is not an array, it is now
     z = z * np.ones_like(x)
        
@@ -188,29 +191,18 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
         upw_u = mesh.props[label]
     upw_u = np.reshape(upw_u, [mesh.shape[0], mesh.shape[1]*mesh.shape[2]])      
 
-    plt.figure()
-
-    for i, depth in enumerate(depths - z[0]):
-        upw_u_l = upw_u[i,:]    # analysing extrema layers by layers
-        xx, yy, distance, p_up_f = gridder.profile(x, y, upw_u_l, p1, p2, 1000)
-
-        plt.scatter(xx,p_up_f)
-    
+    # for i, depth in enumerate(depths - z[0]):
+    #     upw_u_l = upw_u[i,:]    # analysing extrema layers by layers
+    #     xx, yy, distance, p_up_f = gridder.profile(x, y, upw_u_l, p1, p2, 1000)
+   
         
-    for i, depth in enumerate(depths - z[0]):
-        
-    
-        # x = mesh.get_xs()[:-1]
-        # y = mesh.get_ys()[:-1]
-        # print(len(x))
-
-        upw_u_l = upw_u[i,:]    # analysing extrema layers by layers
-        
+    for i, depth in enumerate(depths - z[0]): # Loop over RIII extremas
+        upw_u_l = upw_u[i,:]    # analysing extrema layers by layers      
         xx, yy, distance, p_up_f = gridder.profile(x, y, upw_u_l, p1, p2, 1000)
         Max_peaks, _ = find_peaks(p_up_f)
         Min_peaks, _ = find_peaks(-p_up_f)
-        
         MinMax_peaks= np.hstack([Min_peaks,Max_peaks])
+
 
         if np.array(MinMax_peaks).any():
             RIII_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
@@ -225,6 +217,9 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
                 plt.scatter(xx[Max_peaks[ind]],p_up_f[Max_peaks[ind]],color='g')
             plt.legend()
  
+    for i, depth in enumerate(depths - z[0]): # Loop over RII extremas
+        upw_u_l = upw_u[i,:]    # analysing extrema layers by layers        
+
         # 1st vertical derivate of the continued field
         up_f_d1z = transform.derivz(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
         xx, yy, distance, p_up_f_d1z = gridder.profile(x, y, up_f_d1z, p1, p2, 1000)
@@ -245,14 +240,18 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
                 plt.scatter(xx[Max_peaks[ind]],p_up_f_d1z[Max_peaks[ind]],color='b')
             plt.legend()
 
+    for i, depth in enumerate(depths - z[0]): # Loop for RII extremas
+        upw_u_l = upw_u[i,:]    # analysing extrema layers by layers   
         # 1st horizontal derivate of the continued field
         up_f_d1x = transform.derivx(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
         xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, 1000)
         Max_peaks, _ = find_peaks(p_up_f_d1x)
         Min_peaks, _ = find_peaks(-p_up_f_d1x)
-        
+        # Max_peaks, _ = find_peaks(p_up_f_d1x)
+        # Min_peaks, _ = find_peaks(-p_up_f_d1x)       
         MinMax_peaks= np.hstack([Min_peaks,Max_peaks])
-
+        print(depth,len(Min_peaks),len(Max_peaks))
+        
         if np.array(MinMax_peaks).any():
             RI_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
         else:
@@ -273,7 +272,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc'):
     return dfI,dfII, dfIII #, R, R_fit
 
 
-def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth):
+def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False):
     """
     Filter non-rectiligne ridges (denoising)
 
@@ -289,14 +288,43 @@ def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth):
         Text here
 
     """
+    
+    if rmvNaN == True:
+        if dfI.isnull().values.any():
+            print('NaN or Inf detected - trying to remove')
+            dfI.dropna(axis=1, inplace=True) # remove collumns
+            dfI = dfI[~dfI.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
+        if dfII.isnull().values.any():
+            dfII.dropna(axis=1, inplace=True) # remove collumns
+            dfII = dfII[~dfII.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
+        if dfIII.isnull().values.any():
+            dfIII.dropna(axis=1, inplace=True) # remove collumns
+            dfIII = dfIII[~dfIII.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
+        
+    
     if dfI is not None:
-        dfI = dfI.loc[(dfI['depth'] > minDepth) & (dfI['depth'] < maxDepth)]
+        dfI = dfI.loc[(dfI['elevation'] > minDepth) & (dfI['elevation'] < maxDepth)]
     if dfII is not None:
-        dfII = dfII.loc[(dfII['depth'] > minDepth) & (dfII['depth'] < maxDepth)]
+        dfII = dfII.loc[(dfII['elevation'] > minDepth) & (dfII['elevation'] < maxDepth)]
     if dfI is not None:
-        dfIII = dfIII.loc[(dfIII['depth'] > minDepth) & (dfIII['depth'] < maxDepth)]
+        dfIII = dfIII.loc[(dfIII['elevation'] > minDepth) & (dfIII['elevation'] < maxDepth)]
+    
+    # check length of ridges (remove column if less than 3 points)
+    if dfI is not None:
+        smallCol = dfI.count()
+        idrmv = np.where(smallCol<minlength)[0].tolist()
+        dfI = dfI.drop(dfI.columns[idrmv], axis=1)
+    if dfII is not None:
+        smallCol = dfII.count()
+        idrmv = np.where(smallCol<minlength)[0].tolist()
+        dfII = dfII.drop(dfII.columns[idrmv], axis=1)
+    if dfIII is not None:
+        smallCol = dfIII.count()
+        idrmv = np.where(smallCol<minlength)[0].tolist()
+        dfIII = dfIII.drop(dfIII.columns[idrmv], axis=1)
 
-    return dfI, dfII, dfII
+
+    return dfI, dfII, dfIII
 
 
 def fit_ridges(df):
@@ -314,29 +342,64 @@ def fit_ridges(df):
         points and fit equations to plot
 
     """
+    if len(df)==1:
+        df = [df]
+
+    if len(df[0])==0:
+        raise ValueError("No data to fit")
+    
+    
     points = []
     fit = []
+    # plt.figure()
     for i in range(len(df)):
         for k in enumerate(df[i].columns[1:]):
+            # print(df[i].columns[1:])
             # check if line is close to vertical
-            if np.diff(df[i][k[1]]).all() == 0:
-                y_fit = np.linspace(-max(df[i]['depth'])*2,max(df[i]['depth']),100)                                       
+            # if np.diff(df[i][k[1]]).any() == 0:
+            if np.count_nonzero(np.diff(df[i][k[1]]))<5:
+                # print(np.diff(df[i][k[1]]))
+                print('vertical ridge' + str(i) + k[1])
+                y_fit = np.linspace(-max(df[i]['elevation'])*2,max(df[i]['elevation']),100)                                       
                 x_fit = df[i][k[1]].iloc[[0]].to_numpy()*np.ones(len(y_fit))
+            
             else:
-                x_min = min(df[0][k[1]])  
-                x_max = max(df[0][k[1]]) - x_min 
-                x_fit, y_fit = _fit(df[i][k[1]],df[i]['depth'],xmin=x_min, xmax=x_max)
-                # popt_Ri, pcov_Ri = curve_fit(f,df[i][k[1]],df[i]['depth']) # your data x, y to fit
-                # x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
-                # y_fit = f(x_fit, *popt_Ri)
+                print('oblique ridge' + str(i) + k[1])
+                # sign = df[i][k[1]].iloc[[0]].to_numpy() - df[i][k[1]].iloc[[1]].to_numpy()
+                sign = np.mean(np.diff(df[i][k[1]]))
+                print('sign=' + str(sign))
+                # if np.isnan(sign):
+                #     print('choice a new pair of points')
+                    
+                if sign < 0:
+                    x_min = min(df[i][k[1]])  + 2*np.abs(max(df[0][k[1]]))
+                    x_max = max(df[i][k[1]])
+                if sign > 0:
+                    x_min = min(df[i][k[1]])  - 2*max(df[i][k[1]])
+                    x_max = max(df[i][k[1]])  #+ 2*np.abs(max(df[0][k[1]])  )    
+                    # print(x_min)
+                # x_min = min(df[0][k[1]])
+                # x_max = max(df[0][k[1]])
+                x_fit, y_fit, _ = _fit(df[i][k[1]],df[i]['elevation'],xmin=x_min, xmax=x_max)
+                
+               
+            #     plt.plot(df[i][k[1]].to_numpy(), m*xx + c, 'r', label='Fitted line')
+            # # plt.plot(x_fit, y_fit, 'g--')
+            # plt.plot(df[i][k[1]],df[i]['depth'], 'b*')
+
                 
             fit.append(np.array([x_fit,y_fit]).T)
-            points.append(np.array([df[i][k[1]],df[i]['depth']]).T)
+            points.append(np.array([df[i][k[1]],df[i]['elevation']]).T)
+            print('create a dataframe of fitted ridges')
+            pd.dataframe()
+        
+        
+        df_fit.append(fit)
 
     return points, fit
 
 
-def geom_Z0():
+def ridges_intersection_Z0(fit, ax=None,ridge_nb=None):
     """
     Find intersection of ridges
 
@@ -348,9 +411,27 @@ def geom_Z0():
     Returns:
 
     * BB : 
-        Text here
+        return intersection by pairs
 
     """
+    # https://stackoverflow.com/questions/28766692/intersection-of-two-graphs-in-python-find-the-x-value
+    # if ax == None:
+    #     fig = plt.subplots()
+    #     ax = plt.gca()
+    # plt.rcParams['font.size'] = 15
+
+    # my_list = [1,2,3,4]
+    # for pair in itertools.combinations(ridge_nb, r=2):
+    #     print(pair)
+    
+    # if ridge_nb is None:
+    #     ridge_nb = np.arange(0,len(fit))
+        
+    # for i in enumerate(ridge_nb):
+        
+    #     idx = np.argwhere(np.diff(np.sign(f - g))).flatten()
+    #     plt.plot(x[idx], f[idx], 'ro')
+
     return
 
 def scalFUN(df, EXTnb=[1], z0=0):
@@ -369,24 +450,40 @@ def scalFUN(df, EXTnb=[1], z0=0):
 
     """
     
-    for i in enumerate(EXTnb):
-        print(df['EX_xpos'+str(i[1])])
+    
+    SI = []
+    
+    if df.isnull().values.any():
+        print('NaN or Inf detected - trying to remove')
+        df.dropna(axis=1, inplace=True) # remove collumns
+        df = df[~df.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
         
+        
+    for i in enumerate(EXTnb):
+        print(df)
+        print(df['EX_xpos'+str(i[1])])
         num = np.gradient(np.log(np.abs(df['EX_xpos'+str(i[1])])))
-        den = np.gradient(np.log(df['depth']))
+        den = np.gradient(np.log(df['elevation']))
         # print(den)
         Tau = num/den
-        q = 1./df['depth']
+        q = 1./df['elevation']
         
-    factor = (df['depth'] - z0)/df['depth']
+    factor = (df['elevation'] - z0)/df['elevation']
     Tau = Tau*factor
     
     points = np.array([q,Tau]).T
     
-    x_fit, f = _fit(q,Tau,xmin=0)
-    fit = np.array([x_fit, f]).T
 
-    return  points, fit #, SI
+
+   
+    # df.isnull().values.any()
+    
+    x_fit, f, SI  = _fit(q,Tau,xmin=0)
+    fit = np.array([x_fit, f]).T
+    
+    SI.append(SI_tmp)
+    
+    return  points, fit, SI
 
 def scalEULER(df, EXTnb=[1], z0=0):
     """
@@ -404,22 +501,6 @@ def scalEULER(df, EXTnb=[1], z0=0):
 
     """
     
-    for i in enumerate(EXTnb):
-        print(df['EX_xpos'+str(i[1])])
-        
-        num = np.gradient(np.log(np.abs(df['EX_xpos'+str(i[1])])))
-        den = np.gradient(np.log(df['depth']))
-        # print(den)
-        Tau = num/den
-        q = 1./df['depth']
-        
-    factor = (df['depth'] - z0)/df['depth']
-    Tau = Tau*factor
-    
-    points = np.array([q,Tau]).T
-    
-    x_fit, f = _fit(q,Tau,xmin=0)
-    fit = np.array([x_fit, f]).T
 
     return  points, fit #, SI
 
@@ -542,22 +623,48 @@ def dEXP(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0, SI=1):
 # def auto_dEXP():
 
 def _fit(x,y,**kwargs):
+    """
+    Curve least square fit.
+
+    Parameters:
+
+    * 
+
+    Returns:
+
+    * Intersect y(0) (with the y-axis, useful for scalFUN function)
+
+    """
     def f(x, A, B): # this is your 'straight line' y=f(x)
         return A*x + B
-    
-    popt, pcov = curve_fit(f,x,y) # your data x, y to fit
-    
-    x_min = min(x) 
-    x_max = max(x)                                #min/max values for x axis
+   
+    if np.count_nonzero(~np.isnan(x)) <2:
+        raise ValueError("Need at least 3 points to fit the data")
 
-    for key, value in kwargs.items():
-        if key == 'xmin':
-           x_min = value 
-        if key == 'xmax':
-           x_max = value 
-    x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
-              
-    return x_fit, f(x_fit, *popt)
+    else:
+        try:
+            popt, pcov = curve_fit(f,x,y) # your data x, y to fit
+            x_min = min(x) 
+            x_max = max(x)                                #min/max values for x axis
+        
+            for key, value in kwargs.items():
+                if key == 'xmin':
+                   x_min = value 
+                if key == 'xmax':
+                   x_max = value 
+            x_fit = np.linspace(x_min, x_max, 100)   #range of x values used for the fit function
+            y_fit = f(x_fit, *popt)
+            
+            # evaluate function at y(0)
+            intersect = y_fit[0]
+        
+        except RuntimeError:
+            print("Can't fit this ridge - go to the next")
+            x_fit = []   
+            y_fit = []
+            
+        
+    return x_fit, y_fit, intersect
 
 def _build_ridge(RI_minmax,RII_minmax,RIII_minmax):
     # Once extreme points are determined at different altitudes, 
@@ -572,19 +679,19 @@ def _ridges_2_df(RI_minmax, RII_minmax, RIII_minmax):
     dfI = pd.DataFrame(RI_minmax)
     # df[0] = ['layer']
     dfI = dfI.add_prefix('EX_xpos')
-    dfI = dfI.rename(columns={"EX_xpos0": "depth"})
+    dfI = dfI.rename(columns={"EX_xpos0": "elevation"})
     dfI.head(5)
     
     dfII = pd.DataFrame(RII_minmax)
     # df[0] = ['layer']
     dfII = dfII.add_prefix('EX_xpos')
-    dfII = dfII.rename(columns={"EX_xpos0": "depth"})
+    dfII = dfII.rename(columns={"EX_xpos0": "elevation"})
     dfII.head(5)
     
     dfIII = pd.DataFrame(RIII_minmax)
     # df[0] = ['layer']
     dfIII = dfIII.add_prefix('EX_xpos')
-    dfIII = dfIII.rename(columns={"EX_xpos0": "depth"})
+    dfIII = dfIII.rename(columns={"EX_xpos0": "elevation"})
     dfIII.head(5)
     
     return dfI,dfII, dfIII

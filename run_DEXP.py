@@ -7,56 +7,52 @@ from fatiando.vis.mpl import square
 
 import dEXP as dEXP
 import plot_dEXP as pEXP
+import exemples.fwd_mag_sphere as magfwd
+import exemples.load_MALM_model as MALM
+
+import set_parameters as para
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-# -------------------------------  Graphical parameters
-scaled=0 
 
-# -------------------------------  Imaging parameters
-# shape = (50, 50) # data interpolation
-SI = 2 # structural index
-zp=0  # initial depth (conditionned upward or downward)
-qorder = 0 # derivative order of the continuated field
-# ---- z-discretisation - Upward continuation parameters parameters
-maxdepth=20
-nlay = 25
-#square([y1, y2, x1, x2])
-minDepth = 5
-maxDepth = 15
+#%% ------------------------------- MALM DATA
 
-# # ------------------------------  Model parametes
-# ZZ = -3.75 # depth of the synthetic anomaly
-# x1, x2, y1, y2, z1, z2 = -5,5,-5,5,ZZ-2.5/2,ZZ+2.5/2
-# Rsoil = 1000
+# xp, yp, z, U = MALM.load_MALM()
+# scaled, shape, SI, zp, qorder, maxdepth, nlay, minAlt_ridge, maxAlt_ridge = para.set_par()
+# p1, p2 = [min(xp), 0], [max(xp), 0]
 
-# # ------------------------------- Load data
-# filename = 'MSoilR' + str(Rsoil) + 'AnoR1Z'+ str(ZZ) +'L5h2.5'
-# MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
-# #MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
-# os.chdir(MainPath)
-# x,y,z,gz=np.loadtxt('3d_SENS_FAT.txt', unpack=True)
+#%% ------------------------------- MAG DATA
+# -------------------------------  Model
 
-# # ------------------------------- remove B return electrode effects 
-# B = [-104.16666666666667, -104.16666666666667, 0]
-# U = dEXP.cor_field_B(x,y,z,gz,B,rho=100)
+A= [10e3,10e3,2e3]
+B= [25e3,10e3,1e3]
+coord= np.array([A,B])
+radius = 1.5e3*np.ones(len(coord))
+modelmag = magfwd.anomag_model(coord,radii=radius,inc=50, dec=-30)
+xp, yp, zp, field2d, shape = magfwd.fwd_model(modelmag, shape = (300, 300),area = [0, 30e3, 0, 30e3])
+magfwd.plot_model(xp, yp, field2d, shape)
 
-# # U_cor = U
-# xp,yp,U = gridder.interp(x,y,U,shape)
-# # xp,yp,gz_cor= gridder.interp(x,y,gz_cor,shape)
+
+U = field2d[1]
+p1, p2 = [min(xp), 10e3], [max(xp), 10e3]
+
+scaled, shape, SI, zp, qorder, max_elevation, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=2*max(coord[:,2]))
 
 #%% ------------------------------- GRAVITY DATA
 # -------------------------------  Model
-name = '3000_zbot5000_data'
-xp, yp, zp, U= np.loadtxt('./grav_models/' + name + '.txt', unpack=True)
-shape = (25,25) # data interpolation
-maxdepth=10000 # max depth for upward continuation
-minAlt_ridge = 1000
-maxAlt_ridge = 5000
+# name = '1000_zbot3000_data'
+# xp, yp, zp, U= np.loadtxt('./grav_models/' + name + '.txt', unpack=True)
+# shape = (25,25) # data interpolation
+# maxdepth=10000 # max depth for upward continuation
+# minAlt_ridge = 1000
+# maxAlt_ridge = 5000
+# SI = 2 # structural index
+# zp=0  # initial depth (conditionned upward or downward)
+
 
 #%% ------------------------------- Plot the data
-p1, p2 = [min(xp), 0], [max(xp), 0]
+# p1, p2 = [min(xp), 0], [max(xp), 0]
 pEXP.plot_line(xp, yp, U,p1,p2)
 # #plt.title(strname +'ztop' + str(za) +'_zbot'+ str(zb) + '_data', fontsize=20)
 # #plt.savefig(pathFig+strname + '_ExempleFig_z' + str(za) + str(zb) + '_data' + '.png')
@@ -103,18 +99,21 @@ ax1 = pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=True)
 #%% ------- upward continuation of the field data
 
 mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
-                 zmin=0, zmax=maxdepth, nlayers=nlay, 
+                 zmin=0, zmax=max_elevation, nlayers=nlay, 
                  qorder=qorder)
 
 plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
 plt.colorbar(cmap)
         
 #%% ------------------------------- ridges identification
+
+import timeit
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                       label=label_prop) 
-dfI.head(5)
-dfII.head(5)
-dfIII.head(5)
+stop = timeit.default_timer()
+# dfI.head(5)
+# dfII.head(5)
+# dfIII.head(5)
 
 #%% ------------------------------- plot ridges over continuated section
 
@@ -122,76 +121,97 @@ fig = plt.figure()
 ax = plt.gca()
 pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
 pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
-# pEXP.plot_ridges_source(R_fit,ax=ax)
 
 #%% ------------------------------- filter ridges regionally constrainsted)
 
-minAlt_ridge = 500
-maxAlt_ridge = 3000
-dfI_f,dfII_f, dfIII_f = dEXP.filter_Ridges(dfI,dfII,dfIII,minAlt_ridge,maxAlt_ridge)
-df = [dfI_f, dfII_f, dfIII_f]
+
+dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
+                                           minAlt_ridge,maxAlt_ridge,
+                                           minlength=5,rmvNaN=True)
+
+df_f = np.array([dfI_f, dfII_f, dfIII_f])
+
+#%% ------------------------------- plot ridges fitted over continuated section
 
 fig = plt.figure()
 ax = plt.gca()
+
 pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax)
-points, fit = dEXP.fit_ridges(df) # fit ridges
-pEXP.plot_ridges_sources(points, fit, ax=ax, z_max_source=-3000)
-
-# from scipy.optimize import curve_fit
-
-# def f(x, A, B): # this is your 'straight line' y=f(x)
-#     return A*x + B
-
-# df = [dfI_f,dfII_f]
-
-# plt.figure()
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
+points, fit = dEXP.fit_ridges(df_f) # fit ridges
 
 
-   
-#         plt.plot(df[i][k[1]],df[i]['depth'] , 'b.',
-#                   label='points')
-#         plt.plot(x_fit,y_fit, 'k--',
-#                   label='fit')
-#     # plt.scatter(df[i]['EX_xpos1'],df[i]['depth'],marker='*')
+pEXP.plot_ridges_sources(points, fit, ax=ax, z_max_source=-8000,ridge_nb=[5,16,17])
+# pEXP.plot_ridges_sources(points, fit, ax=ax, z_max_source=-8000)
 
-# # plt.ylim([zlim[0],zlim[1]])
+
+
+
+#%% ------------------------------- save intersection
+# TO IMPLEMENT !
+dEXP.ridges_intersection_Z0(fit,ax=ax,ridge_nb=[3,4]) # 
+
+f= fit
+idx = np.argwhere(np.diff(np.sign(f - g))).flatten()
+plt.plot(x[idx], f[idx], 'ro')
+
+import itertools  
     
+l = ['Geeks', 'for', 'Geeks']  
+
+import itertools
+
+
+# defining iterator  
+iterators = itertools(l)  
+    
+# for in loop  
+for i in range(6):  
+        
+    # Using next function  
+    print(next(iterators), end = " ")  
+
+# np.diff(df[0]['EX_xpos1'])
+# np.diff(df[0]['EX_xpos2']).any()
+
+# print(np.diff(df[i][k[1]]))
 
 #%% ------------------------------- ridges analysis
 
 # points, fit = dEXP.scalFUN(dfI_f,EXTnb=[1],z0=-10000)
-z0est = [0,3,6]
+z0est = [0,30,60]
 P = []
 F = []
 for zi in z0est:
-    points, fit = dEXP.scalFUN(dfII_f,EXTnb=[1],z0=zi)
+    points, fit = dEXP.scalFUN(dfII,EXTnb=[1],z0=zi)
     P.append(points)
     F.append(fit)
     
-points2, fit = dEXP.scalFUN(dfII_f,EXTnb=[1],z0=3)
+dfII.isnull().values.any()
 
-fig = plt.figure()
-ax = plt.gca()
-ax1 = plt.subplot(3,1,1)
-pEXP.plot_scalFUN(P, F, ax=ax1, z0=z0est)
+# points2, fit = dEXP.scalFUN(dfII_f,EXTnb=[1],z0=3)
 
-
-# plt.subplot(3,1,2)
-# plot_scalFUN(points, fit, ax=ax, z0=z0est)
-# plt.subplot(3,1,2)
-# plot_scalFUN(points, fit, ax=ax, z0=z0est)
+# fig = plt.figure()
+# ax = plt.gca()
+# ax1 = plt.subplot(3,1,1)
+# pEXP.plot_scalFUN(P, F, ax=ax1, z0=z0est)
 
 
-# dfI_f.head(5)
-# EXTnb=[1,2]
 
+# z0est = [0,30,60]
+# P = []
+# F = []
+# for zi in z0est:
+#     points, fit = dEXP.scalEuler(dfII,EXTnb=[1],z0=zi)
+#     P.append(points)
+#     F.append(fit)
+    
 
 
 
 #%% ------- dEXP continuation of the field data
 mesh, label_prop = dEXP.dEXP(xp, yp, zp, U, shape, 
-                          zmin=0, zmax=maxdepth, nlayers=nlay, 
+                          zmin=0, zmax=max_elevation, nlayers=nlay, 
                           qorder=qorder, SI=1)
 # pEXP.plot_z(mesh)
 pEXP.plot_xy(mesh, label=label_prop,markerMax=True)      
@@ -207,13 +227,13 @@ pEXP.plot_xy(mesh, label=label_prop,markerMax=True)
 #     i = orderi +1
 #     axupwc = plt.subplot(2, 3, i)
 #     mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
-#                       zmin=0, zmax=maxdepth, nlayers=nlay, 
+#                       zmin=0, zmax=max_elevation, nlayers=nlay, 
 #                       qorder=orderi) 
 #     plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=axupwc)
 #     plt.colorbar(cmap)
 #     axdexp = plt.subplot(2, 3, i+3)
 #     mesh, label_prop = dEXP.dEXP(xp, yp, zp, U, shape, 
-#                                   zmin=0, zmax=maxdepth, nlayers=nlay, 
+#                                   zmin=0, zmax=max_elevation, nlayers=nlay, 
 #                                   qorder=orderi, SI=1)
 #     pEXP.plot_xy(mesh, label=label_prop,markerMax=True, ax=axdexp) 
 #     plt.colorbar(cmap)

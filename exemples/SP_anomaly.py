@@ -19,9 +19,9 @@ m = 1.5
 
 
 x = np.linspace(-100,100,1000)
+yy = np.linspace(-100,100,1000)
 nlayers= 25
 zz = np.linspace(-40,0,25)
-
 # Equation synthetic SP anomalies 
     
 Sxz=[]
@@ -29,6 +29,13 @@ for hi in zz:
     num= (x-x0)*np.cos(theta) + (hi-z0)*np.sin(theta)
     den = ((x-x0)**2 + (hi-z0)**2)**m
     Sxz = np.concatenate([Sxz,-K*num/den],axis=0)
+
+Sxz=[]
+for hi in zz:
+    num= (x-x0)*np.cos(theta) + (hi-z0)*np.sin(theta)
+    den = ((x-x0)**2 + (hi-z0)**2)**m
+    Sxz = np.concatenate([Sxz,-K*num/den],axis=0)
+
 
 
 shape = (len(x),nlayers)
