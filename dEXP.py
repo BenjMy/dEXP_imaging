@@ -44,22 +44,29 @@ def cor_field_B(x,y,z,u,B,rho=100):
 
     u_cor = u - u_B # correct total measured potential from influence of B
 
-    plt.figure()
-    plt.subplot(1,3,1)
+    plt.figure(figsize=(20,10))
+    plt.subplot(2,2,1)
     plt.tricontourf(x, y, dist, 50, cmap='RdBu_r')
     cbar = plt.colorbar(orientation='vertical', aspect=50)
     cbar.set_label('Distance from B (m)')
     plt.tight_layout()
     plt.axis('square')
 
-    plt.subplot(1,3,2)
+    plt.subplot(2,2,2)
     plt.tricontourf(x, y, u_B, 50, cmap='RdBu_r')
     cbar = plt.colorbar(orientation='vertical', aspect=50)
-    cbar.set_label('$u_{B}$')
+    cbar.set_label('$u_{B}$ (V)')
     plt.tight_layout()
     plt.axis('square')
-
-    plt.subplot(1,3,3)
+    
+    plt.subplot(2,2,3)
+    plt.tricontourf(x, y, u, 50, cmap='RdBu_r')
+    cbar = plt.colorbar(orientation='vertical', aspect=50)
+    cbar.set_label('$u = U_{T} $(V)')
+    plt.tight_layout()
+    plt.axis('square')
+    
+    plt.subplot(2,2,4)
     plt.tricontourf(x, y, u_cor, 50, cmap='RdBu_r')
     cbar = plt.colorbar(orientation='vertical', aspect=50)
     cbar.set_label('$u = U_{T} - u_{B}$ (V)')
@@ -344,59 +351,60 @@ def fit_ridges(df):
     """
     if len(df)==1:
         df = [df]
-
+    
     if len(df[0])==0:
         raise ValueError("No data to fit")
     
     
-    points = []
-    fit = []
+    df_Rfit = []
     # plt.figure()
-    for i in range(len(df)):
-        for k in enumerate(df[i].columns[1:]):
-            # print(df[i].columns[1:])
-            # check if line is close to vertical
-            # if np.diff(df[i][k[1]]).any() == 0:
-            if np.count_nonzero(np.diff(df[i][k[1]]))<5:
-                # print(np.diff(df[i][k[1]]))
-                print('vertical ridge' + str(i) + k[1])
-                y_fit = np.linspace(-max(df[i]['elevation'])*2,max(df[i]['elevation']),100)                                       
-                x_fit = df[i][k[1]].iloc[[0]].to_numpy()*np.ones(len(y_fit))
+    for r_type in range(len(df)): # loop over ridges type I, II, III
+        fit_ridges_all = []
+        lable = []
+        cols = []
+    
+        for k in enumerate(df[r_type].columns[1:]): # loop over ridges of the same familly
+            if np.count_nonzero(np.diff(df[r_type][k[1]]))<5: # check if ridge is vertical
+                # print('vertical ridge type:' + str(r_type) + ' / ridgenb:' + k[1])
+                fit_name = 'R'+ str(r_type) + ' Vert.' +  k[1]
+                y_fit = np.linspace(-max(df[r_type]['elevation'])*2,max(df[r_type]['elevation']),100)                                       
+                x_fit = df[r_type][k[1]].iloc[[0]].to_numpy()*np.ones(len(y_fit))
             
             else:
-                print('oblique ridge' + str(i) + k[1])
-                # sign = df[i][k[1]].iloc[[0]].to_numpy() - df[i][k[1]].iloc[[1]].to_numpy()
-                sign = np.mean(np.diff(df[i][k[1]]))
-                print('sign=' + str(sign))
-                # if np.isnan(sign):
-                #     print('choice a new pair of points')
-                    
+                # print('oblique ridge type:' + str(r_type) + ' / ridgenb:' + k[1])
+                sign = np.mean(np.diff(df[r_type][k[1]])) # slope sign
+                fit_name = 'R'+ str(r_type) + ' Obl.' +  k[1]
                 if sign < 0:
-                    x_min = min(df[i][k[1]])  + 2*np.abs(max(df[0][k[1]]))
-                    x_max = max(df[i][k[1]])
+                    x_min = min(df[r_type][k[1]])  + 2*np.abs(max(df[0][k[1]]))
+                    x_max = max(df[r_type][k[1]])
                 if sign > 0:
-                    x_min = min(df[i][k[1]])  - 2*max(df[i][k[1]])
-                    x_max = max(df[i][k[1]])  #+ 2*np.abs(max(df[0][k[1]])  )    
-                    # print(x_min)
-                # x_min = min(df[0][k[1]])
-                # x_max = max(df[0][k[1]])
-                x_fit, y_fit, _ = _fit(df[i][k[1]],df[i]['elevation'],xmin=x_min, xmax=x_max)
+                    x_min = min(df[r_type][k[1]])  - 2*max(df[r_type][k[1]])
+                    x_max = max(df[r_type][k[1]])  #+ 2*np.abs(max(df[0][k[1]])  )
+                    
+                print(r_type)
+                x_fit, y_fit, _ = _fit(df[r_type][k[1]],df[r_type]['elevation'],xmin=x_min, xmax=x_max) # fit function
                 
                
-            #     plt.plot(df[i][k[1]].to_numpy(), m*xx + c, 'r', label='Fitted line')
-            # # plt.plot(x_fit, y_fit, 'g--')
+                # plt.plot(df[r_type][k[1]].to_numpy(), m*xx + c, 'r', label='Fitted line')
+            # plt.plot(x_fit, y_fit, '--')
             # plt.plot(df[i][k[1]],df[i]['depth'], 'b*')
-
-                
-            fit.append(np.array([x_fit,y_fit]).T)
-            points.append(np.array([df[i][k[1]],df[i]['elevation']]).T)
-            print('create a dataframe of fitted ridges')
-            pd.dataframe()
-        
-        
-        df_fit.append(fit)
-
-    return points, fit
+            # print(len(x_fit))
+    
+            fit_xy = np.array([x_fit,y_fit]).T 
+            lable_xy = np.array(['x', 'y'])
+            lable = np.array([fit_name])
+    
+            cols = pd.MultiIndex.from_product([lable, lable_xy])   
+            fit_tmp = pd.DataFrame(fit_xy, columns=cols)
+            
+            if k[0] == 0:
+                fit_ridges_all = fit_tmp
+            else:
+                fit_ridges_all = pd.concat([fit_ridges_all,fit_tmp], axis=1)
+    
+        df_Rfit.append(fit_ridges_all) # merge ridges from different fanilly
+    
+    return df_Rfit
 
 
 def ridges_intersection_Z0(fit, ax=None,ridge_nb=None):
@@ -674,7 +682,10 @@ def _build_ridge(RI_minmax,RII_minmax,RIII_minmax):
     
     return
 
-def _ridges_2_df(RI_minmax, RII_minmax, RIII_minmax):
+def _ridges_2_df(RI_minmax, RII_minmax, RIII_minmax, **kwargs):
+    
+    # kwargs
+    # prefix
     
     dfI = pd.DataFrame(RI_minmax)
     # df[0] = ['layer']

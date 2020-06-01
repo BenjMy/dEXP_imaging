@@ -13,6 +13,7 @@ from fatiando.gravmag import sphere
 import matplotlib.pyplot as plt
 import numpy as np
 
+# %%
 # Create a model using geometric objects from fatiando.mesher
 # Each model element has a dictionary with its physical properties.
 # The spheres have different total magnetization vectors (total = induced +
@@ -63,3 +64,20 @@ def plot_model(x, y, field, shape):
     ax.set_ylabel('x (km)')
     plt.tight_layout(pad=0.5)
     plt.show()
+
+def load_mag_synthetic():
+    
+    A= [10e3,10e3,2e3]
+    B= [25e3,10e3,1e3]
+    coord= np.array([A,B])
+    radius = 1.5e3*np.ones(len(coord))
+    modelmag = anomag_model(coord,radii=radius,inc=50, dec=-30)
+    xp, yp, zp, field2d, shape = fwd_model(modelmag, shape = (300, 300),area = [0, 30e3, 0, 30e3])
+    plot_model(xp, yp, field2d, shape)
+    
+    
+    U = field2d[1]
+    p1, p2 = [min(xp), 10e3], [max(xp), 10e3]
+        
+    return xp, yp, zp, U, shape, p1, p2, coord
+# %% pygimli exemple

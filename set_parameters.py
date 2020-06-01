@@ -7,15 +7,18 @@ Created on Thu May 28 07:57:02 2020
 
 
 def set_par(shape,max_elevation,**kwargs):
+    
+    # parameters = dict()
+    
+
     # # -------------------------------  Graphical parameters
-    scaled=0 
+    scaled=0
    
     for key, value in kwargs.items():
         if key == 'SI': # data interpolation
-            SI = value        
-    shape = shape # data interpolation
+            SI = value      
     qorder = 0 # derivative order of the continuated field
-
+        
     # # -------------------------------  Imaging parameters
     SI = 2 # default structural index
     zp=0  # initial depth (conditionned upward or downward)
@@ -35,5 +38,12 @@ def set_par(shape,max_elevation,**kwargs):
             minAlt_ridge = value  
 
 
-    
-    return scaled, shape, SI, zp, qorder, max_elevation, nlay, minAlt_ridge, maxAlt_ridge
+    # return parameters
+    return scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge
+
+
+# def f(out):
+#     for key,val in out.items():
+#         exec(key + '=val')
+        
+        

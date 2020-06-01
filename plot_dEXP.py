@@ -143,7 +143,7 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False):
 
 #     return ax
 
-def plot_line(x,y,data,p1,p2,ax=None):
+def plot_line(x,y,data,p1,p2,ax=None,**kwargs):
     
     # Extract a profile between points 1 and 2
     xx, yy, distance, profile = gridder.profile(x, y, data, p1, p2, 1000)
@@ -160,22 +160,26 @@ def plot_line(x,y,data,p1,p2,ax=None):
     plt.subplot(2, 1, 2)
     plt.title("Original data")
     plt.plot(xx, yy, '-k', label='Profile', linewidth=2)
-    scale = np.abs([data.min(), data.max()]).max()
-    plt.tricontourf(x, y, data, 50, cmap='RdBu_r', vmin=-scale, vmax=scale)
+    # scale = np.abs([data.min(), data.max()]).max()
+    plt.tricontourf(x, y, data, 50, cmap='RdBu_r', vmin=min(data), vmax=max(data))
     plt.colorbar(orientation='horizontal', aspect=50)
     plt.legend(loc='lower right')
     plt.tight_layout()
-    plt.show()
+    plt.axis('square')
 
     for key, value in kwargs.items():
         # print("{0} = {1}".format(key, value))
-        
+
         if key == 'title':
+            plt.title(value, fontsize=15)        
+        if key == 'suptitle':
             plt.suptitle(value, fontsize=15)
         if key == 'savefig':
             if value == True:
             # plt.savefig(pathFig+ strname + '_data' + str(ZZ) + '.png')
                 plt.savefig('fig2d.png', r=400)
+        
+    plt.show()
 
     return ax
 
@@ -229,16 +233,13 @@ def plot_ridges_harmonic(RI=None,RII=None,RIII=None,ax=None,label=False,**kwargs
     return ax
 
 
-def plot_ridges_sources(points, fit, ax=None, ridge_nb=None, z_max_source=None):
+def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_source=None):
     """
     Plot ridges in the source domain and observe intersection point
 
     Parameters:
-
-    * points
-        points
-    * fit
-        fit
+    * df_fit
+        dataframe fit
     Returns:
 
     * BB : 
@@ -250,30 +251,54 @@ def plot_ridges_sources(points, fit, ax=None, ridge_nb=None, z_max_source=None):
         ax = plt.gca()
     plt.rcParams['font.size'] = 15
 
+    if ridge_type is None:
+        ridge_type = np.arange(0,len(df_fit))
+
+    ridge_nb_n = []
     if ridge_nb is None:
-        ridge_nb = np.arange(0,len(points))
+        for r_type in enumerate(ridge_type):
+            ridge_nb_n_tmp = np.arange(0,df_fit[r_type[1]].shape[1])
+            ridge_nb_n.append(ridge_nb_n_tmp)
+    else:
+        ridge_nb_n = ridge_nb
+    
+    # print(ridge_nb_n)
+            
+    for r_type in enumerate(ridge_type):
         
-    for i in enumerate(ridge_nb):
-        ax.plot(fit[i[0]][:,0], fit[i[0]][:,1], 'g--')
-        # ax.scatter(points[i[0]][:,0], points[i[0]][:,1],marker='*')
-        
-        ymin, ymax = ax.get_ylim()
+        for r_nb in enumerate(ridge_nb_n[r_type[1]]):
+            print(r_type[1],r_nb[1])
+            
+            name_col = df_fit[r_type[1]].columns[r_nb[1]][0]
+            # print(name_col)
+            # print(r_type[1])
+            ax.plot(df_fit[r_type[1]][name_col]['x'],
+                    df_fit[r_type[1]][name_col]['y'], 'g--')
 
-        if z_max_source is None:
-            ax.set_ylim([-ymax*3,ymax])   
-        else:
-            ax.set_ylim([z_max_source,ymax])   
 
-        ax.set_xlabel('x (m)', size=20)
-        # ax.set_ylabel('depth (m)')
-        # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
-        plt.grid()
-        # plt.legend()
-        # the text bounding box
-        plt.ylabel(" ")
-        bbox = {'fc': '0.8', 'pad': 0}
-        ax.text(-0.15, 0.3, 'depth', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
-        ax.text(-0.15, 0.8, 'altitude', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
+            # plt.plot(df_fit[r_type[1]][r_nb[1]])
+
+
+            # ax.plot(fit[r_nb[0]][:,0], fit[r_nb[0]][:,1], 'g--')
+            # # ax.scatter(points[i[0]][:,0], points[i[0]][:,1],marker='*')
+            
+            ymin, ymax = ax.get_ylim()
+    
+            if z_max_source is None:
+                ax.set_ylim([-ymax*3,ymax])   
+            else:
+                ax.set_ylim([z_max_source,ymax])   
+    
+            ax.set_xlabel('x (m)', size=20)
+            # ax.set_ylabel('depth (m)')
+            # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
+            plt.grid()
+            # plt.legend()
+            # the text bounding box
+            plt.ylabel(" ")
+            bbox = {'fc': '0.8', 'pad': 0}
+            ax.text(-0.15, 0.3, 'depth', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
+            ax.text(-0.15, 0.8, 'altitude', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
 
     return ax
     

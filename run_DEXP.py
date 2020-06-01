@@ -5,59 +5,57 @@ from fatiando import gridder, mesher, utils
 from fatiando.gravmag import prism, imaging, transform
 from fatiando.vis.mpl import square
 
+# my own functions
 import dEXP as dEXP
+from dEXP import _fit
 import plot_dEXP as pEXP
+
+# exemples
 import exemples.fwd_mag_sphere as magfwd
+import exemples.load_grav_model as grav
 import exemples.load_MALM_model as MALM
 
 import set_parameters as para
 
 import numpy as np
 import matplotlib.pyplot as plt
+plt.rcParams['font.size'] = 15
+
+# icsd functions
+from icsd3d.importers.read import load_obs, load_geom
+
 
 
 #%% ------------------------------- MALM DATA
+# path2files="example_2add_later/Landfill_3d/Ano_0_EA/"  # Real A position without anomaly
+# path2files="example_2add_later/Landfill_3d/Ano_1_BH_EA/"  # Real A position with big hole anomaly
+path2files="example_2add_later/Landfill_3d/Ano_1_SH_EA/"  # Real A position  with small hole anomaly
+Main = 'E:/Padova/Software/SourceInversion/icsd_dev/example_2add_later/Landfill_3d/Ano_1_BH_EA/'
+Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/'
+file = 'Ano963.txt'
 
-# xp, yp, z, U = MALM.load_MALM()
-# scaled, shape, SI, zp, qorder, maxdepth, nlay, minAlt_ridge, maxAlt_ridge = para.set_par()
-# p1, p2 = [min(xp), 0], [max(xp), 0]
+coord_xyz, coord_xyz_int, U, coords_liner, shape, max_elevation, p = MALM.load_MALM_LandfillPorto(path=Main, filename=file)
+
+scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape, max_elevation=max_elevation)
+xp, yp, zp = coord_xyz_int
+# xp, yp, zp = coord_xyz
+
+U = U[2] # U_raw, Ucor, U_int, Ucor_int
+p1 , p2 = p
 
 #%% ------------------------------- MAG DATA
 # -------------------------------  Model
-
-A= [10e3,10e3,2e3]
-B= [25e3,10e3,1e3]
-coord= np.array([A,B])
-radius = 1.5e3*np.ones(len(coord))
-modelmag = magfwd.anomag_model(coord,radii=radius,inc=50, dec=-30)
-xp, yp, zp, field2d, shape = magfwd.fwd_model(modelmag, shape = (300, 300),area = [0, 30e3, 0, 30e3])
-magfwd.plot_model(xp, yp, field2d, shape)
-
-
-U = field2d[1]
-p1, p2 = [min(xp), 10e3], [max(xp), 10e3]
-
-scaled, shape, SI, zp, qorder, max_elevation, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=2*max(coord[:,2]))
+# xp, yp, zp, U, shape, p1, p2, coord= magfwd.load_mag_synthetic()
+# max_elevation=2*max(coord[:,2])
+# scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 
 #%% ------------------------------- GRAVITY DATA
 # -------------------------------  Model
-# name = '1000_zbot3000_data'
-# xp, yp, zp, U= np.loadtxt('./grav_models/' + name + '.txt', unpack=True)
-# shape = (25,25) # data interpolation
-# maxdepth=10000 # max depth for upward continuation
-# minAlt_ridge = 1000
-# maxAlt_ridge = 5000
-# SI = 2 # structural index
-# zp=0  # initial depth (conditionned upward or downward)
-
+# load_grav_synthetic()
+# grav.load_grav_pygimli_cylinder()
 
 #%% ------------------------------- Plot the data
-# p1, p2 = [min(xp), 0], [max(xp), 0]
 pEXP.plot_line(xp, yp, U,p1,p2)
-# #plt.title(strname +'ztop' + str(za) +'_zbot'+ str(zb) + '_data', fontsize=20)
-# #plt.savefig(pathFig+strname + '_ExempleFig_z' + str(za) + str(zb) + '_data' + '.png')
-# #x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())q
-# square([y1, y2, x1, x2])
 
 #%% ------------------------------- Pad the edges of grids
 
@@ -138,14 +136,15 @@ ax = plt.gca()
 
 pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
-points, fit = dEXP.fit_ridges(df_f) # fit ridges
 
 
-pEXP.plot_ridges_sources(points, fit, ax=ax, z_max_source=-8000,ridge_nb=[5,16,17])
-# pEXP.plot_ridges_sources(points, fit, ax=ax, z_max_source=-8000)
+df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
 
 
-
+pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-8000,
+                         ridge_type=[0,1,2],ridge_nb=None)
+# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-8000, 
+#                           ridge_type=[0,1,2], ridge_nb=[[4],[1]]) # ridge_nb = [[1,2],[1,3]]
 
 #%% ------------------------------- save intersection
 # TO IMPLEMENT !
