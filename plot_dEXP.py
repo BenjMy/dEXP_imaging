@@ -10,6 +10,8 @@ from fatiando import gridder, mesher, utils
 from collections import OrderedDict
 from scipy.optimize import curve_fit
 
+# my own functions
+import dEXP as dEXP
 
 def plot_z(mesh):
 
@@ -143,19 +145,21 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False):
 
 #     return ax
 
-def plot_line(x,y,data,p1,p2,ax=None,**kwargs):
+def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
     
     # Extract a profile between points 1 and 2
-    xx, yy, distance, profile = gridder.profile(x, y, data, p1, p2, 1000)
+    if interp == False:
+        xx, yy, distance, profile = dEXP.profile_noInter(x, y, data, p1, p2, 1000)
+    else:
+        xx, yy, distance, profile = gridder.profile(x, y, data, p1, p2, 1000)
     
     # Plot the profile and the original map data
     plt.figure()
     ax = ax or plt.gca()
-    ax = ax or plt.gca()
     plt.subplot(2, 1, 1)
     # plt.title(strname + '_data' + str(ZZ), fontsize=15)
-    plt.plot(distance, profile, '.k')
-    plt.xlim(distance.min(), distance.max())
+    plt.plot(xx, profile, '.k')
+    plt.xlim(xx.min(), xx.max())
     plt.grid()
     plt.subplot(2, 1, 2)
     plt.title("Original data")
@@ -266,7 +270,7 @@ def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_s
             
     for r_type in enumerate(ridge_type):
         
-        for r_nb in enumerate(ridge_nb_n[r_type[1]]):
+        for r_nb in enumerate(ridge_nb_n[r_type[0]]):
             print(r_type[1],r_nb[1])
             
             name_col = df_fit[r_type[1]].columns[r_nb[1]][0]

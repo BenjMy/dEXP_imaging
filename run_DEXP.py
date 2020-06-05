@@ -29,18 +29,37 @@ from icsd3d.importers.read import load_obs, load_geom
 #%% ------------------------------- MALM DATA
 # path2files="example_2add_later/Landfill_3d/Ano_0_EA/"  # Real A position without anomaly
 # path2files="example_2add_later/Landfill_3d/Ano_1_BH_EA/"  # Real A position with big hole anomaly
-path2files="example_2add_later/Landfill_3d/Ano_1_SH_EA/"  # Real A position  with small hole anomaly
-Main = 'E:/Padova/Software/SourceInversion/icsd_dev/example_2add_later/Landfill_3d/Ano_1_BH_EA/'
+# path2files="example_2add_later/Landfill_3d/Ano_1_SH_EA/"  # Real A position  with small hole anomaly
+# Main = 'E:/Padova/Software/SourceInversion/icsd_dev/example_2add_later/Landfill_3d/Ano_1_BH_EA/'
+# file = 'OAno_synt'
+
 Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/'
-file = 'Ano963.txt'
+file = 'Ano'
+interp = True
 
-coord_xyz, coord_xyz_int, U, coords_liner, shape, max_elevation, p = MALM.load_MALM_LandfillPorto(path=Main, filename=file)
+dataset = MALM.load_MALM_LandfillPorto(path=Main, 
+                                       filename=file,
+                                       shape = (300,300),
+                                       field=True,
+                                       interp = interp)
+coord_xyz, coord_xyz_int = dataset[0:2]
+U = dataset[2]
+coords_liner = dataset[3]
+shape, max_elevation = dataset[4:6]
+p = dataset[6]         # line points                                       
 
-scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape, max_elevation=max_elevation)
-xp, yp, zp = coord_xyz_int
-# xp, yp, zp = coord_xyz
+# set imaging pseudo-inversion parameters                                                                        
+parameters = para.set_par(shape=shape,max_elevation=max_elevation)
 
-U = U[2] # U_raw, Ucor, U_int, Ucor_int
+scaled = parameters[0]
+SI = parameters[1]
+zp, qorder, nlay = parameters[2:5]
+minAlt_ridge, maxAlt_ridge = parameters[5:7]
+
+# xp, yp, zp = coord_xyz_int
+xp, yp, zp = coord_xyz
+# len(xp)
+U = U[0] # U_raw, Ucor, U_int, Ucor_int
 p1 , p2 = p
 
 #%% ------------------------------- MAG DATA
@@ -52,47 +71,27 @@ p1 , p2 = p
 #%% ------------------------------- GRAVITY DATA
 # -------------------------------  Model
 # load_grav_synthetic()
-# grav.load_grav_pygimli_cylinder()
+# ga, gza = grav.load_grav_pygimli_cylinder()
+# shape = (30,30)
+# scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 
-#%% ------------------------------- Plot the data
-pEXP.plot_line(xp, yp, U,p1,p2)
+#%% ------------------------------- Plot the data 
+pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
 
 #%% ------------------------------- Pad the edges of grids
 
-# padtypes = ['0', 'mean', 'edge', 'lintaper', 'reflection', 'oddreflection',
-#             'oddreflectiontaper']
-# fig = plt.figure()
-# ax = plt.gca()
-
-# xs = xp.reshape(shape)
-# ys = yp.reshape(shape)
-# data = U.reshape(shape)
-
-# padtype = padtypes[3]
-# padded_data, nps = gridder.pad_array(data, padtype=padtype)
-# # Get coordinate vectors
-# pad_x, pad_y = gridder.pad_coords([xs, ys], shape, nps)
-# padshape = padded_data.shape
-# ax.set_title(padtype)
-# ax.pcolormesh(pad_y.reshape(padshape), pad_x.reshape(padshape),
-#               padded_data, cmap='RdBu_r')
-# ax.set_xlim(pad_y.min(), pad_y.max())
-# ax.set_ylim(pad_x.min(), pad_x.max())
-    
-# shape = padded_data.shape
-# U = padded_data.reshape(shape[0]*shape[1])
-# xp = pad_x
-# yp = pad_y
-
-# p1, p2 = [min(xp), 0], [max(xp), 0]
-
+xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=2)
+pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
 
 #%% ------------------------------- Plot the derivatives
 xderiv = transform.derivx(xp, yp, U, shape,order=1)
 yderiv = transform.derivy(xp, yp, U, shape,order=1)
 zderiv = transform.derivz(xp, yp, U, shape,order=1)
 
-ax1 = pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=True)
+# interp = True
+pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp)
+pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp)
+pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp)
 
 #%% ------- upward continuation of the field data
 
@@ -105,14 +104,22 @@ plt.colorbar(cmap)
         
 #%% ------------------------------- ridges identification
 
-import timeit
-dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
-                                      label=label_prop) 
-stop = timeit.default_timer()
-# dfI.head(5)
-# dfII.head(5)
-# dfIII.head(5)
+# import timeit
 
+dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
+                                      label=label_prop,
+                                      fix_peak_nb=None,
+                                      interp=False) 
+
+dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
+                                      label=label_prop,fix_peak_nb=None) 
+
+# dfI, dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+#                                       label=label_prop,
+#                                       # minAlt_ridge=minAlt_ridge,
+#                                       maxAlt_ridge=maxAlt_ridge,
+#                                       fix_peak_nb=None) 
+ 
 #%% ------------------------------- plot ridges over continuated section
 
 fig = plt.figure()
@@ -121,13 +128,17 @@ pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
 pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
 
 #%% ------------------------------- filter ridges regionally constrainsted)
+   
 
+# dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
+#                                            minAlt_ridge,maxAlt_ridge,
+#                                            minlength=5,rmvNaN=True)
 
 dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
                                            minAlt_ridge,maxAlt_ridge,
                                            minlength=5,rmvNaN=True)
 
-df_f = np.array([dfI_f, dfII_f, dfIII_f])
+df_f = dfI_f, dfII_f, dfIII_f
 
 #%% ------------------------------- plot ridges fitted over continuated section
 
@@ -137,38 +148,37 @@ ax = plt.gca()
 pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
-
 df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
 
+pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
+                          ridge_type=[0,1,2],ridge_nb=None)
 
-pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-8000,
-                         ridge_type=[0,1,2],ridge_nb=None)
-# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-8000, 
-#                           ridge_type=[0,1,2], ridge_nb=[[4],[1]]) # ridge_nb = [[1,2],[1,3]]
+# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-30, 
+#                           ridge_type=[0]) # ridge_nb = [[1,2],[1,3]]
 
 #%% ------------------------------- save intersection
 # TO IMPLEMENT !
-dEXP.ridges_intersection_Z0(fit,ax=ax,ridge_nb=[3,4]) # 
+dEXP.ridges_intersection_Z0(df_fit,ax=ax,ridge_nb=[3,4]) # 
 
-f= fit
-idx = np.argwhere(np.diff(np.sign(f - g))).flatten()
-plt.plot(x[idx], f[idx], 'ro')
+# f= fit
+# idx = np.argwhere(np.diff(np.sign(f - g))).flatten()
+# plt.plot(x[idx], f[idx], 'ro')
 
-import itertools  
+# import itertools  
     
-l = ['Geeks', 'for', 'Geeks']  
+# l = ['Geeks', 'for', 'Geeks']  
 
-import itertools
+# import itertools
 
 
-# defining iterator  
-iterators = itertools(l)  
+# # defining iterator  
+# iterators = itertools(l)  
     
-# for in loop  
-for i in range(6):  
+# # for in loop  
+# for i in range(6):  
         
-    # Using next function  
-    print(next(iterators), end = " ")  
+#     # Using next function  
+#     print(next(iterators), end = " ")  
 
 # np.diff(df[0]['EX_xpos1'])
 # np.diff(df[0]['EX_xpos2']).any()

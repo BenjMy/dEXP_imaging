@@ -6,7 +6,7 @@ Created on Thu May 28 07:57:02 2020
 """
 
 
-def set_par(shape,max_elevation,**kwargs):
+def set_par(shape,max_elevation,nlay=25,**kwargs):
     
     # parameters = dict()
     
@@ -25,7 +25,7 @@ def set_par(shape,max_elevation,**kwargs):
 
     # ---- z-discretisation - Upward continuation parameters parameters
     max_elevation=max_elevation
-    nlay = 25 # discretisation of upward continuation
+    nlay = nlay # discretisation of upward continuation
     
     # ----------- ridges analysis
     minAlt_ridge = max_elevation*0.25
