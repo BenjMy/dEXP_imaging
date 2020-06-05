@@ -326,13 +326,23 @@ def plot_scalFUN(points, fit, ax=None, z0=None):
     if ax == None:
         fig = plt.subplots()
         ax = plt.gca()
+
+    if ~isinstance(fit, list):
+    #    fit = np.array([fit])
+    #    points = np.array([points])
+        z0 = np.array([z0])
+
+    # # if len(z0)<2:
+    # #     z0 = [z0]
+    # fit = [fit]
     
     for z in enumerate(z0):
         ax.plot(fit[z[0]][:,0], fit[z[0]][:,1], '--',
-                 label='fit_z0=' + str(z[1]))
+                 label='fit_z0=' + str(z[1]), color='red')
         ax.scatter(points[z[0]][:,0], points[z[0]][:,1],marker='*')
+        print(points[z[0]][:,0])
         ax.set_xlim([0,max(points[z[0]][:,0])])
-    # ax.set_ylim([-5,5])        
+    ax.set_ylim([-5,5])        
     ax.set_xlabel('q (m)', size=20)
     ax.set_ylabel('$\\tau_{f}$', size=20)
     # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)

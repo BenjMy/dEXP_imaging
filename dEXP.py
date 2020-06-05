@@ -26,7 +26,7 @@ from fatiando.gravmag.imaging import _makemesh
 from fatiando import gridder, mesher, utils
 
 from scipy.interpolate import UnivariateSpline
-from scipy.signal import find_peaks, peak_prominences # useful for ridges detection
+from scipy.signal import find_peaks, peak_prominences, peak_widths # useful for ridges detection
 from scipy.signal import savgol_filter
 
 import pandas as pd
@@ -87,7 +87,9 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=Tr
         if key == 'fix_peak_nb':
            fix_peak_nb = value
            print('fix_peak_nb =' + str(value))
-           
+        if key == 'reverse':
+           reverse = True
+           print('fix_peak_nb =' + str(value))   
     # prom = 0.1 #
     # fix_nb_peaks = 3
     # --------------------------------------------
@@ -103,6 +105,11 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=Tr
     else:
         upw_u = mesh.props[label]
     upw_u = np.reshape(upw_u, [mesh.shape[0], mesh.shape[1]*mesh.shape[2]])      
+
+    if reverse==True: #analysis from bottom to top
+        print('to test')
+        depths = np.reverse(depths)
+        upw_u = np.reverse(upw_u)
 
     for i, depth in enumerate(depths - z[0]): # Loop for RII extremas
         upw_u_l = upw_u[i,:]     # analysing extrema layers by layers from top to bottom  
@@ -190,11 +197,13 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
             depths = depths[depths>minAlt_ridge]    
         if key == 'maxAlt_ridge':
              maxAlt_ridge = value    
-             depths = depths[depths<maxAlt_ridge]    
+             depths = depths[depths<maxAlt_ridge]
+        if key == 'method_peak':
+             method_peak = value                                 
 
     # if minAlt_ridge is not None:
     #     print('test')
-    #    # depths = 
+    #     # depths = 
            
     # --------------------------------------------
     
@@ -217,7 +226,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
             xx, yy, distance, p_up_f = profile_noInter(x, y, upw_u_l, p1, p2, 1000)
 
         # peak analysis
-        MinMax_peaks = _peaks_analysis(p_up_f,fix_peak_nb=fix_peak_nb)
+        MinMax_peaks = _peaks_analysis(p_up_f,fix_peak_nb=fix_peak_nb,method_peak=method_peak)
 
         if np.array(MinMax_peaks).any():
             RIII_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
@@ -245,7 +254,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
             xx, yy, distance, p_up_f_d1z = profile_noInter(x, y, up_f_d1z, p1, p2, 1000)
 
         # peak analysis
-        MinMax_peaks = _peaks_analysis(p_up_f_d1z,fix_peak_nb=fix_peak_nb)
+        MinMax_peaks = _peaks_analysis(p_up_f_d1z,fix_peak_nb=fix_peak_nb,method_peak=method_peak)
 
         if np.array(MinMax_peaks).any():
             RII_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
@@ -270,7 +279,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
             xx, yy, distance, p_up_f_d1x = profile_noInter(x, y, up_f_d1x, p1, p2, 1000)
         
         # peak analysis
-        MinMax_peaks = _peaks_analysis(p_up_f_d1x,fix_peak_nb=fix_peak_nb)
+        MinMax_peaks = _peaks_analysis(p_up_f_d1x,fix_peak_nb=fix_peak_nb,method_peak=method_peak)
         
         if np.array(MinMax_peaks).any():
             RI_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
@@ -292,20 +301,44 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
     
     return dfI,dfII, dfIII #, R, R_fit
 
-def _peaks_analysis(p_up_f, fix_peak_nb=None):
+def _peaks_analysis(p_up_f, fix_peak_nb=None, method_peak='peakdet', proxy='width'):
     
-    Max_peaks, _ = find_peaks(p_up_f)
-    prominences = peak_prominences(p_up_f, Max_peaks)[0]
-    p_max = np.array([Max_peaks, prominences]).T
-    if p_max.shape[0]>2:
-        p_max = p_max[p_max[:,1].argsort()[::-1]]
+    if proxy == 'width':
+        pxy = 2
+    else:
+        pxy = 1
+        
+    if method_peak == 'find_peaks':
+        Max_peaks, _ = find_peaks(p_up_f)
+        
+        # proxies to evaluate the peak 
+        prominences = peak_prominences(p_up_f, Max_peaks)[0]
+        results_half = peak_widths(p_up_f, Max_peaks, rel_height=0.5)[0]
+        p_max = np.array([Max_peaks, prominences, results_half]).T
+        if p_max.shape[0]>2:
+            p_max = p_max[p_max[:,pxy].argsort()[::-1]]
+    
+    
+        # --- repeat for the mean --------
+        Min_peaks, _ = find_peaks(-p_up_f)
+        # proxies to evaluate the peak 
+        prominences = peak_prominences(-p_up_f, Min_peaks)[0]
+        results_half = peak_widths(-p_up_f, Min_peaks, rel_height=0.5)[0]
 
-    Min_peaks, _ = find_peaks(-p_up_f)
-    prominences = peak_prominences(-p_up_f, Min_peaks)[0]
-    p_min = np.sort([Min_peaks, prominences])  
-    if p_min.shape[0]>2:
-        p_min = p_min[p_min[:,1].argsort()[::-1]]
-
+        p_min = np.array([Min_peaks, prominences, results_half]).T 
+        if p_min.shape[0]>2:
+            p_min = p_min[p_min[:,pxy].argsort()[::-1]]
+    
+    elif method_peak == 'peakdet':
+        # Min_peaks, _ = find_peaks(-p_up_f)
+        # results_half = peak_widths(-p_up_f, Min_peaks, rel_height=0.5)[0]
+        # Max_peaks, _ = find_peaks_cwt(p_up_f,np.arange(1,10))
+        delta = 0.01
+        Max_peaks, Min_peaks  = peakdet(p_up_f, delta)
+        
+        # if 
+    
+    # --- select a fixed number  --------
     if fix_peak_nb is not None:
         # select fix nb of peaks
         # print('peak before prom filter: ' + str(p_max.shape[0]))
@@ -330,29 +363,58 @@ def _peaks_analysis(p_up_f, fix_peak_nb=None):
         else:
             MinMax_peaks= np.hstack([Max_peaks_select])
     else:
-        MinMax_peaks= np.hstack([Min_peaks,Max_peaks])
+        # print(Min_peaks)
+        # print(Max_peaks)
+        # MinMax_peaks= np.hstack([Min_peaks,Max_peaks])
+        MinMax_peaks= np.append(Min_peaks.astype(int),Max_peaks.astype(int))
+        print(len(MinMax_peaks))
+
 
     return MinMax_peaks
         
-        
-
-def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, **kwargs):
+def _connect_ridges_lines(df,max_distances,gap_thresh):
     """
-    Filter non-rectiligne ridges (denoising)
+    Identify ridges in the 2D matrix. Expect that the width of
+    the wavelet feature increases with increasing row number.
 
-    Parameters:
+    Parameters
+    ----------
+    matr: 2-D ndarray
+        Matrix in which to identify ridge lines.
+    max_distances: 1-D sequence
+        At each row, a ridge line is only connected
+        if the relative max at row[n] is within
+        `max_distances`[n] from the relative max at row[n+1].
+    gap_thresh: int
+        If a relative maximum is not found within `max_distances`,
+        there will be a gap. A ridge line is discontinued if
+        there are more than `gap_thresh` points without connecting
+        a new relative maximum.
 
-    * minDepth
-        Text here
-    * maxDepth
+    Returns
+    -------
+    ridge_lines: tuple
+        tuple of 2 1-D sequences. `ridge_lines`[ii][0] are the rows of the ii-th
+        ridge-line, `ridge_lines`[ii][1] are the columns. Empty if none found.
+        Each ridge-line will be sorted by row (increasing), but the order
+        of the ridge lines is not specified
 
-    Returns:
+    References
+    ----------
+    Bioinformatics (2006) 22 (17): 2059-2065.
+    doi: 10.1093/bioinformatics/btl355
+    http://bioinformatics.oxfordjournals.org/content/22/17/2059.long
 
-    * BB : 
-        Text here
+    Examples
+    --------
+    >>> data = np.random.rand(5,5)
+    >>> ridge_lines = identify_ridge_lines(data, 1, 1)
 
+    Notes:
+    ------
+    This function is intended to be used in conjuction with `cwt`
+    as part of find_peaks_cwt.
     """
-    
     # -----------------------------------------------------------------------#
     # check ridge position consistency - create a new collumn if necessary
     # dfI_2add = []
@@ -374,8 +436,28 @@ def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, *
     #     dfI = pd.DataFrame(RI_minmax)
     #     dfI = dfI.add_prefix('EX_xpos')
     
+    
+def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, **kwargs):
+    """
+    Filter non-rectiligne ridges (denoising)
+
+    Parameters:
+
+    * minDepth
+        Text here
+    * maxDepth
+
+    Returns:
+
+    * BB : 
+        Text here
+
+    """
+    
+
+    
     # -----------------------------------------------------------------------#
-    # remove lines NaN (produce when a peak defined only for some elevation levels)
+    # select a range of ridges within x limits
     # for key, value in kwargs.items():
     #     if key == 'xmin':
     #         minx = value 
@@ -572,38 +654,35 @@ def scalFUN(df, EXTnb=[1], z0=0):
     
     
     SI = []
-    
+    FIT = []
+    PT = []
     if df.isnull().values.any():
-        print('NaN or Inf detected - trying to remove')
+        print('NaN or Inf detected - better to filter data first!')
         df.dropna(axis=1, inplace=True) # remove collumns
         df = df[~df.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
         
-        
+        Tau = np.gradient(np.log(up_f_Centralridge)) / np.gradient(np.log(z_r))
+
     for i in enumerate(EXTnb):
-        print(df)
-        print(df['EX_xpos'+str(i[1])])
+        # print(df['EX_xpos'+str(i[1])])
         num = np.gradient(np.log(np.abs(df['EX_xpos'+str(i[1])])))
         den = np.gradient(np.log(df['elevation']))
         # print(den)
         Tau = num/den
         q = 1./df['elevation']
         
-    factor = (df['elevation'] - z0)/df['elevation']
-    Tau = Tau*factor
+        factor = (df['elevation'] - z0)/df['elevation']
+        Tau = Tau*factor
+        
+        points = np.array([q,Tau]).T  
+        x_fit, f, si  = _fit(q,Tau,xmin=0)
+        fit = np.array([x_fit, f]).T
+        
+        FIT.append(fit)
+        PT.append(points)
+        SI.append(si)
     
-    points = np.array([q,Tau]).T
-    
-
-
-   
-    # df.isnull().values.any()
-    
-    x_fit, f, SI  = _fit(q,Tau,xmin=0)
-    fit = np.array([x_fit, f]).T
-    
-    SI.append(SI_tmp)
-    
-    return  points, fit, SI
+    return  np.array(PT), np.array(FIT), np.array(SI), EXTnb
 
 def scalEULER(df, EXTnb=[1], z0=0):
     """
@@ -894,3 +973,79 @@ def _closest_node(node, nodes):
     nodes = np.asarray(nodes)
     dist_2 = np.sum((nodes - node)**2, axis=1)
     return np.argmin(dist_2)
+
+
+# ----- peaks detections
+
+from numpy import NaN, Inf, arange, isscalar, asarray, array
+
+def peakdet(v, delta, x = None):
+    """
+    Converted from MATLAB script at http://billauer.co.il/peakdet.html
+    
+    Returns two arrays
+    
+    function [maxtab, mintab]=peakdet(v, delta, x)
+    %PEAKDET Detect peaks in a vector
+    %        [MAXTAB, MINTAB] = PEAKDET(V, DELTA) finds the local
+    %        maxima and minima ("peaks") in the vector V.
+    %        MAXTAB and MINTAB consists of two columns. Column 1
+    %        contains indices in V, and column 2 the found values.
+    %      
+    %        With [MAXTAB, MINTAB] = PEAKDET(V, DELTA, X) the indices
+    %        in MAXTAB and MINTAB are replaced with the corresponding
+    %        X-values.
+    %
+    %        A point is considered a maximum peak if it has the maximal
+    %        value, and was preceded (to the left) by a value lower by
+    %        DELTA.
+    
+    % Eli Billauer, 3.4.05 (Explicitly not copyrighted).
+    % This function is released to the public domain; Any use is allowed.
+    
+    """
+    maxtab = []
+    mintab = []
+       
+    if x is None:
+        x = arange(len(v))
+    
+    v = asarray(v)
+    
+    if len(v) != len(x):
+        sys.exit('Input vectors v and x must have same length')
+    
+    if not isscalar(delta):
+        sys.exit('Input argument delta must be a scalar')
+    
+    if delta <= 0:
+        sys.exit('Input argument delta must be positive')
+    
+    mn, mx = Inf, -Inf
+    mnpos, mxpos = NaN, NaN
+    
+    lookformax = True
+    
+    for i in arange(len(v)):
+        this = v[i]
+        if this > mx:
+            mx = this
+            mxpos = x[i]
+        if this < mn:
+            mn = this
+            mnpos = x[i]
+        
+        if lookformax:
+            if this < mx-delta:
+                maxtab.append((mxpos, mx))
+                mn = this
+                mnpos = x[i]
+                lookformax = False
+        else:
+            if this > mn+delta:
+                mintab.append((mnpos, mn))
+                mx = this
+                mxpos = x[i]
+                lookformax = True
+
+    return np.array(maxtab), np.array(mintab)

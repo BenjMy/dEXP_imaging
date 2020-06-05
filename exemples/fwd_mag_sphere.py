@@ -68,8 +68,9 @@ def plot_model(x, y, field, shape):
 def load_mag_synthetic():
     
     A= [10e3,10e3,2e3]
-    B= [25e3,10e3,1e3]
-    coord= np.array([A,B])
+    # B= [25e3,10e3,1e3]
+    # coord= np.array([A,B])
+    coord = np.array([A])
     radius = 1.5e3*np.ones(len(coord))
     modelmag = anomag_model(coord,radii=radius,inc=50, dec=-30)
     xp, yp, zp, field2d, shape = fwd_model(modelmag, shape = (300, 300),area = [0, 30e3, 0, 30e3])

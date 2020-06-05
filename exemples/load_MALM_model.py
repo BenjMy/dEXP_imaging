@@ -24,13 +24,14 @@ plt.rcParams['font.size'] = 15
 
 
 
-def load_MALM_synthetic(ZZ=-3.75,shape=(30,30)):
+def load_MALM_synthetic(ZZ=-13.75,shape=(30,30)):
 
     # ------------------------------  Model parametes
     ZZ = ZZ # depth of the synthetic anomaly
     x1, x2, y1, y2, z1, z2 = -5,5,-5,5,ZZ-2.5/2,ZZ+2.5/2
     Rsoil = 1000
-    
+    maxdepth=20
+
     # ------------------------------- Load data
     filename = 'MSoilR' + str(Rsoil) + 'AnoR1Z'+ str(ZZ) +'L5h2.5'
     MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
@@ -46,7 +47,7 @@ def load_MALM_synthetic(ZZ=-3.75,shape=(30,30)):
     xp,yp,U = gridder.interp(x,y,U,shape)
     # xp,yp,gz_cor= gridder.interp(x,y,gz_cor,shape)
     
-    return xp, yp, z, U
+    return xp, yp, z, U, maxdepth, shape
 
 
 
