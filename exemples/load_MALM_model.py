@@ -24,7 +24,7 @@ plt.rcParams['font.size'] = 15
 
 
 
-def load_MALM_synthetic(ZZ=-13.75,shape=(30,30)):
+def load_MALM_synthetic(ZZ=-13.75,shape=(30,30),field=False):
 
     # ------------------------------  Model parametes
     ZZ = ZZ # depth of the synthetic anomaly
@@ -37,15 +37,16 @@ def load_MALM_synthetic(ZZ=-13.75,shape=(30,30)):
     MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
     #MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
     os.chdir(MainPath)
-    x,y,z,gz=np.loadtxt('3d_SENS_FAT.txt', unpack=True)
-    
-    # ------------------------------- remove B return electrode effects 
-    B = [-104.16666666666667, -104.16666666666667, 0]
-    U = dEXP.cor_field_B(x,y,z,gz,B,rho=100)
-    
-    # U_cor = U
-    xp,yp,U = gridder.interp(x,y,U,shape)
-    # xp,yp,gz_cor= gridder.interp(x,y,gz_cor,shape)
+    if field==True:
+         xp,yp, zp, U  = np.loadtxt(filename + '_uz0_grid.dat', unpack=True)
+    else:
+        x,y,z,gz=np.loadtxt('3d_SENS_FAT.txt', unpack=True)
+        # ------------------------------- remove B return electrode effects 
+        B = [-104.16666666666667, -104.16666666666667, 0]
+        U = dEXP.cor_field_B(x,y,z,gz,B,rho=100)
+        # U_cor = U
+        xp,yp,U = gridder.interp(x,y,U,shape)
+        # xp,yp,gz_cor= gridder.interp(x,y,gz_cor,shape)
     
     return xp, yp, z, U, maxdepth, shape
 

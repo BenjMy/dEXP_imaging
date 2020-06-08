@@ -27,7 +27,7 @@ from icsd3d.importers.read import load_obs, load_geom
 
 #%% ------------------------------- MALM DATA synth sensibility
 
-# xp, yp, zp, U, max_elevation, shape = MALM.load_MALM_synthetic(ZZ=-3.75,shape=(100,100))
+# xp, yp, zp, U, max_elevation, shape = MALM.load_MALM_synthetic(ZZ=-3.75,shape=(100,100), field=False)
 # parameters = para.set_par(shape=shape,max_elevation=max_elevation)
 # p1, p2 = [min(xp),0], [max(xp), 0]
 # interp = True
@@ -36,9 +36,9 @@ from icsd3d.importers.read import load_obs, load_geom
 # zp, qorder, nlay = parameters[2:5]
 # minAlt_ridge, maxAlt_ridge = parameters[5:7]
 
-# ----------- ridges analysis
-# nlay = 10
-# max_elevation = 10
+# # ----------- ridges analysis
+# nlay = 25
+# max_elevation = 20
 # minAlt_ridge = max_elevation*0.05
 # maxAlt_ridge = max_elevation*0.65
     
@@ -50,41 +50,41 @@ from icsd3d.importers.read import load_obs, load_geom
 # Main = 'E:/Padova/Software/SourceInversion/icsd_dev/example_2add_later/Landfill_3d/Ano_1_BH_EA/'
 # file = 'OAno_synt'
 
-Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/'
-file = 'Ano'
-interp = True
+# Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/'
+# file = 'Ano'
+# interp = True
 
-dataset = MALM.load_MALM_LandfillPorto(path=Main, 
-                                        filename=file,
-                                        shape = (300,300),
-                                        field=True,
-                                        interp = interp)
-coord_xyz, coord_xyz_int = dataset[0:2]
-U = dataset[2]
-coords_liner = dataset[3]
-shape, max_elevation = dataset[4:6]
-p = dataset[6]         # line points                                       
+# dataset = MALM.load_MALM_LandfillPorto(path=Main, 
+#                                         filename=file,
+#                                         shape = (300,300),
+#                                         field=True,
+#                                         interp = interp)
+# coord_xyz, coord_xyz_int = dataset[0:2]
+# U = dataset[2]
+# coords_liner = dataset[3]
+# shape, max_elevation = dataset[4:6]
+# p = dataset[6]         # line points                                       
 
-# set imaging pseudo-inversion parameters                                                                        
-parameters = para.set_par(shape=shape,max_elevation=max_elevation)
+# # set imaging pseudo-inversion parameters                                                                        
+# parameters = para.set_par(shape=shape,max_elevation=max_elevation)
 
-scaled = parameters[0]
-SI = parameters[1]
-zp, qorder, nlay = parameters[2:5]
-minAlt_ridge, maxAlt_ridge = parameters[5:7]
+# scaled = parameters[0]
+# SI = parameters[1]
+# zp, qorder, nlay = parameters[2:5]
+# minAlt_ridge, maxAlt_ridge = parameters[5:7]
 
-# xp, yp, zp = coord_xyz_int
-xp, yp, zp = coord_xyz
-# len(xp)
-U = U[0] # U_raw, Ucor, U_int, Ucor_int
-p1 , p2 = p
+# # xp, yp, zp = coord_xyz_int
+# xp, yp, zp = coord_xyz
+# # len(xp)
+# U = U[0] # U_raw, Ucor, U_int, Ucor_int
+# p1 , p2 = p
 
 #%% ------------------------------- MAG DATA
 # -------------------------------  Model
-# xp, yp, zp, U, shape, p1, p2, coord= magfwd.load_mag_synthetic()
-# max_elevation=2*max(coord[:,2])
-# scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
-# interp = True
+xp, yp, zp, U, shape, p1, p2, coord= magfwd.load_mag_synthetic()
+max_elevation=2*max(coord[:,2])
+scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
+interp = True
 #%% ------------------------------- GRAVITY DATA
 # -------------------------------  Model
 # load_grav_synthetic()
@@ -97,7 +97,7 @@ pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
 
 #%% ------------------------------- Pad the edges of grids
 
-xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=2)
+xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=5) # reflexion=5
 pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
 
 #%% ------------------------------- Plot the derivatives
@@ -137,14 +137,17 @@ plt.colorbar(cmap)
 
 # %% ridges identification
 
+# interp = True
 # dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
 #                                       label=label_prop,
-#                                       fix_peak_nb=3,
-#                                       interp=False) 
+#                                       fix_peak_nb=None,
+#                                       interp=interp,
+#                                       method_peak='spline_roots')  
 
+# or  find_peaks or peakdet or spline_roots
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
-                                      label=label_prop,fix_peak_nb=None,
-                                      method_peak='peakdet')  # or  find_peaks or peakdet
+                                      label=label_prop,fix_peak_nb=4,
+                                      method_peak='spline_roots')  
 
 # dfI, dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
 #                                       label=label_prop,

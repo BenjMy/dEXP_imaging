@@ -19,21 +19,21 @@ import dEXP as dEXP
 
 # %matplotlib qt
 
-SI = 2
-scaled=0
-# -------------------------------  Model
-ZZ = -3.75
-maxdepth=20
-Rsoil = 1000
-x1, x2, y1, y2, z1, z2 = -5,5,-5,5,ZZ-2.5/2,ZZ+2.5/2
-#square([y1, y2, x1, x2])
+# SI = 2
+# scaled=0
+# # -------------------------------  Model
+# ZZ = -3.75
+# maxdepth=20
+# Rsoil = 1000
+# x1, x2, y1, y2, z1, z2 = -5,5,-5,5,ZZ-2.5/2,ZZ+2.5/2
+# #square([y1, y2, x1, x2])
 
-filename = 'MSoilR' + str(Rsoil) + 'AnoR1Z'+ str(ZZ) +'L5h2.5'
-MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
-#MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
+# filename = 'MSoilR' + str(Rsoil) + 'AnoR1Z'+ str(ZZ) +'L5h2.5'
+# MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
+# #MainPath='E:/Padova/Simulation/MALM_SensitivityAnalysis/Sens3d/' + filename + '/Data/'
 
-#FigPath = '../../'
-os.chdir(MainPath)
+# #FigPath = '../../'
+# os.chdir(MainPath)
 
 #if os.path.exists('../' + 'FiguresPotImg/') == False:
 #   os.mkdir('../' + 'FiguresPotImg/')
@@ -50,26 +50,26 @@ os.chdir(MainPath)
 
 
 # ------------------------------- Load data
-import exemples.fwd_mag_sphere as magfwd
-xp, yp, zp, gz, shape, p1, p2, coord= magfwd.load_mag_synthetic()
+# import exemples.fwd_mag_sphere as magfwd
+# xp, yp, zp, gz, shape, p1, p2, coord= magfwd.load_mag_synthetic()
 
 
-# shape = (50, 50)
-# x,y,z,gz=np.loadtxt('3d_SENS_FAT.txt', unpack=True)
+shape = (50, 50)
+x,y,z,gz=np.loadtxt('3d_SENS_FAT.txt', unpack=True)
 
-# # remove B return electrode effects 
-# B = [-104.16666666666667, -104.16666666666667, 0]
-# gz_cor = dEXP.cor_field_B(x,y,z,gz,B,rho=100)
+# remove B return electrode effects 
+B = [-104.16666666666667, -104.16666666666667, 0]
+gz_cor = dEXP.cor_field_B(x,y,z,gz,B,rho=100)
 
-# gz_cor = gz
-# xp,yp,gz= gridder.interp(x,y,gz,shape)
-# xp,yp,gz_cor= gridder.interp(x,y,gz_cor,shape)
-# zp=0
+gz_cor = gz
+xp,yp,gz= gridder.interp(x,y,gz,shape)
+xp,yp,gz_cor= gridder.interp(x,y,gz_cor,shape)
+zp=0
 
 # # ------------------------------- Export for CWT analysis
 
 # # Extract a profile between points 1 and 2
-# #p1, p2 = [min(xp), 0], [max(xp), 0]
+p1, p2 = [min(xp), 0], [max(xp), 0]
 # p1, p2 = [0, min(xp)], [0, max(xp)]
 xx, yy, distance, profile = gridder.profile(xp, yp, gz, p1, p2, 1000)
 # xx, yy, distance, profile_cor = gridder.profile(xp, yp, gz_cor, p1, p2, 1000)
