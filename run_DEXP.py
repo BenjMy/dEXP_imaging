@@ -9,6 +9,7 @@ from fatiando.vis.mpl import square
 import dEXP as dEXP
 from dEXP import _fit
 import plot_dEXP as pEXP
+import utils_dexp as uEXP
 
 # exemples
 import exemples.fwd_mag_sphere as magfwd
@@ -41,7 +42,9 @@ from icsd3d.importers.read import load_obs, load_geom
 # max_elevation = 20
 # minAlt_ridge = max_elevation*0.05
 # maxAlt_ridge = max_elevation*0.65
-    
+
+# interp = True
+# smooth = True 
 
 #%% ------------------------------- MALM DATA
 # path2files="example_2add_later/Landfill_3d/Ano_0_EA/"  # Real A position without anomaly
@@ -50,41 +53,150 @@ from icsd3d.importers.read import load_obs, load_geom
 # Main = 'E:/Padova/Software/SourceInversion/icsd_dev/example_2add_later/Landfill_3d/Ano_1_BH_EA/'
 # file = 'OAno_synt'
 
-# Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/'
-# file = 'Ano'
-# interp = True
+Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/'
+file = 'Ano'
+interp = True
+smooth = True 
 
-# dataset = MALM.load_MALM_LandfillPorto(path=Main, 
-#                                         filename=file,
-#                                         shape = (300,300),
-#                                         field=True,
-#                                         interp = interp)
-# coord_xyz, coord_xyz_int = dataset[0:2]
-# U = dataset[2]
-# coords_liner = dataset[3]
-# shape, max_elevation = dataset[4:6]
-# p = dataset[6]         # line points                                       
+dataset = MALM.load_MALM_LandfillPorto(path=Main, 
+                                        filename=file,
+                                        shape = (30,30),
+                                        field=True,
+                                        interp = interp,
+                                        radius=300)
+coord_xyz, coord_xyz_int = dataset[0:2]
+coord_xyz_int
+Uload = dataset[2]
+coords_liner = dataset[3]
+shape, max_elevation = dataset[4:6]
 
-# # set imaging pseudo-inversion parameters                                                                        
-# parameters = para.set_par(shape=shape,max_elevation=max_elevation)
 
-# scaled = parameters[0]
-# SI = parameters[1]
-# zp, qorder, nlay = parameters[2:5]
-# minAlt_ridge, maxAlt_ridge = parameters[5:7]
 
-# # xp, yp, zp = coord_xyz_int
-# xp, yp, zp = coord_xyz
-# # len(xp)
-# U = U[0] # U_raw, Ucor, U_int, Ucor_int
-# p1 , p2 = p
+p = dataset[6]         # line points                                       
+# set imaging pseudo-inversion parameters                                                                        
+parameters = para.set_par(shape=shape,max_elevation=max_elevation)
+
+scaled = parameters[0]
+SI = parameters[1]
+zp, qorder, nlay = parameters[2:5]
+minAlt_ridge, maxAlt_ridge = parameters[5:7]
+
+max_elevation = 50
+# nlay = 50
+
+# xp, yp, zp = coord_xyz_int
+xp, yp, zp = coord_xyz
+# len(xp)
+Uini = Uload[0] # U_raw, Ucor, U_int, Ucor_int
+p1 , p2 = p
+
+# MALM.definep1p2(path=Main, radius=130)
+# MALM.squaremat(r=130)
+
+#%%
+U_a, p_a, c_above, U_b, p_b = MALM.isabove(xp, yp, Uini, 
+                                 np.array(p1),np.array(p2))
+a, b, c = MALM.slope(p1,p2)
+Umirror, pmirror = MALM.mirrorU_alongLine(U_a,p_a,c_above,a,b,c)
+Ua = gridder.interp_at(pmirror[:,0], pmirror[:,1], Umirror, xp, yp, algorithm='cubic', extrapolate=True)   
+# xp,yp,U = gridder.interp(xp, yp ,Ucorint_tmp,shape)
+
+
+def mirrorImage( a, b, c, x1, y1): 
+	temp = -2 * (a * x1 + b * y1 + c) /(a * a + b * b) 
+	x = temp * a + x1 
+	y = temp * b + y1 
+	return (x, y) 
+
+plt.figure()
+ 
+# Umirror = np.copy(U).tolist()
+ # pmirror = np.copy(p).tolist()
+# pmirror = np.ones(p.shape).tolist()
+Umirror= []
+pmirror= []
+for i, bool_pi in enumerate(zip(c_above,p_a)):
+    # if bool_pi[0] == False:
+    xmir, ymir = mirrorImage(a, b, c, bool_pi[1][0], bool_pi[1][1]); 
+    # plt.scatter(xmir, ymir, c=U_a[i], cmap='viridis')
+    # plt.annotate(str(i)+ '_m', [xmir, ymir])
+    # plt.scatter(bool_pi[1][0],  bool_pi[1][1], c='black', cmap='viridis')
+    # plt.annotate(str(i), [bool_pi[1][0],  bool_pi[1][1]])
+     
+         
+         # plt.annotate(str(i)+ '_m', [xmir, ymir])
+    Umirror.append(U_a[i])
+    pmirror.append([xmir, ymir])
+    
+    
+p12x=[p1[0],p2[0]]
+p12y=[p1[1],p2[1]]
+
+plt.plot(p12x,p12y)
+# plt.axis('square')
+
+
+pmirror = np.vstack(pmirror)
+Umirror = np.array(Umirror)
+plt.scatter(pmirror[:,0],pmirror[:,1],c=Umirror, cmap='viridis',vmax=0.5)
+plt.axis('square')
+    
+   
+# len(Uini)
+U = np.copy(Uini)
+U[np.where(c_above == True)[0]]= Ua[np.where(c_above == True)[0]]
+# len(xp)
+plt.figure()
+plt.scatter(xp, yp, c=U, cmap='viridis',vmax=0.25)
+plt.colorbar()
+plt.axis('square')
+plt.show()
+
+
+# plt.plot(xp,yp)
+
+
+# Perp = (-y2+y1, x2-x1)
+# (midX, midY) and (midX-y2+y1, midY + x2-x1)
+# Perp = (-p2[1]+p1[1], p2[0]-p1[0])
+# (midX, midY) and (midX-y2+y1, midY + x2-x1)
+
+# midX=(x1+x2)/2
+# midY=(y1+y2)/2
+
+
+
+midX=(p1[0]+p2[0])/2
+midY=(p1[1]+p2[1])/2
+# new_p1 = [midX,midY]
+new_p2 = [midX-p2[1]+p1[1], midY + p2[0]-p1[0]]
+new_p1 = [midX+p2[1]-p1[1], midY - p2[0]+p1[0]]
+
+p12x_new=[new_p1[0],new_p2[0]]
+p12y_new=[new_p1[1],new_p2[1]]
+
+
+plt.plot(p12x,p12y)
+plt.plot(p12x_new,p12y_new)
+
+# U = MALM.zeros_sym(Uini,c_above,value=0)
+
+p1 = new_p1
+p2 = new_p2
+
+shape = (300,300)
+
+#%% select part of the grid
+# uEXP.mirror(p[:,0],p[:,1],data,a,b)
+# uEXP.mirror(xp,yp,data,p1,p2)
 
 #%% ------------------------------- MAG DATA
 # -------------------------------  Model
-xp, yp, zp, U, shape, p1, p2, coord= magfwd.load_mag_synthetic()
-max_elevation=2*max(coord[:,2])
-scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
-interp = True
+# xp, yp, zp, U, shape, p1, p2, coord= magfwd.load_mag_synthetic()
+# max_elevation=2*max(coord[:,2])
+# scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
+# interp = True
+# nlay=10
 #%% ------------------------------- GRAVITY DATA
 # -------------------------------  Model
 # load_grav_synthetic()
@@ -93,22 +205,64 @@ interp = True
 # scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 
 #%% ------------------------------- Plot the data 
-pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+
+# from astropy.convolution import convolve
+# from astropy.convolution.kernels import Gaussian2DKernel
+
+U = dEXP.smooth2d(xp, yp, U, sigma=5)
+
+#%% ------------------------------- Plot the data 
+
+# _, p1, p2, _ = MALM.definep1p2(path=Main,radius=300)
+xx, yy, distance, profile = pEXP.plot_line(xp, yp, U ,p1,p2, interp=interp)
+# xx, yy, distance, profile = pEXP.plot_line(xp, yp, U_f ,p1,p2, interp=interp)
+
+# from scipy.signal import savgol_filter
+# # from scipy.interpolate import interp1d
+# # itp = interp1d(x,y, kind='linear')
+# window_size, poly_order = 11, 10
+# yy_sg = savgol_filter(profile, window_size, poly_order)
+
+# plt.figure()
+# plt.plot(distance,profile,'*')
+# # plt.plot(distance,yy_sg)
+
+
+# import numpy as np
+# from scipy.signal import butter,filtfilt
+# # Filter requirements.
+# fs = abs(1/(distance[0] - distance[1]))      # sample rate, Hz
+# cutoff = 0.025      # desired cutoff frequency of the filter, Hz ,      slightly higher than actual 1.2 Hz
+# nyq = 0.5 * fs  # Nyquist Frequency
+# order = 1    # sin wave can be approx represented as quadratic
+
+# def butter_lowpass_filter(data, cutoff, fs, order):
+#     normal_cutoff = cutoff / nyq
+#     # Get the filter coefficients 
+#     b, a = butter(order, normal_cutoff, btype='low', analog=False)
+#     y = filtfilt(b, a, data)
+#     return y
+
+# filtdata = butter_lowpass_filter(profile, cutoff, fs, order=order)
+
+# plt.plot(distance,filtdata)
+
 
 #%% ------------------------------- Pad the edges of grids
 
-xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=5) # reflexion=5
-pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+# xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
+# pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
 
 #%% ------------------------------- Plot the derivatives
-# xderiv = transform.derivx(xp, yp, U, shape,order=1)
-# yderiv = transform.derivy(xp, yp, U, shape,order=1)
-# zderiv = transform.derivz(xp, yp, U, shape,order=1)
 
-# # interp = True
-# pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp)
-# pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp)
-# pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp)
+xderiv = transform.derivx(xp, yp, U, shape,order=1)
+yderiv = transform.derivy(xp, yp, U, shape,order=1)
+zderiv = transform.derivz(xp, yp, U, shape,order=1)
+
+# interp = True
+pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp)
+pEXP.plot_line(xp, yp, yderiv ,p1,p2,title='yderiv',savefig=False, interp=interp)
+pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp)
 
 #%% ------- upward continuation of the field data
 
@@ -137,17 +291,17 @@ plt.colorbar(cmap)
 
 # %% ridges identification
 
-# interp = True
-# dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
-#                                       label=label_prop,
-#                                       fix_peak_nb=None,
-#                                       interp=interp,
-#                                       method_peak='spline_roots')  
+dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
+                                      label=label_prop,
+                                      fix_peak_nb=4,
+                                      interp=interp,smooth=smooth,
+                                      method_peak='find_peaks')  
 
 # or  find_peaks or peakdet or spline_roots
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
                                       label=label_prop,fix_peak_nb=4,
-                                      method_peak='spline_roots')  
+                                      smooth=smooth,
+                                      method_peak='find_peaks')  
 
 # dfI, dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
 #                                       label=label_prop,
@@ -156,7 +310,7 @@ dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
 #                                       fix_peak_nb=None) 
  
 #%% ------------------------------- plot ridges over continuated section
-
+    
 fig = plt.figure()
 ax = plt.gca()
 pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
@@ -170,8 +324,13 @@ pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
 #                                            minlength=5,rmvNaN=True)
 
 dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                           minAlt_ridge,maxAlt_ridge,
-                                           minlength=5,rmvNaN=True)
+                                            1,maxAlt_ridge,
+                                            minlength=8,rmvNaN=True)
+
+# dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
+#                                            minAlt_ridge,maxAlt_ridge,
+#                                            minlength=5,rmvNaN=True,
+#                                            xmin=284200)
 
 df_f = dfI_f, dfII_f, dfIII_f
 
@@ -187,9 +346,10 @@ df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
 
 pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
                           ridge_type=[0,1,2],ridge_nb=None)
-
+# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
+#                           ridge_type=[1],ridge_nb=None)
 # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-30, 
-#                           ridge_type=[0]) # ridge_nb = [[1,2],[1,3]]
+#                           ridge_type=[0,1], ridge_nb = [[0,1]])
 
 #%% ------------------------------- save intersection
 # TO IMPLEMENT !

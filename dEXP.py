@@ -29,6 +29,8 @@ from fatiando import gridder, mesher, utils
 from scipy.interpolate import sproot, CubicSpline, UnivariateSpline, InterpolatedUnivariateSpline, BSpline, LSQUnivariateSpline
 from scipy.signal import find_peaks, peak_prominences, peak_widths # useful for ridges detection
 from scipy.signal import savgol_filter
+from scipy.signal import butter,filtfilt
+from scipy.ndimage import gaussian_filter
 
 import pandas as pd
 from scipy.optimize import curve_fit
@@ -80,7 +82,7 @@ def cor_field_B(x,y,z,u,B,rho=100):
     return u_cor   
 
 
-def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, **kwargs):
+def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True,smooth=False, **kwargs):
     plt.figure()
     
     method_peak = 'find_peaks'
@@ -89,7 +91,6 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=Tr
     for key, value in kwargs.items():
         if key == 'fix_peak_nb':
            fix_peak_nb = value
-           print('fix_peak_nb =' + str(value))
         if key == 'method_peak':
              method_peak = value  
     # prom = 0.1 #
@@ -126,28 +127,25 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=Tr
         else:
             xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth  = profile_noInter(x, y, up_f_d1x, p1, p2, 1000)
 
+        if smooth == True:
+            p_up_f_d1x = _smooth_lowpass(xx,p_up_f_d1x)
+            
         # peak analysis
         MinMax_peaks = _peaks_analysis(xx,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
-                                       method_peak=method_peak)     
+                                       method_peak=method_peak,proxy=None)     
         
-        if np.array(MinMax_peaks).any():
-            RI_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
-        else:
-            RI_minmax.append(np.hstack([[depth],[]]))
-
         colors = pl.cm.viridis(np.linspace(0,1,len(depths)))
         plt.plot(xx,p_up_f_d1x, color=colors[i], label=str(int(depth)))
         for ind in range(len(MinMax_peaks)):
-            # print(len(Max_peaks))
             plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color= 'r')
-            # plt.scatter(xx[Min_peaks[ind]],p_up_f_d1x[Min_peaks[ind]],color='r')
+            # plt.scatter(MinMax_peaks[ind],0,color= 'r')
         plt.legend()
             
 
     
 
     
-def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, **kwargs):
+def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True,smooth=True, **kwargs):
     """
     Form a multiridge set
     RI and RII : zeros of the first horizontal and first vertical derivatives of the potential field
@@ -178,7 +176,6 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
     for key, value in kwargs.items():
         if key == 'fix_peak_nb':
            fix_peak_nb = value
-           print(value)
                   
     # prom = 0.1 #
     # fix_nb_peaks = 3
@@ -195,7 +192,6 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
     # --------------------------------------------
     # select depths
     depths = mesh.get_zs()[:-1]
-    print(depths)
 
     for key, value in kwargs.items():
         if key == 'minAlt_ridge':
@@ -231,11 +227,15 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
         else:
             xx, yy, distance, p_up_f, p_up_f_smooth = profile_noInter(x, y, upw_u_l, p1, p2, 1000)
 
+        if smooth == True:
+            p_up_f = _smooth_lowpass(xx,p_up_f)
+
         # peak analysis
         MinMax_peaks = _peaks_analysis(xx, p_up_f,fix_peak_nb=fix_peak_nb,
-                                       method_peak=method_peak)
+                                       method_peak=method_peak,proxy=None)
         if np.array(MinMax_peaks).any():
-            RIII_minmax.append(np.hstack([[depth], MinMax_peaks]))
+            # RIII_minmax.append(np.hstack([[depth], MinMax_peaks]))
+            RIII_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
         else:
             RIII_minmax.append(np.hstack([[depth],[]]))
         
@@ -245,8 +245,8 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
             plt.subplot(3,1,1)
             plt.plot(xx,p_up_f,label='u')
             for ind in range(len(MinMax_peaks)):
-                # plt.scatter(xx[MinMax_peaks[ind]],p_up_f[MinMax_peaks[ind]],color='g')
-                plt.scatter([MinMax_peaks[ind]],0,color='g')
+                plt.scatter(xx[MinMax_peaks[ind]],p_up_f[MinMax_peaks[ind]],color='g')
+                # plt.scatter([MinMax_peaks[ind]],0,color='g')
             plt.legend()
  
     for i, depth in enumerate(depths - z[0]): # Loop over RII extremas
@@ -259,13 +259,18 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
             xx, yy, distance, p_up_f_d1z = gridder.profile(x, y, up_f_d1z, p1, p2, 1000)
         else:
             xx, yy, distance, p_up_f_d1z, p_up_f_d1z_smooth = profile_noInter(x, y, up_f_d1z, p1, p2, 1000)
+            p_up_f_d1z = p_up_f_d1z_smooth
 
+        if smooth == True:
+            p_up_f_d1z = _smooth_lowpass(xx,p_up_f_d1z)
+            
         # peak analysis
         MinMax_peaks = _peaks_analysis(xx,p_up_f_d1z,fix_peak_nb=fix_peak_nb,
-                                       method_peak=method_peak)
+                                       method_peak=method_peak,proxy=None)
 
         if np.array(MinMax_peaks).any():
-            RII_minmax.append(np.hstack([[depth], MinMax_peaks]))
+            # RII_minmax.append(np.hstack([[depth], MinMax_peaks]))
+            RII_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
         else:
             RII_minmax.append(np.hstack([[depth],[]]))
 
@@ -273,8 +278,8 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
             plt.subplot(3,1,2)
             plt.plot(xx,p_up_f_d1z,label='dz')
             for ind in range(len(MinMax_peaks)):
-                # plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1z[MinMax_peaks[ind]],color='b')
-                plt.scatter([MinMax_peaks[ind]],0,color='g')
+                plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1z[MinMax_peaks[ind]],color='b')
+                # plt.scatter([MinMax_peaks[ind]],0,color='g')
             plt.legend()
 
     for i, depth in enumerate(depths - z[0]): # Loop for RII extremas
@@ -286,13 +291,18 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
             xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, 1000)
         else:
             xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth = profile_noInter(x, y, up_f_d1x, p1, p2, 1000)
-        
+            p_up_f_d1x = p_up_f_d1x_smooth
+
+        if smooth == True:
+            p_up_f_d1x = _smooth_lowpass(xx,p_up_f_d1x)
+            
         # peak analysis
         MinMax_peaks = _peaks_analysis(xx,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
-                                       method_peak=method_peak)
+                                       method_peak=method_peak,proxy=None)
         
         if np.array(MinMax_peaks).any():
-            RI_minmax.append(np.hstack([[depth], MinMax_peaks]))
+            # RI_minmax.append(np.hstack([[depth], MinMax_peaks]))
+            RI_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
         else:
             RI_minmax.append(np.hstack([[depth],[]]))
 
@@ -300,9 +310,8 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True, *
             plt.subplot(3,1,3)
             plt.plot(xx,p_up_f_d1x,label='dx')
             for ind in range(len(MinMax_peaks)):
-                # print(len(Max_peaks))
-                # plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color='r')
-                plt.scatter([MinMax_peaks[ind]],0,color='g')
+                plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color='r')
+                # plt.scatter([MinMax_peaks[ind]],0,color='g')
             plt.legend()
             
     # R = [np.array(RI_minmax), np.array(RII_minmax), np.array(RIII_minmax)]
@@ -321,96 +330,100 @@ def _peaks_analysis(x_axis, p_up_f, fix_peak_nb=None,
                pxy = 2
            else:
                pxy = 1
-                   
 
-    if method_peak == 'find_peaks':
-        Max_peaks, _ = find_peaks(p_up_f)
-        
-        # proxies to evaluate the peak 
-        prominences = peak_prominences(p_up_f, Max_peaks)[0]
-        results_half = peak_widths(p_up_f, Max_peaks, rel_height=0.5)[0]
-        p_max = np.array([Max_peaks, prominences, results_half]).T
-        if p_max.shape[0]>2:
-            p_max = p_max[p_max[:,pxy].argsort()[::-1]]
-    
-        # --- repeat for the min --------
-        Min_peaks, _ = find_peaks(-p_up_f)
-        # proxies to evaluate the peak 
-        prominences = peak_prominences(-p_up_f, Min_peaks)[0]
-        results_half = peak_widths(-p_up_f, Min_peaks, rel_height=0.5)[0]
-
-        p_min = np.array([Min_peaks, prominences, results_half]).T 
-        if p_min.shape[0]>2:
-            p_min = p_min[p_min[:,pxy].argsort()[::-1]]
-        
-        MinMax_peaks= np.append(x_axis[Max_peaks],x_axis[Min_peaks])
-        
-    elif method_peak == 'peakdet':
-        delta = 0.01
-        Max_peaks, Min_peaks  = peakdet(p_up_f, delta)            
-        MinMax_peaks= np.append(x_axis[Max_peaks],x_axis[Min_peaks])
-
-    elif method_peak == 'spline_roots':
+    if method_peak == 'spline_roots':
         MinMax_peaks  = _spline_roots(x_axis,p_up_f)
-
+    
+    else: 
+            
+        if method_peak == 'find_peaks':
+            Max_peaks, _ = find_peaks(p_up_f)
+            
+            # proxies to evaluate the peak 
+            prominences = peak_prominences(p_up_f, Max_peaks)[0]
+            results_half = peak_widths(p_up_f, Max_peaks, rel_height=0.5)[0]
+            p_max = np.array([Max_peaks, prominences, results_half]).T
+            
+            if p_max.shape[0]>2:
+                p_max = p_max[p_max[:,pxy].argsort()[::-1]]
+        
+            # --- repeat for the min --------
+            Min_peaks, _ = find_peaks(-p_up_f)
+            # proxies to evaluate the peak 
+            prominences = peak_prominences(-p_up_f, Min_peaks)[0]
+            results_half = peak_widths(-p_up_f, Min_peaks, rel_height=0.5)[0]
+    
+            p_min = np.array([Min_peaks, prominences, results_half]).T 
+            
+            if p_min.shape[0]>2:
+                p_min = p_min[p_min[:,pxy].argsort()[::-1]]
+                
+            # MinMax_peaks= np.append(x_axis[Max_peaks],x_axis[Min_peaks])
+            MinMax_peaks= np.append(Max_peaks,Min_peaks)
+        
+            if fix_peak_nb is not None:
+                MinMax_peaks = _select_ridges_nb(fix_peak_nb,p_max,p_min)
+            
+        elif method_peak == 'peakdet':
+            delta = 0.01
+            Max_peaks, Min_peaks  = peakdet(p_up_f, delta)
+            
+            # MinMax_peaks= np.append(x_axis[Max_peaks],x_axis[Min_peaks])
+            MinMax_peaks= np.append(Max_peaks,Min_peaks)
+     
     return MinMax_peaks
 
-def _select_ridges(fix_peak_nb,MinMax_peaks):
+def _select_ridges_nb(fix_peak_nb,p_max,p_min):
 
-    print('to write')
     # --- select a fixed number  --------
-    # if fix_peak_nb is not None:
-    #     # select fix nb of peaks
-    #     if fix_peak_nb<p_max.shape[0]:
-    #         Max_peaks_select =  p_max[0:fix_peak_nb,0].astype(int)
-    #     else:
-    #         Max_peaks_select = p_max[:,0].astype(int)
+    if fix_peak_nb<p_max.shape[0]:
+        Max_peaks_select =  p_max[0:fix_peak_nb,0].astype(int)
+    else:
+        Max_peaks_select = p_max[:,0].astype(int)
 
-    #     warn_peak = 0
-    #     if fix_peak_nb<p_min.shape[0]:
-    #         Min_peaks_select = p_min[0:fix_peak_nb,0].astype(int)
-    #     else:
-    #         if p_min.shape[1]==0:
-    #             warn_peak = 1
-    #         else:
-    #             Min_peaks_select = p_min[:,0].astype(int)
+    warn_peak = 0
+    if fix_peak_nb<p_min.shape[0]:
+        Min_peaks_select = p_min[0:fix_peak_nb,0].astype(int)
+    else:
+        if p_min.shape[1]==0:
+            warn_peak = 1
+        else:
+            Min_peaks_select = p_min[:,0].astype(int)
 
-    #     if warn_peak == 0:
-    #         MinMax_peaks= np.hstack([Min_peaks_select,Max_peaks_select])
-    #     else:
-    #         MinMax_peaks= np.hstack([Max_peaks_select])
-    # else:
-    #     MinMax_peaks= np.append(x_axis[Min_peaks.astype(int)],
-    #                             x_axis[Max_peaks.astype(int)])
+    if warn_peak == 0:
+        MinMax_peaks= np.hstack([Min_peaks_select,Max_peaks_select])
+    else:
+        MinMax_peaks= np.hstack([Max_peaks_select])
         
+    return MinMax_peaks
         
+
 def _spline_roots(x_axis, p_up_f):
     # print('spline root analysis')
     
-    smooth = UnivariateSpline(x_axis, p_up_f, s=1)
-    spl = CubicSpline(x_axis, smooth(x_axis))
+    # smooth = UnivariateSpline(x_axis, p_up_f, s=1)
+    spl = CubicSpline(x_axis, p_up_f)
     # find function roots
-    Max_peaks = spl.roots()
-    Max_peaks_der = spl.derivative().roots()
+    # Max_peaks = spl.roots()
+    zeros_der = spl.derivative().roots()
 
-    # find indexes
     # index_Max_peaks=[]
     # for mp in Max_peaks:
-    #     index_Max_peaks.append(abs(x_axis-mp).argmin())
-    # index_Max_peaks_der=[]
-    # for mpder in Max_peaks_der:
-    #     index_Max_peaks_der.append(abs(x_axis-mpder).argmin())
+    #     index_Max_peaks.append(abs(smooth(x_axis)-mp).argmin())
+    index_Max_peaks_der=[]
+    for mpder in zeros_der:
+        index_Max_peaks_der.append(abs(x_axis-mpder).argmin())
 
     # MinMax_peaks= np.append(index_Max_peaks,index_Max_peaks_der)
     # MinMax_peaks = np.array(MinMax_peaks.astype(int))
     
-    MinMax_peaks= np.append(Max_peaks,Max_peaks_der)
-    MinMax_peaks = np.array(MinMax_peaks)
+    MinMax_peaks = np.array(zeros_der)
     
     # plt.scatter(x_axis, p_up_f)
+    # plt.figure()
     # plt.plot(x_axis, spl(x_axis), 'g', lw=3, alpha=0.7)
-    # # plt.scatter(x_axis[index_Max_peaks], p_up_f[index_Max_peaks], color='red')
-    # # plt.scatter(x_axis[index_Max_peaks_der], p_up_f[index_Max_peaks_der], color='blue')
+    # plt.scatter(MinMax_peaks, np.zeros(MinMax_peaks.shape), color='red')
+    # plt.scatter(x_axis[index_Max_peaks_der], p_up_f[index_Max_peaks_der], color='blue')
     # # plt.plot(Min_peaks, p_up_f[Min_peaks], "v")
     # plt.show()
     
@@ -506,29 +519,40 @@ def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, *
     #     if key == 'xmin':
     #         minx = value 
 
+    #         idfI_col_2rmv = []
     #         for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
     #             if dfI[k[1]].any()< minx:
-    #                 col2rmv = 
-    #                dfI = dfI.drop(dfI.columns[k[0]+1], axis=1)
+    #                 idfI_col_2rmv.append(k[0]+1)
+                    
+    #         dfI = dfI.drop(dfI.columns[idfI_col_2rmv], axis=1)
+            
+    #         idfII_col_2rmv = []
     #         for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
     #             if dfII[k[1]].any()< minx:
-    #                dfII = dfII.drop(dfII.columns[k[0]+1], axis=1)
+    #                 idfII_col_2rmv.append(k[0]+1)
+            
+    #         dfII = dfII.drop(dfII.columns[idfII_col_2rmv], axis=1)
+            
+            
+    #         idfIII_col_2rmv = []
     #         for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
     #             if dfIII[k[1]].any()< minx:
-    #                dfIII = dfIII.drop(dfIII.columns[k[0]+1], axis=1)
+    #                 idfIII_col_2rmv.append(k[0]+1)
+            
+    #         dfIII = dfIII.drop(dfIII.columns[idfIII_col_2rmv], axis=1)
        
-    #     if key == 'xmax':
-    #         maxx = value 
+        # if key == 'xmax':
+        #     maxx = value 
              
-    #         for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
-    #             if dfI[k[1]].any()> maxx:
-    #                dfI = dfI.drop(dfI.columns[k[0]+1], axis=1)
-    #         for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
-    #             if dfII[k[1]].any()> maxx:
-    #                dfII = dfII.drop(dfII.columns[k[0]+1], axis=1)
-    #         for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
-    #             if dfIII[k[1]].any()> maxx:
-    #                dfIII = dfIII.drop(dfIII.columns[k[0]+1], axis=1)
+        #     for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
+        #         if dfI[k[1]].any()> maxx:
+        #             dfI = dfI.drop(dfI.columns[k[0]+1], axis=1)
+        #     for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
+        #         if dfII[k[1]].any()> maxx:
+        #             dfII = dfII.drop(dfII.columns[k[0]+1], axis=1)
+        #     for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
+        #         if dfIII[k[1]].any()> maxx:
+        #             dfIII = dfIII.drop(dfIII.columns[k[0]+1], axis=1)
 
     # -----------------------------------------------------------------------#
     # remove lines NaN (produce when a peak defined only for some elevation levels)
@@ -554,6 +578,7 @@ def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, *
     if dfI is not None:
         dfIII = dfIII.loc[(dfIII['elevation'] > minDepth) & (dfIII['elevation'] < maxDepth)]
     
+    # -----------------------------------------------------------------------#
     # check length of ridges (remove column if less than 3 points)
     if dfI is not None:
         smallCol = dfI.count()
@@ -602,7 +627,8 @@ def fit_ridges(df):
         cols = []
     
         for k in enumerate(df[r_type].columns[1:]): # loop over ridges of the same familly
-            if np.count_nonzero(np.diff(df[r_type][k[1]]))<5: # check if ridge is vertical
+            # if np.count_nonzero(np.diff(df[r_type][k[1]]))<5: # check if ridge is vertical
+            if abs(np.mean(np.diff(df[r_type][k[1]])))>15: # check if ridge is vertical
                 print('vertical ridge type:' + str(r_type) + ' / ridgenb:' + k[1])
                 fit_name = 'R'+ str(r_type) + ' Vert.' +  k[1]
                 y_fit = np.linspace(-max(df[r_type]['elevation'])*2,max(df[r_type]['elevation']),100)                                       
@@ -619,7 +645,6 @@ def fit_ridges(df):
                     x_min = min(df[r_type][k[1]])  - 2*max(df[r_type][k[1]])
                     x_max = max(df[r_type][k[1]])  #+ 2*np.abs(max(df[0][k[1]])  )
                     
-                print(r_type)
                 x_fit, y_fit, _ = _fit(df[r_type][k[1]],df[r_type]['elevation'],xmin=x_min, xmax=x_max) # fit function
                 
                
@@ -967,6 +992,7 @@ def pad_edges(xp,yp,U,shape,pad_type=2):
 
 
 def profile_noInter(x, y, v, point1, point2, size):
+    # https://stackoverflow.com/questions/7878398/how-to-extract-an-arbitrary-line-of-values-from-a-numpy-array
     """
     Extract a profile between 2 points from spacial data.
 
@@ -1008,8 +1034,11 @@ def profile_noInter(x, y, v, point1, point2, size):
         ind = _closest_node(p, nodes)
         vp.append(v[ind])
 
-    window_size, poly_order = 101, 3
-    vp_smooth = savgol_filter(vp, window_size, poly_order)
+    # window_size, poly_order = 101, 3
+    # vp_smooth = savgol_filter(vp, window_size, poly_order)
+    spl = UnivariateSpline(xp, vp, s=10)
+    plt.plot(xp, spl(xp), 'g', lw=3)
+    vp_smooth = np.array(spl(xp))
     # vp = interp_at(x, y, v, xp, yp, algorithm=algorithm, extrapolate=True)
     return xp, yp, distances, vp, vp_smooth
 
@@ -1093,3 +1122,64 @@ def peakdet(v, delta, x = None):
                 lookformax = True
 
     return np.array(maxtab), np.array(mintab)
+
+
+def _smooth1d_old(x_axis, p_up):
+    import csaps
+    p_up_smooth = csaps.CubicSmoothingSpline(x_axis, p_up, smooth=0.25)
+    # p_up_smooth = UnivariateSpline(x_axis, p_up, s=3)
+    return np.array(p_up_smooth(x_axis))
+
+def _smooth1d(x_axis, p_up ,window_len=11,window='hanning'):
+    """smooth the data using a window with requested size."""
+    
+    from scipy.signal import savgol_filter
+    # from scipy.interpolate import interp1d
+    
+    # itp = interp1d(x,y, kind='linear')
+    window_size, poly_order = 201, 2
+    yy_sg = savgol_filter(p_up, window_size, poly_order)
+    # print(yy_sg)
+    # print(yy_sg)
+
+    return yy_sg
+
+def butter_lowpass_filter(data, cutoff, fs, nyq, order):
+    normal_cutoff = cutoff / nyq
+    # Get the filter coefficients 
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)
+    y = filtfilt(b, a, data)
+    return y
+    
+def _smooth_lowpass(x_axis, p_up):
+    
+    # Filter requirements.
+    fs = abs(1/(x_axis[0] - x_axis[1]))      # sample rate, Hz
+    cutoff = 0.025      # desired cutoff frequency of the filter, Hz ,      slightly higher than actual 1.2 Hz
+    nyq = 0.5 * fs  # Nyquist Frequency
+    order = 2      # sin wave can be approx represented as quadratic
+        
+    filtdata = butter_lowpass_filter(p_up, cutoff, fs, nyq, order)
+    return filtdata
+
+def smooth2d(x, y, U, sigma = 10):
+
+    plt.figure()
+    plt.subplot(1,2,1)
+    plt.scatter(x, y, c=U, cmap='viridis',vmax=0.25)
+    plt.colorbar()
+    plt.axis('square')
+    # plt.show()
+    
+    U2d = U.reshape(int(np.sqrt(U.shape)),int(np.sqrt(U.shape)))
+    U2d_f = gaussian_filter(U2d, sigma=sigma)
+    
+    U_f = np.copy(U)
+    U_f = U2d_f.reshape(U.shape)
+    plt.subplot(1,2,2)
+    plt.scatter(x, y, c=U_f, cmap='viridis',vmax=0.25)
+    plt.colorbar()
+    plt.axis('square')
+    plt.show()
+    
+    return U_f

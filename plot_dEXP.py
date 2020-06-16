@@ -185,7 +185,7 @@ def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
         
     plt.show()
 
-    return ax
+    return xx, yy, distance, profile
 
 
 def plot_ridges_harmonic(RI=None,RII=None,RIII=None,ax=None,label=False,**kwargs):
@@ -274,14 +274,16 @@ def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_s
             print(r_type[1],r_nb[1])
             
             name_col = df_fit[r_type[1]].columns[r_nb[1]][0]
-            # print(name_col)
-            # print(r_type[1])
+            print(name_col)
+            print(r_type[1])
             ax.plot(df_fit[r_type[1]][name_col]['x'],
                     df_fit[r_type[1]][name_col]['y'], 'g--')
 
-
-            # plt.plot(df_fit[r_type[1]][r_nb[1]])
-
+            # print(df_fit[1]['R1 Vert.EX_xpos1']['x'])
+            # # plt.plot(df_fit[r_type[1]][r_nb[1]])
+            # ax.plot(df_fit[1]['R1 Vert.EX_xpos1']['x'],
+            #         df_fit[1]['R1 Vert.EX_xpos1']['y'], 'g--')
+            
 
             # ax.plot(fit[r_nb[0]][:,0], fit[r_nb[0]][:,1], 'g--')
             # # ax.scatter(points[i[0]][:,0], points[i[0]][:,1],marker='*')
