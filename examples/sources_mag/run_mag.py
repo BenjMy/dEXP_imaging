@@ -34,7 +34,7 @@ import plot_dEXP as pEXP
 import set_parameters as para
 
 # exemples
-import examples.sources_mag.fwd_mag as magfwd
+import examples.sources_mag.fwd_mag.fwd_mag_sphere as magfwd
 
 import numpy as np
 import matplotlib.pyplot as plt
