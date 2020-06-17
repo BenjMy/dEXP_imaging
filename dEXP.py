@@ -628,7 +628,7 @@ def fit_ridges(df):
     
         for k in enumerate(df[r_type].columns[1:]): # loop over ridges of the same familly
             # if np.count_nonzero(np.diff(df[r_type][k[1]]))<5: # check if ridge is vertical
-            if abs(np.mean(np.diff(df[r_type][k[1]])))>15: # check if ridge is vertical
+            if abs(np.mean(np.diff(df[r_type][k[1]])))>5: # check if ridge is vertical
                 print('vertical ridge type:' + str(r_type) + ' / ridgenb:' + k[1])
                 fit_name = 'R'+ str(r_type) + ' Vert.' +  k[1]
                 y_fit = np.linspace(-max(df[r_type]['elevation'])*2,max(df[r_type]['elevation']),100)                                       

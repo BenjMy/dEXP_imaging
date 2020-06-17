@@ -45,16 +45,22 @@ plt.rcParams['font.size'] = 15
 #%% ------------------------------- GRAV DATA
 # -------------------------------  Model
 # xp, yp, zp, U, shape,model = gravfwd.fwd_grav_fatiando()
-grav.load_grav_fatiando()
+xp, yp, zp, U = grav.load_grav_fatiando()
 # ga, gza = grav.load_grav_pygimli_cylinder()
-# shape = (30,30)
+nel= int(np.sqrt(len(U)))
+shape = (nel,nel)
 # scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 
 
-x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())
-p1, p2 = [-6000, y2+y1], [6000, y2+y1]
+# x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())
+# p1, p2 = [-6000, y2+y1], [6000, y2+y1]
+# p1 =[0, min(yp)]
+# p2 =[0, max(yp)]
 
-max_elevation=2*z2
+p1 =[min(yp),0]
+p2 =[max(yp),0]
+
+max_elevation=8000
 scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 interp = True
 
