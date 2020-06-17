@@ -24,7 +24,7 @@ model = [mesher.Prism(-1000, 1000, -1000, 1000, za, zb, {'density': dens})]
 #model = [mesher.Prism(-4000, 0, -4000, -2000, za, zb, {'density': 1200}),
 #         mesher.Prism(-1000, 1000, -1000, 1000, 5, 7000, {'density': -800})]
 
-shape = (30, 30)
+shape = (300, 300)
 #xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), shape[0]*shape[1], z=0)
 xp, yp, zp = gridder.regular((-6000, 6000, -6000, 6000), shape, z=0)
 
@@ -35,22 +35,22 @@ x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())/1000
 
 
 import pickle
-d = { "xyzg" : [xp, yp, zp, gz], "shape" : shape , "model" : model}
+d = { "xyzg" : [xp, yp, zp, gz], "shape" : shape , "model" : model, "density" : dens}
 afile = open(simname + '.pkl', 'wb')
 pickle.dump(d, afile)
 afile.close()
 
-import pickle
+# import pickle
 
 #reload object from file
 
     
-file2 = open(simname + '.pkl', 'rb')
-u = pickle._Unpickler(file2)
-u.encoding = 'latin1'
-test = u.load()
+# file2 = open(simname + '.pkl', 'rb')
+# u = pickle._Unpickler(file2)
+# u.encoding = 'latin1'
+# test = u.load()
 
-file2.close()
+# file2.close()
 
 # new_d['model']
 

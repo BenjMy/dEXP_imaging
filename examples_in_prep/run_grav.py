@@ -52,6 +52,7 @@ data_struct = grav.load_grav_fatiando(name='grav_models/za_1000zb_1500dens_1200'
 xp,yp,zp,U = data_struct['xyzg']
 shape = data_struct['shape']
 model = data_struct['model']
+dens  = data_struct['density']
 # scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 
 
@@ -60,12 +61,19 @@ x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())
 p1 =[min(yp),0]
 p2 =[max(yp),0]
 
-max_elevation=8000
+max_elevation=2000
 scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 interp = True
 
+
 #%% ------------------------------- Plot the data 
 pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+
+#%% ------------------------------- Pad the edges of grids
+
+xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
+pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
+
 
 #%% ------- upward continuation of the field data
 
@@ -75,7 +83,7 @@ mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape,
 
 plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
 plt.colorbar(cmap)
-        
+
 
 # %% ridges identification
 
@@ -102,8 +110,8 @@ pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
    
 
 dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                            minAlt_ridge,maxAlt_ridge,
-                                            minlength=8,rmvNaN=True)
+                                            minDepth=0,maxDepth=2000,
+                                            minlength=3,rmvNaN=True)
 df_f = dfI_f, dfII_f, dfIII_f
 
 #%% ------------------------------- plot ridges fitted over continuated section
@@ -118,7 +126,8 @@ df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
 
 pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
                           ridge_type=[0,1,2],ridge_nb=None)
-
+square([x1, x2, -z1, -z2])
+plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
 
 # #reload object from file
 # file2 = open(r'test.pkl', 'rb')
