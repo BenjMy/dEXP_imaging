@@ -82,7 +82,7 @@ def cor_field_B(x,y,z,u,B,rho=100):
     return u_cor   
 
 
-def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True,smooth=False, **kwargs):
+def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,fix_peak_nb=None, label='upwc',interp=True,smooth=False, **kwargs):
     plt.figure()
     
     method_peak = 'find_peaks'

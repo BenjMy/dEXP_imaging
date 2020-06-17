@@ -29,7 +29,6 @@ interp = True
 #%% ------------------------------- Plot the data 
 pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
 
-
 #%% ------- upward continuation of the field data
 
 mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
@@ -40,16 +39,47 @@ plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
 plt.colorbar(cmap)
         
 
-#%% ------------------------------- ridges identification
-import Find_peaks_Du_et_al_2006 as fpeak
-import Find_peaks as fp
-from Find_peaks_Du_et_al_2006 import _boolrelextrema, _identify_ridge_lines, _filter_ridge_lines
+# %% ridges identification
 
-upw_u_test = mesh.props[label_prop]
-upw_u_test = np.reshape(upw_u_test, [mesh.shape[0], mesh.shape[1]*mesh.shape[2]])   
+dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
+                                      label=label_prop,
+                                      method_peak='find_peaks')  
 
-peak_width = np.linspace(400,1000)
+# or  find_peaks or peakdet or spline_roots
+dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+                                      label=label_prop,
+                                      method_peak='find_peaks')  
 
-fp.find_peaks_U(upw_u_test,widths=peak_width, max_distances=None,gap_thresh=None)
+ 
+#%% ------------------------------- plot ridges over continuated section
+    
+fig = plt.figure()
+ax = plt.gca()
+pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
 
+#%% ------------------------------- filter ridges regionally constrainsted)
+   
+
+dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
+                                            1,maxAlt_ridge,
+                                            minlength=8,rmvNaN=True)
+df_f = dfI_f, dfII_f, dfIII_f
+
+#%% ------------------------------- plot ridges fitted over continuated section
+
+fig = plt.figure()
+ax = plt.gca()
+
+pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
+
+df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
+
+pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
+                          ridge_type=[0,1,2],ridge_nb=None)
+# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
+#                           ridge_type=[1],ridge_nb=None)
+# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-30, 
+#                           ridge_type=[0,1], ridge_nb = [[0,1]])
 
