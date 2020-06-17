@@ -53,18 +53,25 @@ def fwd_grav_fatiando():
     return xp, yp, zp, gz, shape, model
 
 
-def load_grav_fatiando(name='1000_zbot3000_data'):
+def load_grav_fatiando(name='za_1000zb_1500dens_1200'):
 
-    # name = '1000_zbot3000_data'
-    xp, yp, zp, U= np.loadtxt('./grav_models/' + name + '.txt', unpack=True)
-    # shape = shape # data interpolation
-    # maxdepth=10000 # max depth for upward continuation
-    # minAlt_ridge = 1000
-    # maxAlt_ridge = 5000
-    # SI = 2 # structural index
-    # zp=0  # initial depth (conditionned upward or downward)
+    # # name = '1000_zbot3000_data'
+    # xp, yp, zp, U= np.loadtxt('./grav_models/' + name + '.txt', unpack=True)
+    # # shape = shape # data interpolation
+    # # maxdepth=10000 # max depth for upward continuation
+    # # minAlt_ridge = 1000
+    # # maxAlt_ridge = 5000
+    # # SI = 2 # structural index
+    # # zp=0  # initial depth (conditionned upward or downward)
     
-    return xp, yp, zp, U
+    import pickle
+    #reload object from file
+    file = open(name + '.pkl', 'rb')
+    u = pickle._Unpickler(file)
+    u.encoding = 'latin1'
+    data = u.load()
+
+    return data
 
 
 # %%

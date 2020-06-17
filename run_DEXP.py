@@ -303,6 +303,7 @@ df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
 
 pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
                           ridge_type=[0,1,2],ridge_nb=None)
+
 # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
 #                           ridge_type=[1],ridge_nb=None)
 # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-30, 

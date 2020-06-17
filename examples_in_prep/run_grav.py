@@ -45,17 +45,17 @@ plt.rcParams['font.size'] = 15
 #%% ------------------------------- GRAV DATA
 # -------------------------------  Model
 # xp, yp, zp, U, shape,model = gravfwd.fwd_grav_fatiando()
-xp, yp, zp, U = grav.load_grav_fatiando()
+
+data_struct = grav.load_grav_fatiando(name='grav_models/za_1000zb_1500dens_1200')
 # ga, gza = grav.load_grav_pygimli_cylinder()
-nel= int(np.sqrt(len(U)))
-shape = (nel,nel)
+
+xp,yp,zp,U = data_struct['xyzg']
+shape = data_struct['shape']
+model = data_struct['model']
 # scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 
 
-# x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())
-# p1, p2 = [-6000, y2+y1], [6000, y2+y1]
-# p1 =[0, min(yp)]
-# p2 =[0, max(yp)]
+x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())
 
 p1 =[min(yp),0]
 p2 =[max(yp),0]
@@ -119,3 +119,8 @@ df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
 pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
                           ridge_type=[0,1,2],ridge_nb=None)
 
+
+# #reload object from file
+# file2 = open(r'test.pkl', 'rb')
+# new_d = pickle.load(file2)
+# file2.close()
