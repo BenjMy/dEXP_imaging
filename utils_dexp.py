@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jun  8 20:09:26 2020
+Miscellaneous utility functions.
 
 @author: Benjamin
 """

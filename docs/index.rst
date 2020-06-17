@@ -1,4 +1,4 @@
-Welcome to ICSD's documentation!
+Welcome to pydEXP's documentation!
 ================================
 
 Quick use
@@ -26,7 +26,7 @@ Paper in preparation
 
 .. toctree::
    :maxdepth: 2
-   :caption: ICSD
+   :caption: pydEXP
 
    content/started/getting-started
    content/started/install

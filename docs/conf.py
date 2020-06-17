@@ -11,13 +11,15 @@ import datetime
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-sys.path.append(os.path.relpath('../dEXP_imaging'))
-sys.path.insert(0, os.path.abspath('../dEXP_imaging'))
+# sys.path.append(os.path.relpath('../dEXP_imaging'))
+# sys.path.insert(0, os.path.abspath('../dEXP_imaging'))
 sys.path.append(os.path.pardir)
 
 
 #sys.path.append(os.path.abspath('..{}'.format(os.path.sep)))
 import dEXP as dEXP
+import plot_dEXP as pEXP
+import utils_dEXP as uEXP
 
 
 # -- Project information -----------------------------------------------------
