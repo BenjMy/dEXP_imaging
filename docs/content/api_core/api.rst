@@ -2,24 +2,24 @@
 API reference: The ``pydEXP`` package
 =======================================
 
-.. automodule:: dEXP_imaging.dEXP
+.. automodule:: dEXP
    :members:
    :show-inheritance:
    :inherited-members:
 
 
-``dEXP_imaging.plot_dEXP``: plotter
+``plot_dEXP``: plotter
 ======================================
 
-.. automodule:: dEXP_imaging.plot_dEXP
+.. automodule:: plot_dEXP
    :members:
    :show-inheritance:
    :inherited-members:
 
-``dEXP_imaging.utils_dexp``: utils
+``utils_dexp``: utils
 ======================================
 
-.. automodule:: dEXP_imaging.utils_dEXP
+.. automodule:: utils_dEXP
    :members:
    :show-inheritance:
    :inherited-members:

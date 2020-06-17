@@ -15,6 +15,43 @@ import dEXP as dEXP
 
 # %%
 
+def fwd_grav_fatiando():
+    
+    """
+    GravMag: 3D imaging using the migration method on synthetic gravity data
+    (more complex model + noisy data)
+    """
+    
+    # Make some synthetic gravity data from a simple prism model
+    za= 5000
+    zb= 7000
+    model = [mesher.Prism(-4000, 0, -4000, -2000, za, zb, {'density': 1200})]#,
+    #         mesher.Prism(-1000, 1000, -1000, 1000, 1000, 7000, {'density': -800}),
+    #         mesher.Prism(2000, 4000, 3000, 4000, 0, 2000, {'density': 600})]
+    # Calculate on a scatter of points to show that migration doesn't need gridded
+    # data
+    xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), 1000, z=0)
+    shape = (25, 25)
+    xp, yp, zp = gridder.regular((-5000, 5000, -5000, 5000), shape, z=0)
+    
+    #gz = utils.contaminate(prism.gz(xp, yp, zp, model), 0.1)
+    gz = prism.gz(xp, yp, zp, model)
+    
+    # Plot the data
+    shape = (50, 50)
+    mpl.figure()
+    mpl.axis('scaled')
+    mpl.contourf(yp, xp, gz, shape, 30, interp=True)
+    mpl.colorbar()
+    mpl.plot(yp, xp, '.k')
+    mpl.xlabel('East (km)')
+    mpl.ylabel('North (km)')
+    mpl.m2km()
+    mpl.show()
+
+    return gz
+
+
 def load_grav_fatiando(ZZ=-3.75,shape=(30,30)):
 
     name = '1000_zbot3000_data'
