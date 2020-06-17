@@ -82,7 +82,9 @@ def cor_field_B(x,y,z,u,B,rho=100):
     return u_cor   
 
 
-def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,fix_peak_nb=None, label='upwc',interp=True,smooth=False, **kwargs):
+def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
+                       fix_peak_nb=None, label='upwc',
+                       interp=True,smooth=False, **kwargs):
     plt.figure()
     
     method_peak = 'find_peaks'
@@ -627,8 +629,11 @@ def fit_ridges(df):
         cols = []
     
         for k in enumerate(df[r_type].columns[1:]): # loop over ridges of the same familly
-            # if np.count_nonzero(np.diff(df[r_type][k[1]]))<5: # check if ridge is vertical
-            if abs(np.mean(np.diff(df[r_type][k[1]])))>5: # check if ridge is vertical
+            # if abs(np.mean(np.diff(df[r_type][k[1]])))>1: # check if ridge is vertical
+            sign = np.mean(np.diff(df[r_type][k[1]])) # slope sign
+            if sign == 0: # check if ridge is vertical
+            # print( abs(np.mean(np.diff(df[r_type][k[1]]))))
+            # if abs(np.mean(np.diff(df[r_type][k[1]])))>1: # check if ridge is vertical
                 print('vertical ridge type:' + str(r_type) + ' / ridgenb:' + k[1])
                 fit_name = 'R'+ str(r_type) + ' Vert.' +  k[1]
                 y_fit = np.linspace(-max(df[r_type]['elevation'])*2,max(df[r_type]['elevation']),100)                                       
@@ -636,7 +641,6 @@ def fit_ridges(df):
             
             else:
                 print('oblique ridge type:' + str(r_type) + ' / ridgenb:' + k[1])
-                sign = np.mean(np.diff(df[r_type][k[1]])) # slope sign
                 fit_name = 'R'+ str(r_type) + ' Obl.' +  k[1]
                 if sign < 0:
                     x_min = min(df[r_type][k[1]])  + 2*np.abs(max(df[r_type][k[1]]))
@@ -644,7 +648,7 @@ def fit_ridges(df):
                 if sign > 0:
                     x_min = min(df[r_type][k[1]])  - 2*max(df[r_type][k[1]])
                     x_max = max(df[r_type][k[1]])  #+ 2*np.abs(max(df[0][k[1]])  )
-                    
+                
                 x_fit, y_fit, _ = _fit(df[r_type][k[1]],df[r_type]['elevation'],xmin=x_min, xmax=x_max) # fit function
                 
                
@@ -890,6 +894,18 @@ def dEXP(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0, SI=1):
 
 # def auto_dEXP():
 
+# def _removeOutliers(x, outlierConstant=1):
+#     a = np.array(x)
+#     upper_quartile = np.percentile(a, 75)
+#     lower_quartile = np.percentile(a, 25)
+#     IQR = (upper_quartile - lower_quartile) * outlierConstant
+#     quartileSet = (lower_quartile - IQR, upper_quartile + IQR)
+#     resultList = []
+#     for y in a.tolist():
+#         if y >= quartileSet[0] and y <= quartileSet[1]:
+#             resultList.append(y)
+#     return resultList
+
 def _fit(x,y,**kwargs):
     """
     Curve least square fit.
@@ -911,7 +927,25 @@ def _fit(x,y,**kwargs):
 
     else:
         try:
+           
+            # ------------------------------------ #
+            print('remove outliers points')
+            df = pd.concat([x, y], axis=1).reindex(x.index)
+            print(df)
+            if np.mean(x)<0:
+                filtered_entries = (x < 0)
+            else:
+                filtered_entries = (x > 0)
+
+            print(filtered_entries)
+            new_df = df[filtered_entries]
+            print(new_df)
+            x = new_df.iloc[: ,0]
+            y = new_df.iloc[: ,1]
+            # ------------------------------------ #
+
             popt, pcov = curve_fit(f,x,y) # your data x, y to fit
+            # popt, pcov = curve_fit(f,x,y,loss='soft_l1') # your data x, y to fit
             x_min = min(x) 
             x_max = max(x)                                #min/max values for x axis
         

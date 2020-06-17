@@ -81,11 +81,13 @@ plt.colorbar(cmap)
 
 dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
                                       label=label_prop,
+                                      fix_peak_nb=2,
                                       method_peak='find_peaks')  
 
 # or  find_peaks or peakdet or spline_roots
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                       label=label_prop,
+                                      fix_peak_nb=2,
                                       method_peak='find_peaks')  
 
  
@@ -100,7 +102,7 @@ pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
    
 
 dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                            1,maxAlt_ridge,
+                                            minAlt_ridge,maxAlt_ridge,
                                             minlength=8,rmvNaN=True)
 df_f = dfI_f, dfII_f, dfIII_f
 
@@ -114,6 +116,6 @@ pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
 df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
 
-pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
+pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
                           ridge_type=[0,1,2],ridge_nb=None)
 
