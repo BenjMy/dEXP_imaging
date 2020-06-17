@@ -145,7 +145,7 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,fix_peak_nb=None, label
     
 
     
-def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',interp=True,smooth=True, **kwargs):
+def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=None, interp=True,smooth=False, **kwargs):
     """
     Form a multiridge set
     RI and RII : zeros of the first horizontal and first vertical derivatives of the potential field
