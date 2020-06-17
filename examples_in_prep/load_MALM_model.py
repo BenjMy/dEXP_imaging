@@ -75,12 +75,12 @@ def definep1p2(path,radius):
     
     # ------------- define p1 and p2   -----------------------------------------
     B = coordE[RemLineNb+2,1:] # position of the return electrode
-    plt.figure(figsize=(20,10))
-    ax = plt.subplot()
-    plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
-    for i in range(len(coords_liner[:,0])):
-        ax.annotate(str(i), (coords_liner[i,0], coords_liner[i,1]))
-    plt.scatter(B[0],B[1],color='red')
+    # plt.figure(figsize=(20,10))
+    # ax = plt.subplot()
+    # plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
+    # for i in range(len(coords_liner[:,0])):
+    #     ax.annotate(str(i), (coords_liner[i,0], coords_liner[i,1]))
+    # plt.scatter(B[0],B[1],color='red')
     ptsliner = [2,3]
     
     # p2, p1 = [[coords_liner[ptsliner[0],0],coords_liner[ptsliner[0],1]],
@@ -120,8 +120,8 @@ def creategrid(coords_liner, B, shape, offset=500):
     # create a regular grid
     xnew, ynew = gridder.regular((xnew_min, xnew_max, ynew_min, ynew_max), shape)
     # plt.figure()
-    plt.scatter(xnew,ynew, color='green')
-    plt.show()
+    # plt.scatter(xnew,ynew, color='green')
+    # plt.show()
     
     return xnew, ynew
     
@@ -147,11 +147,11 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
         x, y, z, U_raw = np.loadtxt(path + filename + '_uz0_grid.dat', unpack=True)
         # x , y, z = mesh_xyz
         # ------------------------------- Plot the data
-        plt.figure()
-        plt.scatter(x, y,c=U_raw, cmap='viridis',vmin=None, vmax=1)
-        plt.colorbar()
-        plt.axis('square')
-        plt.show()
+        # plt.figure()
+        # plt.scatter(x, y,c=U_raw, cmap='viridis',vmin=None, vmax=1)
+        # plt.colorbar()
+        # plt.axis('square')
+        # plt.show()
     
     else:         
         U_raw = load_obs(path, filename + '.txt') # load observation data
@@ -177,13 +177,13 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
     
     # ------------- Raw data   -----------------------------------------
     
-    pEXP.plot_line(x, y, U_raw,p1,p2, title='U_raw', interp=interp) #, vmin=0.01, vmax=0.1, 
+    # pEXP.plot_line(x, y, U_raw,p1,p2, title='U_raw', interp=interp) #, vmin=0.01, vmax=0.1, 
     
     # ------------- Interpolation  -----------------------------------------
     U_int = gridder.interp_at(x, y, U_raw, xnew, ynew, algorithm='cubic', extrapolate=True)
     # xp,yp,U_int = gridder.interp(xnew,ynew,U,shape)
     
-    pEXP.plot_line(xnew, ynew, U_int,p1,p2,title='U_int', interp=interp)
+    # pEXP.plot_line(xnew, ynew, U_int,p1,p2,title='U_int', interp=interp)
     
     
     # ------------- correction of B  + interpolation  ----------------------
@@ -195,7 +195,7 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
     
     Ucor_int = gridder.interp_at(x, y, Ucor, xnew, ynew, algorithm='cubic', extrapolate=True)
     # xp,yp,Ucor_int = gridder.interp(xnew,ynew,Ucorint_tmp,shape)
-    pEXP.plot_line(xnew, ynew, Ucor_int,p1,p2, title='U_cor&int', interp=interp)
+    # pEXP.plot_line(xnew, ynew, Ucor_int,p1,p2, title='U_cor&int', interp=interp)
     
     # --------------- plot 2d maps -----------------------------------------
     # plt.figure(figsize=(20,10))
@@ -332,7 +332,6 @@ def mirrorU_alongLine(U,p,c_above,a,b,c):
    Umirror= []
    pmirror= []
    for i, bool_pi in enumerate(zip(c_above,p)):
-        # if bool_pi[0] == False:
         xmir, ymir = mirrorImage(a, b, c, bool_pi[1][0], bool_pi[1][1]); 
         # plt.scatter(xmir, ymir,c=U[i], cmap='viridis')
         # plt.annotate(str(i)+ '_m', [xmir, ymir])
@@ -341,7 +340,8 @@ def mirrorU_alongLine(U,p,c_above,a,b,c):
         
    pmirror = np.vstack(pmirror)
    Umirror = np.array(Umirror)
-   plt.scatter(pmirror[:,0],pmirror[:,1],c=Umirror, cmap='viridis',vmax=0.5)
+   plt.scatter(pmirror[:,0],pmirror[:,1],c=Umirror, cmap='viridis',vmax=0.25)
+   plt.colorbar()
    plt.axis('square')
     
    return Umirror, pmirror

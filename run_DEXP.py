@@ -53,14 +53,14 @@ from icsd3d.importers.read import load_obs, load_geom
 # Main = 'E:/Padova/Software/SourceInversion/icsd_dev/example_2add_later/Landfill_3d/Ano_1_BH_EA/'
 # file = 'OAno_synt'
 
-Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/'
+Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/ph/'
 file = 'Ano'
 interp = True
-smooth = True 
+smooth = False 
 
 dataset = MALM.load_MALM_LandfillPorto(path=Main, 
                                         filename=file,
-                                        shape = (30,30),
+                                        shape = (300,300),
                                         field=True,
                                         interp = interp,
                                         radius=300)
@@ -90,101 +90,92 @@ xp, yp, zp = coord_xyz
 Uini = Uload[0] # U_raw, Ucor, U_int, Ucor_int
 p1 , p2 = p
 
+# len(xp)
 # MALM.definep1p2(path=Main, radius=130)
 # MALM.squaremat(r=130)
 
 #%%
-U_a, p_a, c_above, U_b, p_b = MALM.isabove(xp, yp, Uini, 
+# find point position with respect to line equation defined by p1 and p2
+U_a, p_a, bool_above, U_b, p_b = MALM.isabove(xp, yp, Uini, 
                                  np.array(p1),np.array(p2))
+# Compute p1 and p2 line equation ax + by + c = 0
 a, b, c = MALM.slope(p1,p2)
-Umirror, pmirror = MALM.mirrorU_alongLine(U_a,p_a,c_above,a,b,c)
-Ua = gridder.interp_at(pmirror[:,0], pmirror[:,1], Umirror, xp, yp, algorithm='cubic', extrapolate=True)   
-# xp,yp,U = gridder.interp(xp, yp ,Ucorint_tmp,shape)
 
+# Mirror points with respect to p1p2 line
+Umirror, xy_mirror = MALM.mirrorU_alongLine(U_a,p_a,bool_above,a,b,c)
 
-def mirrorImage( a, b, c, x1, y1): 
-	temp = -2 * (a * x1 + b * y1 + c) /(a * a + b * b) 
-	x = temp * a + x1 
-	y = temp * b + y1 
-	return (x, y) 
+U_a_int = gridder.interp_at(xy_mirror[:,0], xy_mirror[:,1], Umirror, xp, yp, algorithm='nearest', 
+                        extrapolate=True)   
 
 plt.figure()
- 
-# Umirror = np.copy(U).tolist()
- # pmirror = np.copy(p).tolist()
-# pmirror = np.ones(p.shape).tolist()
-Umirror= []
-pmirror= []
-for i, bool_pi in enumerate(zip(c_above,p_a)):
-    # if bool_pi[0] == False:
-    xmir, ymir = mirrorImage(a, b, c, bool_pi[1][0], bool_pi[1][1]); 
-    # plt.scatter(xmir, ymir, c=U_a[i], cmap='viridis')
-    # plt.annotate(str(i)+ '_m', [xmir, ymir])
-    # plt.scatter(bool_pi[1][0],  bool_pi[1][1], c='black', cmap='viridis')
-    # plt.annotate(str(i), [bool_pi[1][0],  bool_pi[1][1]])
-     
-         
-         # plt.annotate(str(i)+ '_m', [xmir, ymir])
-    Umirror.append(U_a[i])
-    pmirror.append([xmir, ymir])
-    
-    
-p12x=[p1[0],p2[0]]
-p12y=[p1[1],p2[1]]
-
-plt.plot(p12x,p12y)
-# plt.axis('square')
-
-
-pmirror = np.vstack(pmirror)
-Umirror = np.array(Umirror)
-plt.scatter(pmirror[:,0],pmirror[:,1],c=Umirror, cmap='viridis',vmax=0.5)
+plt.scatter(xp,yp,c=U_a_int, cmap='viridis',vmax=0.25)
+plt.colorbar()
 plt.axis('square')
-    
    
-# len(Uini)
+   
 U = np.copy(Uini)
-U[np.where(c_above == True)[0]]= Ua[np.where(c_above == True)[0]]
-# len(xp)
+U[np.where(bool_above == True)[0]]= U_a_int[np.where(bool_above == True)[0]]
 plt.figure()
 plt.scatter(xp, yp, c=U, cmap='viridis',vmax=0.25)
 plt.colorbar()
 plt.axis('square')
 plt.show()
 
+#%%
 
-# plt.plot(xp,yp)
+# def mirrorImage( a, b, c, x1, y1): 
+#  	temp = -2 * (a * x1 + b * y1 + c) /(a * a + b * b) 
+#  	x = temp * a + x1 
+#  	y = temp * b + y1 
+#  	return (x, y) 
+
+# plt.figure()
+ 
+# # Umirror = np.copy(U).tolist()
+#   # pmirror = np.copy(p).tolist()
+# # pmirror = np.ones(p.shape).tolist()
+# Umirror= []
+# pmirror= []
+# for i, bool_pi in enumerate(zip(c_above,p_a)):
+#     # if bool_pi[0] == False:
+#     xmir, ymir = mirrorImage(a, b, c, bool_pi[1][0], bool_pi[1][1]); 
+#     # plt.scatter(xmir, ymir, c=U_a[i], cmap='viridis')
+#     # plt.annotate(str(i)+ '_m', [xmir, ymir])
+#     # plt.scatter(bool_pi[1][0],  bool_pi[1][1], c='black', cmap='viridis')
+#     # plt.annotate(str(i), [bool_pi[1][0],  bool_pi[1][1]])
+#     # plt.annotate(str(i)+ '_m', [xmir, ymir])
+#     Umirror.append(U_a[i])
+#     pmirror.append([xmir, ymir])
+    
+    
+# p12x=[p1[0],p2[0]]
+# p12y=[p1[1],p2[1]]
+
+# plt.plot(p12x,p12y)
+# # plt.axis('square')
 
 
-# Perp = (-y2+y1, x2-x1)
-# (midX, midY) and (midX-y2+y1, midY + x2-x1)
-# Perp = (-p2[1]+p1[1], p2[0]-p1[0])
-# (midX, midY) and (midX-y2+y1, midY + x2-x1)
-
-# midX=(x1+x2)/2
-# midY=(y1+y2)/2
-
-
-
-midX=(p1[0]+p2[0])/2
-midY=(p1[1]+p2[1])/2
-# new_p1 = [midX,midY]
-new_p2 = [midX-p2[1]+p1[1], midY + p2[0]-p1[0]]
-new_p1 = [midX+p2[1]-p1[1], midY - p2[0]+p1[0]]
-
-p12x_new=[new_p1[0],new_p2[0]]
-p12y_new=[new_p1[1],new_p2[1]]
+# pmirror = np.vstack(pmirror)
+# Umirror = np.array(Umirror)
+# plt.scatter(pmirror[:,0],pmirror[:,1],c=Umirror, cmap='viridis',vmax=0.5)
+# plt.axis('square')
+    
+   
+# U = np.copy(Uini)
+# U[np.where(bool_above == True)[0]]= Ua[np.where(bool_above == True)[0]]
+# plt.figure()
+# plt.scatter(xp, yp, c=U, cmap='viridis',vmax=0.25)
+# plt.colorbar()
+# plt.axis('square')
+# plt.show()
 
 
-plt.plot(p12x,p12y)
-plt.plot(p12x_new,p12y_new)
+# %% change p1p2 axis 
+
+p1,p2 = uEXP.perp_p1p2(p1,p2, offset=0)
 
 # U = MALM.zeros_sym(Uini,c_above,value=0)
-
-p1 = new_p1
-p2 = new_p2
-
-shape = (300,300)
+# shape = (300,300)
 
 #%% select part of the grid
 # uEXP.mirror(p[:,0],p[:,1],data,a,b)
@@ -204,49 +195,15 @@ shape = (300,300)
 # shape = (30,30)
 # scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 
-#%% ------------------------------- Plot the data 
+#%% ------------------------------- smooth the data 
 
-# from astropy.convolution import convolve
-# from astropy.convolution.kernels import Gaussian2DKernel
-
-U = dEXP.smooth2d(xp, yp, U, sigma=5)
+# U = dEXP.smooth2d(xp, yp, U, sigma=0.5)
 
 #%% ------------------------------- Plot the data 
 
 # _, p1, p2, _ = MALM.definep1p2(path=Main,radius=300)
 xx, yy, distance, profile = pEXP.plot_line(xp, yp, U ,p1,p2, interp=interp)
 # xx, yy, distance, profile = pEXP.plot_line(xp, yp, U_f ,p1,p2, interp=interp)
-
-# from scipy.signal import savgol_filter
-# # from scipy.interpolate import interp1d
-# # itp = interp1d(x,y, kind='linear')
-# window_size, poly_order = 11, 10
-# yy_sg = savgol_filter(profile, window_size, poly_order)
-
-# plt.figure()
-# plt.plot(distance,profile,'*')
-# # plt.plot(distance,yy_sg)
-
-
-# import numpy as np
-# from scipy.signal import butter,filtfilt
-# # Filter requirements.
-# fs = abs(1/(distance[0] - distance[1]))      # sample rate, Hz
-# cutoff = 0.025      # desired cutoff frequency of the filter, Hz ,      slightly higher than actual 1.2 Hz
-# nyq = 0.5 * fs  # Nyquist Frequency
-# order = 1    # sin wave can be approx represented as quadratic
-
-# def butter_lowpass_filter(data, cutoff, fs, order):
-#     normal_cutoff = cutoff / nyq
-#     # Get the filter coefficients 
-#     b, a = butter(order, normal_cutoff, btype='low', analog=False)
-#     y = filtfilt(b, a, data)
-#     return y
-
-# filtdata = butter_lowpass_filter(profile, cutoff, fs, order=order)
-
-# plt.plot(distance,filtdata)
-
 
 #%% ------------------------------- Pad the edges of grids
 

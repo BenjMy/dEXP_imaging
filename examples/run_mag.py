@@ -9,20 +9,15 @@ from fatiando.vis.mpl import square
 import dEXP as dEXP
 from dEXP import _fit
 import plot_dEXP as pEXP
+import set_parameters as para
 
 # exemples
-import exemples.fwd_mag_sphere as magfwd
-import exemples.load_grav_model as grav
-import exemples.load_MALM_model as MALM
-
-import set_parameters as para
+import examples.fwd_mag_sphere as magfwd
 
 import numpy as np
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
 
-# icsd functions
-from icsd3d.importers.read import load_obs, load_geom
 
 #%% ------------------------------- MAG DATA
 # -------------------------------  Model

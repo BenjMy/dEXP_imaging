@@ -49,5 +49,31 @@ def mirror(xp,yp, data, p1, p2, mirror='above'):
     return
 
 
-a = np.array([[1,2,3,4],[1,2,3,4],[1,2,3,4],[1,2,3,4]])
-a[0,3] = a[3,0]
+def perp_p1p2(p1,p2, offset=0):
+    
+    midX=(p1[0]+p2[0])/2
+    midY=(p1[1]+p2[1])/2 
+    
+    plt.scatter(midX,midY,c='red')
+
+    # midX=(p1[0]+offset+p2[0]+offset)/2
+    # midY=(p1[1]+offset+p2[1]+offset)/2 
+    
+    # plt.scatter(midX,midY,c='green')
+
+
+    new_p2 = [midX-p2[1]+p1[1], midY + p2[0]-p1[0]]
+    new_p1 = [midX+p2[1]-p1[1], midY - p2[0]+p1[0]]
+
+    p12x=[p1[0],p2[0]]
+    p12y=[p1[1],p2[1]]
+    
+    p12x_new=[new_p1[0],new_p2[0]]
+    p12y_new=[new_p1[1],new_p2[1]]
+    
+    plt.plot(p12x,p12y,c='red')
+    plt.plot(p12x_new,p12y_new,c='green')
+    plt.axis('square')
+    
+    
+    return new_p1, new_p2
