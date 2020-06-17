@@ -30,7 +30,7 @@ def fwd_grav_fatiando():
     #         mesher.Prism(2000, 4000, 3000, 4000, 0, 2000, {'density': 600})]
     # Calculate on a scatter of points to show that migration doesn't need gridded
     # data
-    xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), 1000, z=0)
+    # xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), 1000, z=0)
     shape = (25, 25)
     xp, yp, zp = gridder.regular((-5000, 5000, -5000, 5000), shape, z=0)
     
@@ -48,22 +48,23 @@ def fwd_grav_fatiando():
     mpl.ylabel('North (km)')
     mpl.m2km()
     mpl.show()
-
-    return gz
-
-
-def load_grav_fatiando(ZZ=-3.75,shape=(30,30)):
-
-    name = '1000_zbot3000_data'
-    xp, yp, zp, U= np.loadtxt('./grav_models/' + name + '.txt', unpack=True)
-    shape = (25,25) # data interpolation
-    maxdepth=10000 # max depth for upward continuation
-    minAlt_ridge = 1000
-    maxAlt_ridge = 5000
-    SI = 2 # structural index
-    zp=0  # initial depth (conditionned upward or downward)
     
-    return
+
+    return xp, yp, zp, gz, shape, model
+
+
+def load_grav_fatiando(name='1000_zbot3000_data'):
+
+    # name = '1000_zbot3000_data'
+    xp, yp, zp, U= np.loadtxt('./grav_models/' + name + '.txt', unpack=True)
+    # shape = shape # data interpolation
+    # maxdepth=10000 # max depth for upward continuation
+    # minAlt_ridge = 1000
+    # maxAlt_ridge = 5000
+    # SI = 2 # structural index
+    # zp=0  # initial depth (conditionned upward or downward)
+    
+    return xp, yp, zp, U
 
 
 # %%

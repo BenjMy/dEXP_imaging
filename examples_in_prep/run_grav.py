@@ -35,7 +35,7 @@ import plot_dEXP as pEXP
 import set_parameters as para
 
 # exemples
-import examples_in_prep.load_grav_model.fwd_grav_fatiando as gravfwd
+import examples_in_prep.load_grav_model as grav
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -44,8 +44,17 @@ plt.rcParams['font.size'] = 15
 
 #%% ------------------------------- GRAV DATA
 # -------------------------------  Model
-xp, yp, zp, U, shape, p1, p2, coord= magfwd.load_mag_synthetic()
-max_elevation=2*max(coord[:,2])
+# xp, yp, zp, U, shape,model = gravfwd.fwd_grav_fatiando()
+grav.load_grav_fatiando()
+# ga, gza = grav.load_grav_pygimli_cylinder()
+# shape = (30,30)
+# scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
+
+
+x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())
+p1, p2 = [-6000, y2+y1], [6000, y2+y1]
+
+max_elevation=2*z2
 scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 interp = True
 
