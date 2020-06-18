@@ -16,22 +16,24 @@ pathData='./'+ 'Data/'
 
 
 # -------------------------------  Model
-za= 1000
-zb= 1500
+za= 3000
+zb= 3500
 dens = 1200
-simname = 'za_' + str(za) + 'zb_' + str(zb) + 'dens_' + str(dens) 
-model = [mesher.Prism(-1000, 1000, -1000, 1000, za, zb, {'density': dens})]
+l= 500
+offset = 0
+simname = 'za' + str(za) + '_zb' + str(zb) + '_l' + str(l) + '_ofs' + str(offset) + '_dens' + str(dens) 
+model = [mesher.Prism(-500, 500, -500, 500, za, zb, {'density': dens})]
 #model = [mesher.Prism(-4000, 0, -4000, -2000, za, zb, {'density': 1200}),
 #         mesher.Prism(-1000, 1000, -1000, 1000, 5, 7000, {'density': -800})]
 
-shape = (300, 300)
+shape = (200, 200)
 #xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), shape[0]*shape[1], z=0)
 xp, yp, zp = gridder.regular((-6000, 6000, -6000, 6000), shape, z=0)
 
 # gz = utils.contaminate(prism.gz(xp, yp, zp, model), 0.1)
 gz = prism.gz(xp, yp, zp, model)
 
-x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())/1000
+x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())
 
 
 import pickle
@@ -64,11 +66,11 @@ plt.colorbar()
 plt.xlabel('x (m)')
 plt.ylabel('y (m)')
 mpl.m2km()
-plt.show()
 plt.tight_layout()
 # plt.title(strname + '_Z_' + str(ZZ) + '_data')
 # plt.savefig(pathFig + strname + '_Z_' + str(ZZ) + '_data' + '.png')
 square([y1, y2, x1, x2])
+plt.show()
 
 
 # model

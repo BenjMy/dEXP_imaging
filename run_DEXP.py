@@ -13,8 +13,7 @@ import utils_dEXP as uEXP
 
 # exemples
 # import exemples.fwd_mag_sphere as magfwd
-import examples_in_prep.load_grav_model as grav
-# import exemples.load_MALM_model as MALM
+import examples_in_prep.load_MALM_model as MALM
 
 import set_parameters as para
 
@@ -28,23 +27,23 @@ from icsd3d.importers.read import load_obs, load_geom
 
 #%% ------------------------------- MALM DATA synth sensibility
 
-# xp, yp, zp, U, max_elevation, shape = MALM.load_MALM_synthetic(ZZ=-3.75,shape=(100,100), field=False)
-# parameters = para.set_par(shape=shape,max_elevation=max_elevation)
-# p1, p2 = [min(xp),0], [max(xp), 0]
-# interp = True
-# scaled = parameters[0]
-# SI = parameters[1]
-# zp, qorder, nlay = parameters[2:5]
-# minAlt_ridge, maxAlt_ridge = parameters[5:7]
+xp, yp, zp, U, max_elevation, shape = MALM.load_MALM_synthetic(ZZ=-3.75,shape=(100,100), field=False)
+parameters = para.set_par(shape=shape,max_elevation=max_elevation)
+p1, p2 = [min(xp),0], [max(xp), 0]
+interp = True
+scaled = parameters[0]
+SI = parameters[1]
+zp, qorder, nlay = parameters[2:5]
+minAlt_ridge, maxAlt_ridge = parameters[5:7]
 
-# # ----------- ridges analysis
-# nlay = 25
-# max_elevation = 20
-# minAlt_ridge = max_elevation*0.05
-# maxAlt_ridge = max_elevation*0.65
+# ----------- ridges analysis
+nlay = 25
+max_elevation = 20
+minAlt_ridge = max_elevation*0.05
+maxAlt_ridge = max_elevation*0.65
 
-# interp = True
-# smooth = True 
+interp = True
+smooth = True 
 
 #%% ------------------------------- MALM DATA
 # path2files="example_2add_later/Landfill_3d/Ano_0_EA/"  # Real A position without anomaly
@@ -181,20 +180,6 @@ from icsd3d.importers.read import load_obs, load_geom
 # uEXP.mirror(p[:,0],p[:,1],data,a,b)
 # uEXP.mirror(xp,yp,data,p1,p2)
 
-#%% ------------------------------- MAG DATA
-# -------------------------------  Model
-# xp, yp, zp, U, shape, p1, p2, coord= magfwd.load_mag_synthetic()
-# max_elevation=2*max(coord[:,2])
-# scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
-# interp = True
-# nlay=10
-#%% ------------------------------- GRAVITY DATA
-# -------------------------------  Model
-xp, yp, zp, U = grav.load_grav_fatiando()
-# ga, gza = grav.load_grav_pygimli_cylinder()
-shape = (30,30)
-scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
-
 #%% ------------------------------- smooth the data 
 
 # U = dEXP.smooth2d(xp, yp, U, sigma=0.5)
@@ -299,7 +284,7 @@ ax = plt.gca()
 pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
-df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
+df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
 
 pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
                           ridge_type=[0,1,2],ridge_nb=None)

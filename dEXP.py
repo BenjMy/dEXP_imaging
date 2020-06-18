@@ -599,7 +599,7 @@ def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, *
     return dfI, dfII, dfIII
 
 
-def fit_ridges(df):
+def fit_ridges(df, rmvOutliers=False):
     """
     Fit ridges and return points and fit equations to plot
 
@@ -649,7 +649,7 @@ def fit_ridges(df):
                     x_min = min(df[r_type][k[1]])  - 2*max(df[r_type][k[1]])
                     x_max = max(df[r_type][k[1]])  #+ 2*np.abs(max(df[0][k[1]])  )
                 
-                x_fit, y_fit, _ = _fit(df[r_type][k[1]],df[r_type]['elevation'],xmin=x_min, xmax=x_max) # fit function
+                x_fit, y_fit, _ = _fit(df[r_type][k[1]],df[r_type]['elevation'],xmin=x_min, xmax=x_max, rmvOutliers=rmvOutliers) # fit function
                 
                
                 # plt.plot(df[r_type][k[1]].to_numpy(), m*xx + c, 'r', label='Fitted line')
@@ -894,17 +894,19 @@ def dEXP(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0, SI=1):
 
 # def auto_dEXP():
 
-# def _removeOutliers(x, outlierConstant=1):
-#     a = np.array(x)
-#     upper_quartile = np.percentile(a, 75)
-#     lower_quartile = np.percentile(a, 25)
-#     IQR = (upper_quartile - lower_quartile) * outlierConstant
-#     quartileSet = (lower_quartile - IQR, upper_quartile + IQR)
-#     resultList = []
-#     for y in a.tolist():
-#         if y >= quartileSet[0] and y <= quartileSet[1]:
-#             resultList.append(y)
-#     return resultList
+def _removeOutliers(x, outlierConstant=1):
+    a = np.array(x)
+    upper_quartile = np.percentile(a, 75)
+    lower_quartile = np.percentile(a, 25)
+    IQR = (upper_quartile - lower_quartile) * outlierConstant
+    quartileSet = (lower_quartile - IQR, upper_quartile + IQR)
+    resultList = []
+    iTrue = []
+    for i,y in enumerate(a.tolist()):
+        if y >= quartileSet[0] and y <= quartileSet[1]:
+            resultList.append(y)
+            iTrue.append(i)
+    return resultList, iTrue
 
 def _fit(x,y,**kwargs):
     """
@@ -928,21 +930,25 @@ def _fit(x,y,**kwargs):
     else:
         try:
            
-            # ------------------------------------ #
-            print('remove outliers points')
-            df = pd.concat([x, y], axis=1).reindex(x.index)
-            print(df)
-            if np.mean(x)<0:
-                filtered_entries = (x < 0)
-            else:
-                filtered_entries = (x > 0)
+            for key, value in kwargs.items():
+                if key == 'rmvOutliers':
+                    # print(x)
+                    _ , filtered_entries = _removeOutliers(x)
+                    print('------')
+                    # print(filtered_entries)
+                    # # ------------------------------------ #
+                    # print('remove outliers points')
+                    df = pd.concat([x, y], axis=1).reindex(x.index)
+                    # if np.mean(x)<0:
+                    #     filtered_entries = (x < 0)
+                    # else:
+                    #     filtered_entries = (x > 0)
+                    new_df = df.iloc[filtered_entries,:]
 
-            print(filtered_entries)
-            new_df = df[filtered_entries]
-            print(new_df)
-            x = new_df.iloc[: ,0]
-            y = new_df.iloc[: ,1]
-            # ------------------------------------ #
+                    # new_df = df[filtered_entries]
+                    x = new_df.iloc[: ,0]
+                    y = new_df.iloc[: ,1]
+                    # ------------------------------------ #
 
             popt, pcov = curve_fit(f,x,y) # your data x, y to fit
             # popt, pcov = curve_fit(f,x,y,loss='soft_l1') # your data x, y to fit

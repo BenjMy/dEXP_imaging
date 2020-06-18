@@ -35,37 +35,33 @@ import plot_dEXP as pEXP
 import set_parameters as para
 
 # exemples
-import examples_in_prep.load_grav_model as grav
+import examples_in_prep.load_MALM_model as MALM
 
 import numpy as np
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
 
 
-#%% ------------------------------- GRAV DATA
-# -------------------------------  Model
-# xp, yp, zp, U, shape,model = gravfwd.fwd_grav_fatiando()
+#%% ------------------------------- MALM DATA synth sensibility
 
-# za3000_zb3500_l500_ofs0_dens1200.pkl
-data_struct = grav.load_grav_fatiando(name='grav_models/za3000_zb3500_l500_ofs0_dens1200')
-# ga, gza = grav.load_grav_pygimli_cylinder()
-
-xp,yp,zp,U = data_struct['xyzg']
-shape = data_struct['shape']
-model = data_struct['model']
-dens  = data_struct['density']
-# scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
-
-
-x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())
-
-p1 =[min(yp),0]
-p2 =[max(yp),0]
-
-max_elevation=z2*1.2
-scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
+xp, yp, zp, U, max_elevation, shape = MALM.load_MALM_synthetic(ZZ=-3.75,shape=(100,100), field=False)
+parameters = para.set_par(shape=shape,max_elevation=max_elevation)
+p1, p2 = [min(xp),0], [max(xp), 0]
 interp = True
-qorder = 1
+scaled = parameters[0]
+SI = parameters[1]
+zp, qorder, nlay = parameters[2:5]
+minAlt_ridge, maxAlt_ridge = parameters[5:7]
+
+# ----------- ridges analysis
+nlay = 25
+max_elevation = 20
+minAlt_ridge = max_elevation*0.05
+maxAlt_ridge = max_elevation*0.65
+
+interp = True
+smooth = True 
+
 
 #%% ------------------------------- Plot the data 
 pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)

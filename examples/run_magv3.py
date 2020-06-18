@@ -24,9 +24,6 @@ from fatiando.vis import mpl #, myv
 from fatiando import gridder, mesher, utils
 from fatiando.gravmag import prism, imaging, transform
 from fatiando.vis.mpl import square
-import dEXP as dEXP
-import plot_dEXP as pEXP
-import set_parameters as para
 import numpy as np
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
