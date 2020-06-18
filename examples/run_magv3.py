@@ -27,7 +27,6 @@ from fatiando.vis.mpl import square
 import dEXP as dEXP
 import plot_dEXP as pEXP
 import set_parameters as para
-import examples.sources_mag.fwd_mag.fwd_mag_sphere as magfwd
 import numpy as np
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
