@@ -15,8 +15,17 @@ from dEXP import _fit
 import plot_dEXP as pEXP
 import set_parameters as para
 
+
 # Create a model using geometric objects from fatiando.mesher
 plt.figure()
 plt.imshow(np.random.random((50,50)))
 plt.colorbar()
 plt.show()
+
+xp, yp, zp, U, shape, p1, p2, coord= magfwd.load_mag_synthetic()
+max_elevation=2*max(coord[:,2])
+scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
+interp = True
+
+pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+
