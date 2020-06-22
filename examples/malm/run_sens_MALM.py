@@ -22,6 +22,8 @@ Uieda, L. (2018). Verde: Processing and gridding spatial data using Green's func
 Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential
 field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
 
+Rücker, C., Günther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library for modelling and inversion in geophysics, Computers and Geosciences, 109, 106-123, doi: 10.1016/j.cageo.2017.07.011
+
 ----
 """
 
