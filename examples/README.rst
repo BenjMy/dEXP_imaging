@@ -1,8 +1,7 @@
 Gallery of examples
 ===================
 
-Below is a gallery of examples:
+Below is a gallery of examples for different physics: gravimetry, magnetic and geoelectrical methods (SP and active ERT).
 
-Simple working example of a 2-sources mag depth estimation using dEXP theory
 
     
