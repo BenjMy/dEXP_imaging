@@ -42,11 +42,13 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
 
 
-#%% ------------------------------- MALM DATA synth sensibility
+#%%
+# MALM DATA synthetic anomaly: analysis of sensitivity
 
-xp, yp, zp, U, max_elevation, shape = MALM.load_MALM_synthetic(ZZ=-3.75,shape=(100,100), field=False)
-parameters = para.set_par(shape=shape,max_elevation=max_elevation)
-p1, p2 = [min(xp),0], [max(xp), 0]
+xp, yp, z, U, maxdepth, shape, p1, p2 = MALM.load_MALM_sens3d(filename='./malm_models/' +
+                                                            'MSoilR1000.0AnoR1Z-13.75L5h2.5.pkl')
+# len(xp)
+parameters = para.set_par(shape=shape,max_elevation=abs(maxdepth))
 interp = True
 scaled = parameters[0]
 SI = parameters[1]

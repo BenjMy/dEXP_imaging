@@ -25,15 +25,34 @@ plt.rcParams['font.size'] = 15
 import pickle
 
 
-def load_MALM_sens3d(filename='*.pkl'):
+def load_MALM_sens3d(filename=None):
 
-    file = open(name + '.pkl', 'rb')
+    file = open(filename, 'rb')
     u = pickle._Unpickler(file)
     u.encoding = 'latin1'
     data = u.load()
     
-    
-    return xp, yp, z, U, maxdepth, shape
+       
+    # dstruct = { "SoilR" : SoilR, "AnoR" : AnoR , "HWD" : [HAno,widthAno,depthAno], "XYU" : uz0_grid,
+    #            "shape" : shape, "p12": [p1,p2]}
+    # afile = open(SimName + '.pkl', 'wb')
+    # pickle.dump(dstruct, afile)
+    # afile.close()
+
+    # SimName='M' + 'SoilR' + str(SoilR) + 'AnoR' + str(AnoR) + 'Z' + str(depthAno) + 'L' + str(widthAno) +  'h' + str(HAno)
+
+    maxdepth = data['HWD'][2] * 1.5
+    shape = data['shape']
+    p1 = data['p12'][0]
+    p2 = data['p12'][1]
+    xyzu = data['XYU']
+    xp, yp, z, U  = xyzu[:,0],  xyzu[:,1], xyzu[:,2],  xyzu[:,3]
+    # z = 0
+    # U = xyzu[3]
+    # print(data['XYU'])
+    # print(data['XYU'].shape)
+
+    return xp, yp, z, U, maxdepth, shape, p1, p2
 
 
 def load_MALM_synthetic(ZZ=-13.75,shape=(30,30),field=False):
