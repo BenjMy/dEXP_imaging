@@ -22,6 +22,18 @@ from icsd3d.importers.read import load_obs, load_geom
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
 
+import pickle
+
+
+def load_MALM_sens3d(filename='*.pkl'):
+
+    file = open(name + '.pkl', 'rb')
+    u = pickle._Unpickler(file)
+    u.encoding = 'latin1'
+    data = u.load()
+    
+    
+    return xp, yp, z, U, maxdepth, shape
 
 
 def load_MALM_synthetic(ZZ=-13.75,shape=(30,30),field=False):

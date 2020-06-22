@@ -1,11 +1,9 @@
 """
-Forward modeling gravity data using spheres in Cartesian coordinates
+Test example for mag data analysis using pyDEXP
 --------------------------------------------------------------------
 
-The :mod:`fatiando.gravmag` has many functions for forward modeling gravity and
-magnetic data. Here we'll show how to build a model out of spheres and
-calculate the gravitational attraction and it's gradients in Cartesian
-coordinates.
+Plot 2d randomn data 
+Plot field data over a 2d line
 
 """
 import matplotlib.pyplot as plt
@@ -14,6 +12,7 @@ import dEXP as dEXP
 from dEXP import _fit
 import plot_dEXP as pEXP
 import set_parameters as para
+import examples.sources_mag.fwd_mag_sphere as magfwd
 
 
 # Create a model using geometric objects from fatiando.mesher
@@ -27,5 +26,5 @@ max_elevation=2*max(coord[:,2])
 scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 interp = True
 
+# Plot field data over a 2d line
 pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
-

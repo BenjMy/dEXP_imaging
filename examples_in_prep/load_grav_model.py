@@ -11,6 +11,7 @@ from fatiando import gridder, mesher, utils
 from fatiando.gravmag import prism, imaging, transform
 from fatiando.vis.mpl import square
 import dEXP as dEXP
+import pickle
 
 
 # %%
@@ -64,7 +65,6 @@ def load_grav_fatiando(name='za_1000zb_1500dens_1200'):
     # # SI = 2 # structural index
     # # zp=0  # initial depth (conditionned upward or downward)
     
-    import pickle
     #reload object from file
     file = open(name + '.pkl', 'rb')
     u = pickle._Unpickler(file)
