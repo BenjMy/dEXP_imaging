@@ -39,7 +39,7 @@ def load_MALM_sens3d(filename=None):
     # pickle.dump(dstruct, afile)
     # afile.close()
 
-    # SimName='M' + 'SoilR' + str(SoilR) + 'AnoR' + str(AnoR) + 'Z' + str(depthAno) + 'L' + str(widthAno) +  'h' + str(HAno)
+    SimName='M' + 'SoilR' + str(data['SoilR']) + 'AnoR' + str(data['AnoR']) + 'Z' + str(data['HWD'][0]) + 'W' + str(data['HWD'][1]) +  'D' + str(data['HWD'][2])
 
     maxdepth = data['HWD'][2] * 1.5
     shape = data['shape']
@@ -47,12 +47,10 @@ def load_MALM_sens3d(filename=None):
     p2 = data['p12'][1]
     xyzu = data['XYU']
     xp, yp, z, U  = xyzu[:,0],  xyzu[:,1], xyzu[:,2],  xyzu[:,3]
-    # z = 0
-    # U = xyzu[3]
-    # print(data['XYU'])
-    # print(data['XYU'].shape)
+    
+    # ano_prop = data
 
-    return xp, yp, z, U, maxdepth, shape, p1, p2
+    return xp, yp, z, U, maxdepth, shape, p1, p2, SimName, data
 
 
 def load_MALM_synthetic(ZZ=-13.75,shape=(30,30),field=False):

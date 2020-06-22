@@ -1,21 +1,21 @@
 """
-Example of potential magnetic field data analysis using pyDEXP
---------------------------------------------------------------------
+Magnetic field data analysis using pyDEXP: a 2-sources case
+-----------------------------------------------------------
 
-This code shows a step-by-step processing in order to provide an estimate of magnetic sources positions and depth using the dEXP tranformation method.
+This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of magnetic sources positions and depth using the dEXP tranformation method.
 dEXP method implementation from Fedi et al. 2012. 
 Calculations used :mod:`dEXP`, while plotting use the :mod:`plot_dEXP` module.
 
 The model data was created using geometric objects from :mod:`fatiando.mesher`. The forward simulation of the data was done using :mod:`fatiando.gravmag` module.
 
 Sources locations:
-    S_{A} = [10e3,10e3,2e3] # xyz coordinates
-    S_{B} = [25e3,10e3,1e3]
+    - S_{A} = [10e3,10e3,2e3] # xyz coordinates
+    - S_{B} = [25e3,10e3,1e3]
 
 Sources properties: 
-    radius = 1.5e3
-    inc = 50
-    dec = -30
+    - radius = 1.5e3
+    - inc = 50
+    - dec = -30
 
 .. note::
 

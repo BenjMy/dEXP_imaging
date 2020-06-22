@@ -45,9 +45,8 @@ plt.rcParams['font.size'] = 15
 #%%
 # MALM DATA synthetic anomaly: analysis of sensitivity
 
-xp, yp, z, U, maxdepth, shape, p1, p2 = MALM.load_MALM_sens3d(filename='./malm_models/' +
+xp, yp, z, U, maxdepth, shape, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./malm_models/' +
                                                             'MSoilR1000.0AnoR1Z-13.75L5h2.5.pkl')
-# len(xp)
 parameters = para.set_par(shape=shape,max_elevation=abs(maxdepth))
 interp = True
 scaled = parameters[0]
@@ -64,17 +63,27 @@ maxAlt_ridge = max_elevation*0.65
 interp = True
 smooth = True 
 
+# dstruct = { "SoilR" : SoilR, "AnoR" : AnoR , "HWD" : [HAno,widthAno,depthAno], "XYU" : uz0_grid,
+#            "shape" : shape, "p12": [p1,p2]}
+    
+x1, x2, z1, z2 = [-ano_prop['HWD'][1]/2,ano_prop['HWD'][1]/2,
+                ano_prop['HWD'][2]+ ano_prop['HWD'][0]/2,
+                ano_prop['HWD'][2]- ano_prop['HWD'][0]/2]
+CT = ano_prop['SoilR']/ano_prop['AnoR']
 
-#%% ------------------------------- Plot the data 
+#%% 
+# Plot the data 
 pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
 
-#%% ------------------------------- Pad the edges of grids
+#%% 
+# Pad the edges of grids (if necessary)
 
-xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
-pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
+# xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
+# pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
 
 
-#%% ------- upward continuation of the field data
+#%% 
+# upward continuation of the field data
 
 mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
                  zmin=0, zmax=max_elevation, nlayers=nlay, 
@@ -84,7 +93,8 @@ plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
 plt.colorbar(cmap)
 
 
-# %% ridges identification
+#%%
+# ridges identification
 
 dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
                                       label=label_prop,
@@ -98,22 +108,24 @@ dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                       method_peak='find_peaks')  
 
  
-#%% ------------------------------- plot ridges over continuated section
-    
+#%% 
+# plot ridges over continuated section
+
 fig = plt.figure()
 ax = plt.gca()
 pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
 pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
 
-#%% ------------------------------- filter ridges regionally constrainsted)
-   
+#%%
+# filter ridges (regionally constrainsted)
 
 dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                            minDepth=1000,maxDepth=3000,
+                                            minDepth=minAlt_ridge,maxDepth=maxAlt_ridge,
                                             minlength=3,rmvNaN=True)
 df_f = dfI_f, dfII_f, dfIII_f
 
-#%% ------------------------------- plot ridges fitted over continuated section
+#%%
+# plot ridges fitted over continuated section
 
 fig = plt.figure()
 ax = plt.gca()
@@ -125,6 +137,6 @@ df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
 
 pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
                           ridge_type=[0,1,2],ridge_nb=None)
-square([x1, x2, -z1, -z2])
-plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
+square([x1, x2, z1, z2])
+plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
 
