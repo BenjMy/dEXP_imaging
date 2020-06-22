@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Imaging methods for potential fields.
+This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of magnetic sources positions and depth using the dEXP tranformation method.
+dEXP method implementation from Fedi et al. 2012. 
+Calculations used :mod:`dEXP`, while plotting use the :mod:`plot_dEXP` module.
 
-Implements the DEXP method described in Fedi and Pilkington (2012). Application on a anomaly of density  (gravimetry).
+Application on a anomaly of electrical resistivity.
+The model data was created using geometric objects from :mod:`pygimli.meshtools`. The forward simulation of the data was done using :mod:`pygimli.ERTsimulate` module.
+
 
 .. note::
 
