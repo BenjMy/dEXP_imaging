@@ -37,7 +37,7 @@ import dEXP as dEXP
 from dEXP import _fit
 import plot_dEXP as pEXP
 import set_parameters as para
-import examples.sources_mag.fwd_mag_sphere as magfwd
+import examples.magnetic.fwdmag.fwd_mag_sphere as magfwd
 
 
 #%%
