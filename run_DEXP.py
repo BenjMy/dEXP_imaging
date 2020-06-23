@@ -25,26 +25,6 @@ plt.rcParams['font.size'] = 15
 from icsd3d.importers.read import load_obs, load_geom
 
 
-#%% ------------------------------- MALM DATA synth sensibility
-
-xp, yp, zp, U, max_elevation, shape = MALM.load_MALM_synthetic(ZZ=-3.75,shape=(100,100), field=False)
-parameters = para.set_par(shape=shape,max_elevation=max_elevation)
-p1, p2 = [min(xp),0], [max(xp), 0]
-interp = True
-scaled = parameters[0]
-SI = parameters[1]
-zp, qorder, nlay = parameters[2:5]
-minAlt_ridge, maxAlt_ridge = parameters[5:7]
-
-# ----------- ridges analysis
-nlay = 25
-max_elevation = 20
-minAlt_ridge = max_elevation*0.05
-maxAlt_ridge = max_elevation*0.65
-
-interp = True
-smooth = True 
-
 #%% ------------------------------- MALM DATA
 # path2files="example_2add_later/Landfill_3d/Ano_0_EA/"  # Real A position without anomaly
 # path2files="example_2add_later/Landfill_3d/Ano_1_BH_EA/"  # Real A position with big hole anomaly
@@ -52,73 +32,73 @@ smooth = True
 # Main = 'E:/Padova/Software/SourceInversion/icsd_dev/example_2add_later/Landfill_3d/Ano_1_BH_EA/'
 # file = 'OAno_synt'
 
-# Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/ph/'
-# file = 'Ano'
-# interp = True
-# smooth = False 
+Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/ph/'
+file = 'Ano'
+interp = True
+smooth = True 
 
-# dataset = MALM.load_MALM_LandfillPorto(path=Main, 
-#                                         filename=file,
-#                                         shape = (300,300),
-#                                         field=True,
-#                                         interp = interp,
-#                                         radius=300)
-# coord_xyz, coord_xyz_int = dataset[0:2]
-# coord_xyz_int
-# Uload = dataset[2]
-# coords_liner = dataset[3]
-# shape, max_elevation = dataset[4:6]
+dataset = MALM.load_MALM_LandfillPorto(path=Main, 
+                                        filename=file,
+                                        shape = (300,300),
+                                        field=True,
+                                        interp = interp,
+                                        radius=300)
+coord_xyz, coord_xyz_int = dataset[0:2]
+coord_xyz_int
+Uload = dataset[2]
+coords_liner = dataset[3]
+shape, max_elevation = dataset[4:6]
 
 
 
-# p = dataset[6]         # line points                                       
-# # set imaging pseudo-inversion parameters                                                                        
-# parameters = para.set_par(shape=shape,max_elevation=max_elevation)
+p = dataset[6]         # line points                                       
+# set imaging pseudo-inversion parameters                                                                        
+parameters = para.set_par(shape=shape,max_elevation=max_elevation)
 
-# scaled = parameters[0]
-# SI = parameters[1]
-# zp, qorder, nlay = parameters[2:5]
-# minAlt_ridge, maxAlt_ridge = parameters[5:7]
+scaled = parameters[0]
+SI = parameters[1]
+zp, qorder, nlay = parameters[2:5]
+minAlt_ridge, maxAlt_ridge = parameters[5:7]
 
-# max_elevation = 50
-# # nlay = 50
+max_elevation = 50
+# nlay = 50
 
-# # xp, yp, zp = coord_xyz_int
-# xp, yp, zp = coord_xyz
-# # len(xp)
-# Uini = Uload[0] # U_raw, Ucor, U_int, Ucor_int
-# p1 , p2 = p
+# xp, yp, zp = coord_xyz_int
+xp, yp, zp = coord_xyz
+# len(xp)
+Uini = Uload[0] # U_raw, Ucor, U_int, Ucor_int
+p1 , p2 = p
 
-# # len(xp)
-# # MALM.definep1p2(path=Main, radius=130)
-# # MALM.squaremat(r=130)
+# len(xp)
+# MALM.definep1p2(path=Main, radius=130)
+# MALM.squaremat(r=130)
 
-# #%%
-# # find point position with respect to line equation defined by p1 and p2
-# U_a, p_a, bool_above, U_b, p_b = MALM.isabove(xp, yp, Uini, 
-#                                  np.array(p1),np.array(p2))
-# # Compute p1 and p2 line equation ax + by + c = 0
-# a, b, c = MALM.slope(p1,p2)
+#%%
+# find point position with respect to line equation defined by p1 and p2
+U_a, p_a, bool_above, U_b, p_b = MALM.isabove(xp, yp, Uini, 
+                                  np.array(p1),np.array(p2))
+# Compute p1 and p2 line equation ax + by + c = 0
+a, b, c = MALM.slope(p1,p2)
 
-# # Mirror points with respect to p1p2 line
-# Umirror, xy_mirror = MALM.mirrorU_alongLine(U_a,p_a,bool_above,a,b,c)
+# Mirror points with respect to p1p2 line
+Umirror, xy_mirror = MALM.mirrorU_alongLine(U_a,p_a,bool_above,a,b,c)
 
-# U_a_int = gridder.interp_at(xy_mirror[:,0], xy_mirror[:,1], Umirror, xp, yp, algorithm='nearest', 
-#                         extrapolate=True)   
+U_a_int = gridder.interp_at(xy_mirror[:,0], xy_mirror[:,1], Umirror, xp, yp, algorithm='nearest', 
+                        extrapolate=True)   
 
-# plt.figure()
-# plt.scatter(xp,yp,c=U_a_int, cmap='viridis',vmax=0.25)
-# plt.colorbar()
-# plt.axis('square')
+plt.figure()
+plt.scatter(xp,yp,c=U_a_int, cmap='viridis',vmax=0.25)
+plt.colorbar()
+plt.axis('square')
    
    
-# U = np.copy(Uini)
-# U[np.where(bool_above == True)[0]]= U_a_int[np.where(bool_above == True)[0]]
-# plt.figure()
-# plt.scatter(xp, yp, c=U, cmap='viridis',vmax=0.25)
-# plt.colorbar()
-# plt.axis('square')
-# plt.show()
+U = np.copy(Uini)
+U[np.where(bool_above == True)[0]]= U_a_int[np.where(bool_above == True)[0]]
+plt.figure()
+plt.scatter(xp, yp, c=U, cmap='viridis',vmax=0.25)
+plt.colorbar()
+plt.axis('square')
+plt.show()
 
 #%%
 
@@ -171,7 +151,7 @@ smooth = True
 
 # %% change p1p2 axis 
 
-# p1,p2 = uEXP.perp_p1p2(p1,p2, offset=0)
+p1,p2 = uEXP.perp_p1p2(p1,p2, offset=0)
 
 # U = MALM.zeros_sym(Uini,c_above,value=0)
 # shape = (300,300)

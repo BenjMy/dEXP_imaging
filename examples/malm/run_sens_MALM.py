@@ -41,7 +41,7 @@ import plot_dEXP as pEXP
 import set_parameters as para
 
 # exemples
-import examples_in_prep.load_MALM_model as MALM
+import examples.malm.loadmalm.Load_sens_MALM as MALM
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -51,7 +51,7 @@ plt.rcParams['font.size'] = 15
 #%%
 # MALM DATA synthetic anomaly: analysis of sensitivity
 
-xp, yp, z, U, maxdepth, shape, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./malm_models/' +
+xp, yp, z, U, maxdepth, shape, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
                                                             'MSoilR1000.0AnoR1Z-13.75L5h2.5.pkl')
 parameters = para.set_par(shape=shape,max_elevation=abs(maxdepth))
 interp = True
@@ -102,10 +102,10 @@ plt.colorbar(cmap)
 #%%
 # ridges identification
 
-dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
-                                      label=label_prop,
-                                      fix_peak_nb=2,
-                                      method_peak='find_peaks')  
+# dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
+#                                       label=label_prop,
+#                                       fix_peak_nb=2,
+#                                       method_peak='find_peaks')  
 
 # or  find_peaks or peakdet or spline_roots
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
@@ -133,16 +133,16 @@ df_f = dfI_f, dfII_f, dfIII_f
 #%%
 # plot ridges fitted over continuated section
 
-fig = plt.figure()
-ax = plt.gca()
+# fig = plt.figure()
+# ax = plt.gca()
 
-pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
+# pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+# pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
-df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
+# df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
 
-pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
-square([x1, x2, z1, z2])
-plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
+# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
+#                           ridge_type=[0,1,2],ridge_nb=None)
+# square([x1, x2, z1, z2])
+# plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
 
