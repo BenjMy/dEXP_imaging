@@ -35,7 +35,7 @@ from icsd3d.importers.read import load_obs, load_geom
 Main = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/ph/'
 file = 'Ano'
 interp = True
-smooth = True 
+smooth = False 
 
 dataset = MALM.load_MALM_LandfillPorto(path=Main, 
                                         filename=file,
@@ -162,7 +162,7 @@ p1,p2 = uEXP.perp_p1p2(p1,p2, offset=0)
 
 #%% ------------------------------- smooth the data 
 
-# U = dEXP.smooth2d(xp, yp, U, sigma=0.5)
+U = dEXP.smooth2d(xp, yp, U, sigma=10)
 
 #%% ------------------------------- Plot the data 
 
@@ -177,14 +177,14 @@ xx, yy, distance, profile = pEXP.plot_line(xp, yp, U ,p1,p2, interp=interp)
 
 #%% ------------------------------- Plot the derivatives
 
-xderiv = transform.derivx(xp, yp, U, shape,order=1)
-yderiv = transform.derivy(xp, yp, U, shape,order=1)
-zderiv = transform.derivz(xp, yp, U, shape,order=1)
+# xderiv = transform.derivx(xp, yp, U, shape,order=1)
+# yderiv = transform.derivy(xp, yp, U, shape,order=1)
+# zderiv = transform.derivz(xp, yp, U, shape,order=1)
 
-# interp = True
-pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp)
-pEXP.plot_line(xp, yp, yderiv ,p1,p2,title='yderiv',savefig=False, interp=interp)
-pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp)
+# # interp = True
+# pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp)
+# pEXP.plot_line(xp, yp, yderiv ,p1,p2,title='yderiv',savefig=False, interp=interp)
+# pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp)
 
 #%% ------- upward continuation of the field data
 
@@ -213,11 +213,11 @@ plt.colorbar(cmap)
 
 # %% ridges identification
 
-dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
-                                      label=label_prop,
-                                      fix_peak_nb=4,
-                                      interp=interp,smooth=smooth,
-                                      method_peak='find_peaks')  
+# dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
+#                                       label=label_prop,
+#                                       fix_peak_nb=4,
+#                                       interp=interp,smooth=smooth,
+#                                       method_peak='find_peaks')  
 
 # or  find_peaks or peakdet or spline_roots
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,

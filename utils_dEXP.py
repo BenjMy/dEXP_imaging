@@ -6,6 +6,8 @@ Miscellaneous utility functions.
 """
 import numpy as np 
 import matplotlib.pyplot as plt
+import math 
+from numpy import inf
 
 #%% Functions SPECIFIC FOR MISE-A-LA-MASSE data preparation to dEXP transformation 
 
@@ -19,36 +21,43 @@ def cor_field_B(x,y,z,u,B,rho=100):
     dist = np.sqrt((x-B[0])**2 + (y-B[1])**2 + (z-B[2])**2) # distance between B and potential electrodes
     den = 2*math.pi*dist
     u_B = num/den
-
+    
+    print(u_B)
+    u_B[u_B == inf] = 0
+    
     u_cor = u - u_B # correct total measured potential from influence of B
 
-    plt.figure(figsize=(20,10))
+    plt.figure() # figsize=(20,10)
     plt.subplot(2,2,1)
     plt.tricontourf(x, y, dist, 50, cmap='RdBu_r')
     cbar = plt.colorbar(orientation='vertical', aspect=50)
     cbar.set_label('Distance from B (m)')
-    plt.tight_layout()
+    # plt.scatter(B[0],B[1], marker='v', color='red')
+    # plt.tight_layout()
     plt.axis('square')
 
     plt.subplot(2,2,2)
     plt.tricontourf(x, y, u_B, 50, cmap='RdBu_r')
     cbar = plt.colorbar(orientation='vertical', aspect=50)
     cbar.set_label('$u_{B}$ (V)')
-    plt.tight_layout()
+    # plt.scatter(B[0],B[1], marker='v', color='red')
+    # plt.tight_layout()
     plt.axis('square')
     
     plt.subplot(2,2,3)
     plt.tricontourf(x, y, u, 50, cmap='RdBu_r')
     cbar = plt.colorbar(orientation='vertical', aspect=50)
     cbar.set_label('$u = U_{T} $(V)')
-    plt.tight_layout()
+    # plt.scatter(B[0],B[1], marker='v', color='red')
+    # plt.tight_layout()
     plt.axis('square')
     
     plt.subplot(2,2,4)
     plt.tricontourf(x, y, u_cor, 50, cmap='RdBu_r')
     cbar = plt.colorbar(orientation='vertical', aspect=50)
     cbar.set_label('$u = U_{T} - u_{B}$ (V)')
-    plt.tight_layout()
+    # plt.scatter(B[0],B[1], marker='v', color='red')
+    # plt.tight_layout()
     plt.axis('square')
 
     return u_cor   

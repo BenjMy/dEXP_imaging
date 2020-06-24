@@ -1,5 +1,7 @@
-# -*- coding: utf-8 -*-
 """
+Sensitivity analysis of DEXP on Mise-à-la-masse 
+-----------------------------------------------
+
 This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of magnetic sources positions and depth using the dEXP tranformation method.
 dEXP method implementation from Fedi et al. 2012. 
 Calculations used :mod:`dEXP`, while plotting use the :mod:`plot_dEXP` module.
@@ -24,26 +26,18 @@ field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
 
 Rücker, C., Günther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library for modelling and inversion in geophysics, Computers and Geosciences, 109, 106-123, doi: 10.1016/j.cageo.2017.07.011
 
-----
 """
 
-import os
-
-from fatiando.vis import mpl #, myv
-from fatiando import gridder, mesher, utils
-from fatiando.gravmag import prism, imaging, transform
 from fatiando.vis.mpl import square
 
 # my own functions
 import dEXP as dEXP
-from dEXP import _fit
 import plot_dEXP as pEXP
 import set_parameters as para
 
 # exemples
 import examples.malm.loadmalm.Load_sens_MALM as MALM
 
-import numpy as np
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
 
@@ -51,8 +45,10 @@ plt.rcParams['font.size'] = 15
 #%%
 # MALM DATA synthetic anomaly: analysis of sensitivity
 
+# MSoilR1000.0AnoR1Z-3.75L5h2.5
+
 xp, yp, z, U, maxdepth, shape, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
-                                                            'MSoilR1000.0AnoR1Z-13.75L5h2.5.pkl')
+                                                            'MSoilR1000.0AnoR1Z-3.75L5h2.5.pkl')
 parameters = para.set_par(shape=shape,max_elevation=abs(maxdepth))
 interp = True
 scaled = parameters[0]
@@ -60,7 +56,8 @@ SI = parameters[1]
 zp, qorder, nlay = parameters[2:5]
 minAlt_ridge, maxAlt_ridge = parameters[5:7]
 
-# ----------- ridges analysis
+#%%
+# ridges analysis parameters
 nlay = 25
 max_elevation = 20
 minAlt_ridge = max_elevation*0.05
@@ -69,9 +66,8 @@ maxAlt_ridge = max_elevation*0.65
 interp = True
 smooth = True 
 
-# dstruct = { "SoilR" : SoilR, "AnoR" : AnoR , "HWD" : [HAno,widthAno,depthAno], "XYU" : uz0_grid,
-#            "shape" : shape, "p12": [p1,p2]}
-    
+#%%
+# Anomalies properties
 x1, x2, z1, z2 = [-ano_prop['HWD'][1]/2,ano_prop['HWD'][1]/2,
                 ano_prop['HWD'][2]+ ano_prop['HWD'][0]/2,
                 ano_prop['HWD'][2]- ano_prop['HWD'][0]/2]
@@ -83,13 +79,12 @@ pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
 
 #%% 
 # Pad the edges of grids (if necessary)
-
 # xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
 # pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
 
 
 #%% 
-# upward continuation of the field data
+# Upward continuation of the field data
 
 mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
                  zmin=0, zmax=max_elevation, nlayers=nlay, 
@@ -100,8 +95,7 @@ plt.colorbar(cmap)
 
 
 #%%
-# ridges identification
-
+# Ridges identification
 # dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
 #                                       label=label_prop,
 #                                       fix_peak_nb=2,
@@ -115,7 +109,7 @@ dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
 
  
 #%% 
-# plot ridges over continuated section
+# Plot ridges over continuated section
 
 fig = plt.figure()
 ax = plt.gca()
@@ -123,7 +117,7 @@ pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
 pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
 
 #%%
-# filter ridges (regionally constrainsted)
+# Filter ridges (regionally constrainsted)
 
 dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
                                             minDepth=minAlt_ridge,maxDepth=maxAlt_ridge,

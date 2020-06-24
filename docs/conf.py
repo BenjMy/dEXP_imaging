@@ -45,16 +45,29 @@ release = 'v0.1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+
+# extensions = [
+#     'sphinx.ext.autodoc',
+#     'sphinx.ext.coverage',
+#     'sphinx.ext.mathjax',
+#     'sphinx.ext.napoleon',
+#     'numpydoc',
+#     #'nbsphinx', # to include jupyter notebook as sphinx doc page
+#     'sphinx_gallery.gen_gallery', # to generate the gallery
+#     #'sphinx_nbexamples', # needs pandoc (apt-get install pandoc)
+#     'sphinx.ext.autosectionlabel'
+# ]
+
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
-    'sphinx.ext.napoleon',
-    'numpydoc',
-    #'nbsphinx', # to include jupyter notebook as sphinx doc page
-    'sphinx_gallery.gen_gallery', # to generate the gallery
-    #'sphinx_nbexamples', # needs pandoc (apt-get install pandoc)
-    'sphinx.ext.autosectionlabel'
+    'sphinx.ext.doctest',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.extlinks',
+    'matplotlib.sphinxext.plot_directive',
+    'sphinx_gallery.gen_gallery',
 ]
 
 
@@ -73,12 +86,18 @@ sphinx_gallery_conf = {
     # Sort gallery example by file name instead of number of lines (default)
     # 'within_subsection_order': FileNameSortKey,
     # directory where function granular galleries are stored
-    # 'backreferences_dir': False,
+    'backreferences_dir': True,
     # Modules for which function level galleries are created.  In
     # this case sphinx_gallery and numpy in a tuple of strings.
     # 'doc_module': 'harmonica',
     # Insert links to documentation of objects in the examples
     # 'reference_url': {'harmonica': None},
+    'reference_url': {
+     # The module you locally document uses None
+    'sphinx_gallery': None,
+    }
+    # # directory where function/class granular galleries are stored
+    # 'backreferences_dir'  : 'gen_modules/backreferences',
 }
 
 # Configure the inline plots from matplotlib plot_directive
