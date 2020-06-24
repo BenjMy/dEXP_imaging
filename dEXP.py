@@ -39,8 +39,11 @@ from scipy.optimize import curve_fit
     
 def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
                        fix_peak_nb=None, label='upwc',
-                       interp=True,smooth=False, **kwargs):
-    plt.figure()
+                       interp=True,smooth=False,showfig=False, **kwargs):
+    
+    
+    if  showfig == True:
+        plt.figure()
     
     method_peak = 'find_peaks'
     x_resolution = len(x)
@@ -93,13 +96,14 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
         # peak analysis
         MinMax_peaks = _peaks_analysis(xx,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
                                        method_peak=method_peak,proxy=None)     
-        
-        colors = pl.cm.viridis(np.linspace(0,1,len(depths)))
-        plt.plot(xx,p_up_f_d1x, color=colors[i], label=str(int(depth)))
-        for ind in range(len(MinMax_peaks)):
-            plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color= 'r')
-            # plt.scatter(MinMax_peaks[ind],0,color= 'r')
-        plt.legend()
+
+        if  showfig == True:
+            colors = pl.cm.viridis(np.linspace(0,1,len(depths)))
+            plt.plot(xx,p_up_f_d1x, color=colors[i], label=str(int(depth)))
+            for ind in range(len(MinMax_peaks)):
+                plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color= 'r')
+                # plt.scatter(MinMax_peaks[ind],0,color= 'r')
+            plt.legend()
             
 
     
