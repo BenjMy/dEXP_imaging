@@ -29,6 +29,7 @@ Rücker, C., Günther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library f
 """
 
 from fatiando.vis.mpl import square
+from fatiando import gridder
 
 # my own functions
 import dEXP as dEXP
@@ -47,8 +48,12 @@ plt.rcParams['font.size'] = 15
 
 # MSoilR1000.0AnoR1Z-3.75L5h2.5
 
-xp, yp, z, U, maxdepth, shape, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
+x_raw, y_raw, z_raw, U_raw, maxdepth, shape_raw, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
                                                             'MSoilR1000.0AnoR1Z-3.75L5h2.5.pkl')
+shape = (300,300)
+xp,yp,U = gridder.interp(x_raw,y_raw,U_raw,shape)
+
+
 parameters = para.set_par(shape=shape,max_elevation=abs(maxdepth))
 interp = True
 scaled = parameters[0]
@@ -64,7 +69,7 @@ minAlt_ridge = max_elevation*0.05
 maxAlt_ridge = max_elevation*0.65
 
 interp = True
-smooth = True 
+smooth = False 
 
 #%%
 # Anomalies properties
@@ -127,16 +132,31 @@ df_f = dfI_f, dfII_f, dfIII_f
 #%%
 # plot ridges fitted over continuated section
 
+fig = plt.figure()
+ax = plt.gca()
+
+pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
+
+df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
+
+pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
+                          ridge_type=[0,1,2],ridge_nb=None)
+square([x1, x2, z1, z2])
+plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
+
+
+#%% Loop on source depth
 # fig = plt.figure()
-# ax = plt.gca()
 
-# pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
-# pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
-
-# df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
-
-# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
-#                           ridge_type=[0,1,2],ridge_nb=None)
-# square([x1, x2, z1, z2])
-# plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
-
+# for i in range(3):
+    
+#     pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+#     pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
+    
+#     df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
+    
+#     pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
+#                               ridge_type=[0,1,2],ridge_nb=None)
+#     square([x1, x2, z1, z2])
+#     plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])

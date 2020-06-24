@@ -43,6 +43,7 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
     plt.figure()
     
     method_peak = 'find_peaks'
+    x_resolution = len(x)
     # --------------------------------------------
     # parameters to parse into find_peaks function
     for key, value in kwargs.items():
@@ -50,7 +51,9 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
            fix_peak_nb = value
         if key == 'method_peak':
              method_peak = value  
-    # prom = 0.1 #
+        if key == 'x_resolution':
+             x_resolution = value  
+             # prom = 0.1 #
     # fix_nb_peaks = 3
     # --------------------------------------------
     
@@ -80,9 +83,9 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
         up_f_d1x = transform.derivx(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
         
         if interp == True:
-            xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, 1000)
+            xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, x_resolution)
         else:
-            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth  = profile_noInter(x, y, up_f_d1x, p1, p2, 1000)
+            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth  = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution)
 
         if smooth == True:
             p_up_f_d1x = _smooth_lowpass(xx,p_up_f_d1x)
@@ -149,6 +152,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
     # --------------------------------------------
     # select depths
     depths = mesh.get_zs()[:-1]
+    x_resolution = len(x)
 
     for key, value in kwargs.items():
         if key == 'minAlt_ridge':
@@ -159,7 +163,8 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
              depths = depths[depths<maxAlt_ridge]
         if key == 'method_peak':
              method_peak = value                                 
-
+        if key == 'x_resolution':
+             x_resolution = value  
     # if minAlt_ridge is not None:
     #     print('test')
     #     # depths = 
@@ -180,9 +185,9 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         upw_u_l = upw_u[i,:]     # analysing extrema layers by layers from top to bottom     
         
         if interp == True:
-            xx, yy, distance, p_up_f = gridder.profile(x, y, upw_u_l, p1, p2, 1000)
+            xx, yy, distance, p_up_f = gridder.profile(x, y, upw_u_l, p1, p2, x_resolution)
         else:
-            xx, yy, distance, p_up_f, p_up_f_smooth = profile_noInter(x, y, upw_u_l, p1, p2, 1000)
+            xx, yy, distance, p_up_f, p_up_f_smooth = profile_noInter(x, y, upw_u_l, p1, p2, x_resolution)
 
         if smooth == True:
             p_up_f = _smooth_lowpass(xx,p_up_f)
@@ -213,9 +218,9 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         up_f_d1z = transform.derivz(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
         
         if interp == True:
-            xx, yy, distance, p_up_f_d1z = gridder.profile(x, y, up_f_d1z, p1, p2, 1000)
+            xx, yy, distance, p_up_f_d1z = gridder.profile(x, y, up_f_d1z, p1, p2, x_resolution)
         else:
-            xx, yy, distance, p_up_f_d1z, p_up_f_d1z_smooth = profile_noInter(x, y, up_f_d1z, p1, p2, 1000)
+            xx, yy, distance, p_up_f_d1z, p_up_f_d1z_smooth = profile_noInter(x, y, up_f_d1z, p1, p2, x_resolution)
             p_up_f_d1z = p_up_f_d1z_smooth
 
         if smooth == True:
@@ -245,9 +250,9 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         up_f_d1x = transform.derivx(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
         
         if interp == True:
-            xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, 1000)
+            xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, x_resolution)
         else:
-            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth = profile_noInter(x, y, up_f_d1x, p1, p2, 1000)
+            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution)
             p_up_f_d1x = p_up_f_d1x_smooth
 
         if smooth == True:
