@@ -1,6 +1,6 @@
 """
-MALM DEXP preprocessing
------------------------
+Preprocessing of MALM for dEXP
+------------------------------
 
 This code shows how to remove the influence of the return electrode B and correct as much as it is possible the field before dEXP analysis.
 Calculations used :mod:`utils_dEXP`, while plotting use the :mod:`plot_dEXP` module.

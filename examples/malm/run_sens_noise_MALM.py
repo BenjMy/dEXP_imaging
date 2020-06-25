@@ -1,6 +1,6 @@
 """
-Sensitivity analysis of DEXP to depth on Mise-à-la-masse 
---------------------------------------------------------
+Sensitivity analysis of DEXP to noise level  on Mise-Ã -la-masse 
+----------------------------------------------------------------
 
 This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of electrical sources positions and depth using the dEXP tranformation method.
 dEXP method implementation from Fedi et al. 2012. 
@@ -8,7 +8,7 @@ Calculations used :mod:`dEXP`, while plotting use the :mod:`plot_dEXP` module.
 
 Application on a anomaly of electrical resistivity.
 The model data was created using geometric objects from :mod:`pygimli.meshtools`. The forward simulation of the data was done using :mod:`pygimli.ERTsimulate` module.
-
+The noise is added to the data. Here 1% plus 1µV. Note, we force a specific noise seed as we want reproducable results for testing purposes.
 
 .. note::
 
@@ -24,7 +24,7 @@ Uieda, L. (2018). Verde: Processing and gridding spatial data using Green's func
 Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential
 field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
 
-Rücker, C., Günther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library for modelling and inversion in geophysics, Computers and Geosciences, 109, 106-123, doi: 10.1016/j.cageo.2017.07.011
+RÃ¼cker, C., GÃ¼nther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library for modelling and inversion in geophysics, Computers and Geosciences, 109, 106-123, doi: 10.1016/j.cageo.2017.07.011
 
 """
 
@@ -53,15 +53,17 @@ DF_FIT = []
 XXZZ = []
 CTm = []
 
-filenames = ['MSoilR1000.0AnoR1Z-3.75L5h2.5',
-             'MSoilR1000.0AnoR1Z-13.75L5h2.5',
-             'MSoilR1000.0AnoR1Z-23.75L5h2.5']
 
-for fi in filenames:
-    print(fi)
+filenames = ['MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0',
+             'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.01', # 10% of noise
+             'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.01', # use smooth fct
+             'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.01'] # use derivative order 1
+
+for i, fi in enumerate(filenames):
     x_raw, y_raw, z_raw, U_raw, maxdepth, shape_raw, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
                                                                 fi + '.pkl')
-    shape = (300,300)
+    shape = (200,200)
+    # print(U_raw[1:10])
     xp,yp,U = gridder.interp(x_raw,y_raw,U_raw,shape)
     
     
@@ -71,40 +73,51 @@ for fi in filenames:
     SI = parameters[1]
     zp, qorder, nlay = parameters[2:5]
     minAlt_ridge, maxAlt_ridge = parameters[5:7]
-    
+    fix_peak_nb = 2
 #%%
 # ridges analysis parameters
     nlay = 25
     max_elevation = 20
-    minAlt_ridge = max_elevation*0.05
-    maxAlt_ridge = max_elevation*0.65
+    minAlt_ridge = max_elevation*0.25
+    maxAlt_ridge = max_elevation*0.75
     
     interp = True
     smooth = False 
     
-#%%
-# Anomalies properties
-# HDWL : height, Depth, Width (x), Lenght (y)
-
-    x1, x2, z1, z2 = [max(x_raw)/2-ano_prop['HWD'][1]/2,max(x_raw)/2 + ano_prop['HWD'][1]/2,
-                    ano_prop['HWD'][2]+ ano_prop['HWD'][0]/2,
-                    ano_prop['HWD'][2]- ano_prop['HWD'][0]/2]
+    #%%
+    # Anomalies properties
+    # HDWL : height, Depth, Width (x), Lenght (y)
+    x1, x2, z1, z2 = [max(x_raw)/2-ano_prop['HWDL'][1]/2,max(x_raw)/2 + ano_prop['HWDL'][1]/2,
+                    ano_prop['HWDL'][2]+ ano_prop['HWDL'][0]/2,
+                    ano_prop['HWDL'][2]- ano_prop['HWDL'][0]/2]
     xxzz = [x1, x2, z1, z2]
     CT = ano_prop['SoilR']/ano_prop['AnoR']
     
 #%% 
-# Plot the data 
-# pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+# some constrainsts
+    if i==2:
+# smooth the data 
+        U = dEXP.smooth2d(xp, yp, U, sigma=1)
+        # smooth = True 
+
+    if i==3:
+# inscrease derivative order 
+        qorder = qorder + 1
+        # fix_peak_nb = 4
+        U = dEXP.smooth2d(xp, yp, U, sigma=1)
+    #%% 
+    # Plot the data 
+    # pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
     
-#%% 
-# Pad the edges of grids (if necessary)
-# xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
-# pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
+    #%% 
+    # Pad the edges of grids (if necessary)
+    # xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
+    # pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
     
     
-#%% 
-# Upward continuation of the field data
-    
+    #%% 
+    # Upward continuation of the field data
+
     mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
                      zmin=0, zmax=max_elevation, nlayers=nlay, 
                      qorder=qorder)
@@ -113,39 +126,69 @@ for fi in filenames:
     # plt.colorbar(cmap)
     
     
-#%%
-# Ridges identification
-# dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
-#                                       label=label_prop,
-#                                       fix_peak_nb=2,
-#                                       method_peak='find_peaks')  
+    #%%
+    # Ridges identification
+    # dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
+    #                                       label=label_prop,
+    #                                       fix_peak_nb=2,
+    #                                       method_peak='find_peaks')  
     
     # or  find_peaks or peakdet or spline_roots
     dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                           label=label_prop,
-                                          fix_peak_nb=2,
-                                          method_peak='find_peaks')  
+                                          fix_peak_nb=fix_peak_nb,
+                                          method_peak='find_peaks',
+                                          smooth=smooth,
+                                          showfig=True
+                                          )  
     
      
-#%% 
-# Plot ridges over continuated section
+    #%% 
+    # Plot ridges over continuated section
     
     # fig = plt.figure()
     # ax = plt.gca()
     # pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
     # pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
     
-#%%
-# Filter ridges (regionally constrainsted)
+    #%%
+    # Filter ridges (regionally constrainsted)
     
     dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                                minDepth=minAlt_ridge,
-                                                maxDepth=maxAlt_ridge,
-                                                minlength=3,rmvNaN=True)
+                                                minDepth=minAlt_ridge,maxDepth=maxAlt_ridge,
+                                                minlength=7,rmvNaN=True,
+                                                xmin=100, xmax=300)
     df_f = dfI_f, dfII_f, dfIII_f
+
+    # dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
+    #                                             minDepth=minAlt_ridge,maxDepth=maxAlt_ridge,
+    #                                             minlength=7,rmvNaN=True)
+    # df_f = dfI_f, dfII_f, dfIII_f
     
-#%%
-# plot ridges fitted over continuated section
+    # k=['EX_xpos1', 'EX_xpos2', 'EX_xpos3', 'EX_xpos4']
+    # minx = xmin
+    # dfI.columns[1:]
+    # import numpy as np
+    # np.where(dfI[k[1]]< minx)
+    
+    #     # -----------------------------------------------------------------------#
+    #     # select a range of ridges within x limits
+    #     for key, value in kwargs.items():
+    #         if key == 'xmin':
+    #             minx = value 
+    
+    #             idfI_col_2rmv = []
+    #             for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
+    #                 id_2NaN = np.where(dfI[k[1]]< minx)
+    #                 dfI[k[1]].iloc[id_2NaN] = np.nan
+                        
+    #             dfI = dfI.drop(dfI.columns[idfI_col_2rmv], axis=1)
+                
+
+       
+        
+    #%%
+    # plot ridges fitted over continuated section
     
     # fig = plt.figure()
     # ax = plt.gca()
@@ -169,23 +212,24 @@ for fi in filenames:
     DF_FIT.append(df_fit)
     XXZZ.append(xxzz)
     CTm.append(CT)
-
+    
 
 #%% 
-# Plot the results
+
 
 i = 0
 plt.figure()
 ax = plt.gca()
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False,legend=False)   
 pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
                           ridge_type=[0,1,2],ridge_nb=None)
+# plt.xlim([100,300])
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
-
+plt.title('0% of noise')
 
 i = 1
 plt.figure()
@@ -198,6 +242,7 @@ pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+plt.title('10% of noise')
 
 i = 2
 plt.figure()
@@ -210,18 +255,33 @@ pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+plt.title('10% of noise - smoothed')
+
+
+i = 3
+plt.figure()
+ax = plt.gca()
+pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
+dfI_f,dfII_f,dfIII_f = DF_F[i]
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
+pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
+                          ridge_type=[0,1,2],ridge_nb=None)
+x1, x2, z1, z2 = XXZZ[i]
+square([x1, x2, z1, z2])
+plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+plt.title('10% of noise - q-order=1')
 
 
 # # Loop on source depth
-# fig, axs = plt.subplots(len(filenames), 1)
+# fig, axs = plt.subplots(1,len(filenames))
 
 # for i in range(len(filenames)):
     
 #     pEXP.plot_xy(MESH[i], label=LABEL[i], ax=axs[i]) #, ldg=)
 #     dfI_f,dfII_f,dfIII_f = DF_F[i]
-#     pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=axs[i],label=False)   
+#     pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=axs[i],label=False, legend=False)    
 #     pEXP.plot_ridges_sources(DF_FIT[i], ax=axs[i], z_max_source=-max_elevation*1.2,
-#                               ridge_type=[0,1,2],ridge_nb=None)
-#     # x1, x2, z1, z2 = XXZZ[i]
-#     # square([x1, x2, z1, z2])
-#     # plt.annotate(CTm[i],[(x1 + x2)/2, -(z1+z2)/2])
+#                                   ridge_type=[0,1,2],ridge_nb=None)
+    # x1, x2, z1, z2 = XXZZ[i]
+    # square([x1, x2, z1, z2])
+    # plt.annotate(CTm[i],[(x1 + x2)/2, -(z1+z2)/2])

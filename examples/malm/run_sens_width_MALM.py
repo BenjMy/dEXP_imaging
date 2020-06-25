@@ -1,6 +1,6 @@
 """
-Sensitivity analysis of DEXP to depth on Mise-à-la-masse 
---------------------------------------------------------
+Sensitivity analysis of DEXP to anomaly width on Mise-Ã -la-masse 
+-----------------------------------------------------------------
 
 This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of electrical sources positions and depth using the dEXP tranformation method.
 dEXP method implementation from Fedi et al. 2012. 
@@ -24,7 +24,7 @@ Uieda, L. (2018). Verde: Processing and gridding spatial data using Green's func
 Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential
 field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
 
-Rücker, C., Günther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library for modelling and inversion in geophysics, Computers and Geosciences, 109, 106-123, doi: 10.1016/j.cageo.2017.07.011
+RÃ¼cker, C., GÃ¼nther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library for modelling and inversion in geophysics, Computers and Geosciences, 109, 106-123, doi: 10.1016/j.cageo.2017.07.011
 
 """
 
@@ -53,13 +53,12 @@ DF_FIT = []
 XXZZ = []
 CTm = []
 
-filenames = ['MSoilR1000.0AnoR1Z-3.75L5h2.5',
-             'MSoilR1000.0AnoR1Z-13.75L5h2.5',
-             'MSoilR1000.0AnoR1Z-23.75L5h2.5']
+
+filenames = ['MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0',
+             'MSoilR1000.0AnoR1Z-13.75W25H2.5L5']
 
 for fi in filenames:
-    print(fi)
-    x_raw, y_raw, z_raw, U_raw, maxdepth, shape_raw, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
+    x_raw, y_raw, z_raw, U_raw, maxdepth, shape_raw, p1, p2, _ , ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
                                                                 fi + '.pkl')
     shape = (300,300)
     xp,yp,U = gridder.interp(x_raw,y_raw,U_raw,shape)
@@ -85,10 +84,9 @@ for fi in filenames:
 #%%
 # Anomalies properties
 # HDWL : height, Depth, Width (x), Lenght (y)
-
-    x1, x2, z1, z2 = [max(x_raw)/2-ano_prop['HWD'][1]/2,max(x_raw)/2 + ano_prop['HWD'][1]/2,
-                    ano_prop['HWD'][2]+ ano_prop['HWD'][0]/2,
-                    ano_prop['HWD'][2]- ano_prop['HWD'][0]/2]
+    x1, x2, z1, z2 = [max(x_raw)/2-ano_prop['HWDL'][1]/2,max(x_raw)/2 + ano_prop['HWDL'][1]/2,
+                    ano_prop['HWDL'][2]+ ano_prop['HWDL'][0]/2,
+                    ano_prop['HWDL'][2]- ano_prop['HWDL'][0]/2]
     xxzz = [x1, x2, z1, z2]
     CT = ano_prop['SoilR']/ano_prop['AnoR']
     
@@ -139,8 +137,7 @@ for fi in filenames:
 # Filter ridges (regionally constrainsted)
     
     dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                                minDepth=minAlt_ridge,
-                                                maxDepth=maxAlt_ridge,
+                                                minDepth=minAlt_ridge,maxDepth=maxAlt_ridge,
                                                 minlength=3,rmvNaN=True)
     df_f = dfI_f, dfII_f, dfIII_f
     
@@ -172,11 +169,21 @@ for fi in filenames:
 
 
 #%% 
-# Plot the results
+# save data loop
+
+MESH.append(mesh)
+LABEL.append(label_prop)
+DF_F.append(df_f)
+DF_FIT.append(df_fit)
+XXZZ.append(xxzz)
+CTm.append(CT)
+
+
+#%% 
+plt.figure()
+ax = plt.gca()
 
 i = 0
-plt.figure()
-ax = plt.gca()
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
@@ -186,10 +193,10 @@ x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 
+plt.figure()
+ax = plt.gca()
 
 i = 1
-plt.figure()
-ax = plt.gca()
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
@@ -198,19 +205,6 @@ pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
-
-i = 2
-plt.figure()
-ax = plt.gca()
-pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
-dfI_f,dfII_f,dfIII_f = DF_F[i]
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
-pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
-x1, x2, z1, z2 = XXZZ[i]
-square([x1, x2, z1, z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
-
 
 # # Loop on source depth
 # fig, axs = plt.subplots(len(filenames), 1)

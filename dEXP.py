@@ -109,7 +109,8 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
     
 
     
-def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=None, interp=True,smooth=False, **kwargs):
+def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=None, 
+                  interp=True,smooth=False,showfig=False, **kwargs):
     """
     Form a multiridge set
     RI and RII : zeros of the first horizontal and first vertical derivatives of the potential field
@@ -205,15 +206,16 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         else:
             RIII_minmax.append(np.hstack([[depth],[]]))
         
-        if i == 3:
 
-            plt.figure()
-            plt.subplot(3,1,1)
-            plt.plot(xx,p_up_f,label='u')
-            for ind in range(len(MinMax_peaks)):
-                plt.scatter(xx[MinMax_peaks[ind]],p_up_f[MinMax_peaks[ind]],color='g')
-                # plt.scatter([MinMax_peaks[ind]],0,color='g')
-            plt.legend()
+        if  showfig == True:
+            if i == 3:
+                plt.figure()
+                plt.subplot(3,1,1)
+                plt.plot(xx,p_up_f,label='u')
+                for ind in range(len(MinMax_peaks)):
+                    plt.scatter(xx[MinMax_peaks[ind]],p_up_f[MinMax_peaks[ind]],color='g')
+                    # plt.scatter([MinMax_peaks[ind]],0,color='g')
+                plt.legend()
  
     for i, depth in enumerate(depths - z[0]): # Loop over RII extremas
         upw_u_l = upw_u[i,:]    # analysing extrema layers by layers from top to bottom  
@@ -240,13 +242,14 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         else:
             RII_minmax.append(np.hstack([[depth],[]]))
 
-        if i == 3:
-            plt.subplot(3,1,2)
-            plt.plot(xx,p_up_f_d1z,label='dz')
-            for ind in range(len(MinMax_peaks)):
-                plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1z[MinMax_peaks[ind]],color='b')
-                # plt.scatter([MinMax_peaks[ind]],0,color='g')
-            plt.legend()
+        if  showfig == True:
+            if i == 3:
+                plt.subplot(3,1,2)
+                plt.plot(xx,p_up_f_d1z,label='dz')
+                for ind in range(len(MinMax_peaks)):
+                    plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1z[MinMax_peaks[ind]],color='b')
+                    # plt.scatter([MinMax_peaks[ind]],0,color='g')
+                plt.legend()
 
     for i, depth in enumerate(depths - z[0]): # Loop for RII extremas
         upw_u_l = upw_u[i,:]     # analysing extrema layers by layers from top to bottom  
@@ -272,13 +275,14 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         else:
             RI_minmax.append(np.hstack([[depth],[]]))
 
-        if i == 3:
-            plt.subplot(3,1,3)
-            plt.plot(xx,p_up_f_d1x,label='dx')
-            for ind in range(len(MinMax_peaks)):
-                plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color='r')
-                # plt.scatter([MinMax_peaks[ind]],0,color='g')
-            plt.legend()
+        if  showfig == True:
+            if i == 3:
+                plt.subplot(3,1,3)
+                plt.plot(xx,p_up_f_d1x,label='dx')
+                for ind in range(len(MinMax_peaks)):
+                    plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color='r')
+                    # plt.scatter([MinMax_peaks[ind]],0,color='g')
+                plt.legend()
             
     # R = [np.array(RI_minmax), np.array(RII_minmax), np.array(RIII_minmax)]
     dfI,dfII, dfIII = _ridges_2_df(RI_minmax, RII_minmax, RIII_minmax)
@@ -481,31 +485,59 @@ def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, *
     
     # -----------------------------------------------------------------------#
     # select a range of ridges within x limits
-    # for key, value in kwargs.items():
-    #     if key == 'xmin':
-    #         minx = value 
+    for key, value in kwargs.items():
+        if key == 'xmin':
+            minx = value 
 
-    #         idfI_col_2rmv = []
-    #         for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
-    #             if dfI[k[1]].any()< minx:
-    #                 idfI_col_2rmv.append(k[0]+1)
-                    
-    #         dfI = dfI.drop(dfI.columns[idfI_col_2rmv], axis=1)
+            for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfI[k[1]]< minx)
+                dfI[k[1]].iloc[id_2NaN] = np.nan
+
+            for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfII[k[1]]< minx)
+                dfII[k[1]].iloc[id_2NaN] = np.nan
+
+            for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfIII[k[1]]< minx)
+                dfIII[k[1]].iloc[id_2NaN] = np.nan
+
+        if key == 'xmax':
+            maxx = value 
+
+            for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfI[k[1]]> maxx)
+                dfI[k[1]].iloc[id_2NaN] = np.nan
+
+            for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfII[k[1]]> maxx)
+                dfII[k[1]].iloc[id_2NaN] = np.nan
+
+            for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfIII[k[1]]> maxx)
+                dfIII[k[1]].iloc[id_2NaN] = np.nan
+                
+                
+            # idfI_col_2rmv = []
+            # for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
+            #     if dfI[k[1]].any()< minx:
+            #     id_2NaN = np.where(dfI[k[1]]< minx)
+            #     dfI[k[1]].iloc[id_2NaN] = np.nan
+            # dfI = dfI.drop(dfI.columns[idfI_col_2rmv], axis=1)
             
-    #         idfII_col_2rmv = []
-    #         for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
-    #             if dfII[k[1]].any()< minx:
-    #                 idfII_col_2rmv.append(k[0]+1)
+            # idfII_col_2rmv = []
+            # for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
+            #     if dfII[k[1]].any()< minx:
+            #         idfII_col_2rmv.append(k[0]+1)
             
-    #         dfII = dfII.drop(dfII.columns[idfII_col_2rmv], axis=1)
+            # dfII = dfII.drop(dfII.columns[idfII_col_2rmv], axis=1)
             
             
-    #         idfIII_col_2rmv = []
-    #         for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
-    #             if dfIII[k[1]].any()< minx:
-    #                 idfIII_col_2rmv.append(k[0]+1)
+            # idfIII_col_2rmv = []
+            # for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
+            #     if dfIII[k[1]].any()< minx:
+            #         idfIII_col_2rmv.append(k[0]+1)
             
-    #         dfIII = dfIII.drop(dfIII.columns[idfIII_col_2rmv], axis=1)
+            # dfIII = dfIII.drop(dfIII.columns[idfIII_col_2rmv], axis=1)
        
         # if key == 'xmax':
         #     maxx = value 
