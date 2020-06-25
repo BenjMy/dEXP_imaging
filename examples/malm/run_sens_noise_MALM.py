@@ -62,7 +62,7 @@ filenames = ['MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0',
 for i, fi in enumerate(filenames):
     x_raw, y_raw, z_raw, U_raw, maxdepth, shape_raw, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
                                                                 fi + '.pkl')
-    shape = (200,200)
+    shape = (150,150)
     # print(U_raw[1:10])
     xp,yp,U = gridder.interp(x_raw,y_raw,U_raw,shape)
     
@@ -74,8 +74,8 @@ for i, fi in enumerate(filenames):
     zp, qorder, nlay = parameters[2:5]
     minAlt_ridge, maxAlt_ridge = parameters[5:7]
     fix_peak_nb = 2
-#%%
-# ridges analysis parameters
+    #%%
+    # ridges analysis parameters
     nlay = 25
     max_elevation = 20
     minAlt_ridge = max_elevation*0.25
@@ -93,15 +93,15 @@ for i, fi in enumerate(filenames):
     xxzz = [x1, x2, z1, z2]
     CT = ano_prop['SoilR']/ano_prop['AnoR']
     
-#%% 
-# some constrainsts
+    #%% 
+    # some constrainsts
     if i==2:
-# smooth the data 
+    # smooth the data 
         U = dEXP.smooth2d(xp, yp, U, sigma=1)
         # smooth = True 
 
     if i==3:
-# inscrease derivative order 
+    # inscrease derivative order 
         qorder = qorder + 1
         # fix_peak_nb = 4
         U = dEXP.smooth2d(xp, yp, U, sigma=1)
@@ -203,8 +203,8 @@ for i, fi in enumerate(filenames):
     # square([x1, x2, z1, z2])
     # plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
 
-#%% 
-# save data loop
+    #%% 
+    # save data loop
 
     MESH.append(mesh)
     LABEL.append(label_prop)

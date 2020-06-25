@@ -17,7 +17,15 @@ def load_MALM_sens3d(filename=None):
     # SimName='M' + 'SoilR' + str(data['SoilR']) + 'AnoR' + str(data['AnoR']) + 'Z' + str(data['HWD'][0]) + 'W' + str(data['HWD'][1]) +  'D' + str(data['HWD'][2])
     SimName = None
 
-    maxdepth = data['HWDL'][2] * 1.5
+    # different version of the pickle file
+    if "HWDL" in data:
+        print("this will execute")
+        maxdepth = data['HWDL'][2] * 1.5
+    elif "HWD" in data:
+        maxdepth = data['HWD'][2] * 1.5
+    elif "HWDLs" in data:
+        maxdepth = data['HWDLs'][2] * 1.5
+
     shape = data['shape']
     p1 = data['p12'][0]
     p2 = data['p12'][1]
