@@ -11,7 +11,7 @@ from numpy import inf
 
 #%% Functions SPECIFIC FOR MISE-A-LA-MASSE data preparation to dEXP transformation 
 
-def cor_field_B(x,y,z,u,B,rho=100):
+def cor_field_B(x,y,z,u,B,rho=100,**kwargs):
     """
     Calculates the potential field (electric) produced by a current injection in B (return electrode) for a
     given homogeneous electrical resistivity rho
@@ -25,36 +25,60 @@ def cor_field_B(x,y,z,u,B,rho=100):
     print(u_B)
     u_B[u_B == inf] = 0
     
-    u_cor = u - u_B # correct total measured potential from influence of B
+    u_cor = u + u_B # correct total measured potential from influence of B
 
+
+    for key, value in kwargs.items():
+        if key == 'vmin':
+            vmin = value
+    for key, value in kwargs.items():
+        if key == 'vmax':
+            vmax = value  
+
+    plt_2 = None
+    for key, value in kwargs.items():
+        if key == 'plt_2':
+            plt_2 = value
+    print(plt_2)
+            
+    # norm = plt.Normalize(vmax=vmax, vmin=vmin)
+    # v = np.linspace(vmin, vmax, 15, endpoint=True)
+
+    vmin = min(dist)
+    vmax = max(dist)
     plt.figure() # figsize=(20,10)
     plt.subplot(2,2,1)
-    plt.tricontourf(x, y, dist, 50, cmap='RdBu_r')
-    cbar = plt.colorbar(orientation='vertical', aspect=50)
+    plt.scatter(x, y, c=dist, cmap='RdBu_r')
+    cbar = plt.colorbar(orientation='vertical')
     cbar.set_label('Distance from B (m)')
-    # plt.scatter(B[0],B[1], marker='v', color='red')
-    # plt.tight_layout()
-    plt.axis('square')
-
-    plt.subplot(2,2,2)
-    plt.tricontourf(x, y, u_B, 50, cmap='RdBu_r')
-    cbar = plt.colorbar(orientation='vertical', aspect=50)
-    cbar.set_label('$u_{B}$ (V)')
-    # plt.scatter(B[0],B[1], marker='v', color='red')
     # plt.tight_layout()
     plt.axis('square')
     
+    vmin = min(u_B)
+    vmax = max(u_B)
+    plt.subplot(2,2,2)
+    plt.scatter(x, y, c=u_B, cmap='RdBu_r')
+    cbar = plt.colorbar(orientation='vertical')
+    cbar.set_label('$u_{B}$ (V)')
+    # plt.scatter(B[0],B[1], marker='v', color='red')
+    # plt.tight_layout()
+    if plt_2 is not None:
+        plt.plot(plt_2[0,:],plt_2[1,:],'*-')
+    plt.axis('square')
+
+    # vmin = min(u)
+    # vmax = max(u)
     plt.subplot(2,2,3)
-    plt.tricontourf(x, y, u, 50, cmap='RdBu_r')
-    cbar = plt.colorbar(orientation='vertical', aspect=50)
+    plt.scatter(x, y, c=u, cmap='RdBu_r')
+    cbar = plt.colorbar(orientation='vertical')
     cbar.set_label('$u = U_{T} $(V)')
     # plt.scatter(B[0],B[1], marker='v', color='red')
     # plt.tight_layout()
     plt.axis('square')
     
     plt.subplot(2,2,4)
-    plt.tricontourf(x, y, u_cor, 50, cmap='RdBu_r')
-    cbar = plt.colorbar(orientation='vertical', aspect=50)
+    plt.scatter(x, y, c=u_cor, cmap='RdBu_r')
+    cbar = plt.colorbar(orientation='vertical')
     cbar.set_label('$u = U_{T} - u_{B}$ (V)')
     # plt.scatter(B[0],B[1], marker='v', color='red')
     # plt.tight_layout()

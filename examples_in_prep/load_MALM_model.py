@@ -86,8 +86,8 @@ def load_MALM_synthetic(ZZ=-13.75,shape=(30,30),field=False):
 # landfill geometry
 # utm coordinates 
 
-def definep1p2(path,radius):
-
+def definep1p2(path,radius,AnoPosp1p2):
+    # print(AnoPosXY)
     RemLineNb, Injection, coordE, pointsE =  load_geom(path) # find the geom file in the folder path
     nb, x , y, z = np.array(coordE[:-3]).T
     
@@ -120,7 +120,7 @@ def definep1p2(path,radius):
 
     # p1 = [284146.0994252465, 5036293.660496061] #coords_liner[1,1]]
     # p2 = [284369.22176640795,5036158.52301766]
-    x1, y1, x2, y2 = squaremat(r=radius)
+    x1, y1, x2, y2 = squaremat(AnoPosp1p2,r=radius)
     p2 = [x1,y1] #coords_liner[1,1]]
     p1 = [x2,y2]
     
@@ -171,6 +171,18 @@ def load_field_u_LandfillPorto(path, filename):
 def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True, radius=20):
 
     if field==True:
+        
+        file = open(path + 'PortoM.pkl', 'rb')
+        u = pickle._Unpickler(file)
+        u.encoding = 'latin1'
+        data_struct = u.load()
+        
+        data_struct['HZ']
+        xA = (data_struct['HZ'][0][0]+data_struct['HZ'][0][1])/2
+        yA = data_struct['HZ'][0][2]
+        AnoPos = [xA,yA]
+
+    
         # x , y, z, U_raw  = load_field_u_LandfillPorto(path, filename + '_uz0.dat')
         print('load' + str(path + filename) + '_uz0_grid.dat')
         x, y, z, U_raw = np.loadtxt(path + filename + '_uz0_grid.dat', unpack=True)
@@ -186,6 +198,7 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
         U_raw = load_obs(path, filename + '.txt') # load observation data
         RemLineNb, Injection, coordE, pointsE =  load_geom(path) # find the geom file in the folder path
         nb, x , y, z = np.array(coordE[:-3]).T
+        AnoPos = []
 
     # path2files="example_2add_later/Landfill_3d/Ano_0_E13/" # Test elec outside landfill
     # # path2files="example_2add_later/Landfill_3d/Ano_0_E89/" # Test 2 elec outside landfill
@@ -201,7 +214,8 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
     else:
         shape = shape
     
-    coords_liner, p1, p2, B = definep1p2(path,radius)
+    # print(AnoPosxAyA)
+    coords_liner, p1, p2, B = definep1p2(path,radius,AnoPos)
     xnew, ynew = creategrid(coords_liner, B, shape)
     
     # ------------- Raw data   -----------------------------------------
@@ -269,7 +283,7 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
     
     max_elevation = 50
 
-    return coord_xyz, coord_xyz_int, U, coords_liner, shape, max_elevation, p
+    return coord_xyz, coord_xyz_int, U, coords_liner, shape, max_elevation, p, data_struct
 
 
 def mirrorImage( a, b, c, x1, y1): 
@@ -376,7 +390,7 @@ def mirrorU_alongLine(U,p,c_above,a,b,c):
    return Umirror, pmirror
 
 
-def squaremat(r=130):
+def squaremat(AnoPosXYmat,r=130):
     # MainPath= 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM'
     # os.chdir(MainPath)
     # grid = pv.read('Ano_field_EA.vtk') 
@@ -389,9 +403,12 @@ def squaremat(r=130):
     
     
     # position of the anomaly
-    ya =  5.0362260e6 
-    xa =  284255 #(284272.0 + 284250.00)/2 -0.055
+    ya =  5.036220e6
+    xa =  284267 #(284272.0 + 284250.00)/2 -0.055
     
+    # xa = AnoPosXYmat[0] - 0.100
+    # ya = AnoPosXYmat[1]
+
     # landfill geometry
     # utm coordinates 
     coords_liner = [(284046.43,	5036328.39),
