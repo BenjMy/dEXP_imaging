@@ -31,6 +31,7 @@ from scipy.signal import find_peaks, peak_prominences, peak_widths # useful for 
 from scipy.signal import savgol_filter
 from scipy.signal import butter,filtfilt
 from scipy.ndimage import gaussian_filter
+from scipy import interpolate
 
 import pandas as pd
 from scipy.optimize import curve_fit
@@ -56,6 +57,9 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
              method_peak = value  
         if key == 'x_resolution':
              x_resolution = value  
+        if key == 'Xaxis':
+             Xaxis = value
+             
              # prom = 0.1 #
     # fix_nb_peaks = 3
     # --------------------------------------------
@@ -90,18 +94,28 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
         else:
             xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth  = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution)
 
+        if Xaxis is 'dist':
+            xaxis = distance
+        elif Xaxis is 'y':
+            xaxis = yy
+        else:
+            xaxis = xx
+        
+        # print(xaxis)
+
+        
         if smooth == True:
-            p_up_f_d1x = _smooth_lowpass(xx,p_up_f_d1x)
+            p_up_f_d1x = _smooth_lowpass(xaxis,p_up_f_d1x)
             
         # peak analysis
-        MinMax_peaks = _peaks_analysis(xx,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
-                                       method_peak=method_peak,proxy=None)     
+        MinMax_peaks = _peaks_analysis(xaxis,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
+                                       method_peak=method_peak,proxy=None)   
 
         if  showfig == True:
             colors = pl.cm.viridis(np.linspace(0,1,len(depths)))
-            plt.plot(xx,p_up_f_d1x, color=colors[i], label=str(int(depth)))
+            plt.plot(xaxis,p_up_f_d1x, color=colors[i], label=str(int(depth)))
             for ind in range(len(MinMax_peaks)):
-                plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color= 'r')
+                plt.scatter(xaxis[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color= 'r')
                 # plt.scatter(MinMax_peaks[ind],0,color= 'r')
             plt.legend()
             
@@ -169,7 +183,10 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         if key == 'method_peak':
              method_peak = value                                 
         if key == 'x_resolution':
-             x_resolution = value  
+             x_resolution = value
+        if key == 'Xaxis':
+             Xaxis = value
+             
     # if minAlt_ridge is not None:
     #     print('test')
     #     # depths = 
@@ -194,15 +211,22 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         else:
             xx, yy, distance, p_up_f, p_up_f_smooth = profile_noInter(x, y, upw_u_l, p1, p2, x_resolution)
 
+        if Xaxis is 'dist':
+            xaxis = distance
+        elif Xaxis is 'y':
+            xaxis = yy
+        else:
+            xaxis = xx
+            
         if smooth == True:
-            p_up_f = _smooth_lowpass(xx,p_up_f)
+            p_up_f = _smooth_lowpass(xaxis,p_up_f)
 
         # peak analysis
-        MinMax_peaks = _peaks_analysis(xx, p_up_f,fix_peak_nb=fix_peak_nb,
+        MinMax_peaks = _peaks_analysis(xaxis, p_up_f,fix_peak_nb=fix_peak_nb,
                                        method_peak=method_peak,proxy=None)
         if np.array(MinMax_peaks).any():
             # RIII_minmax.append(np.hstack([[depth], MinMax_peaks]))
-            RIII_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
+            RIII_minmax.append(np.hstack([[depth], xaxis[MinMax_peaks]]))
         else:
             RIII_minmax.append(np.hstack([[depth],[]]))
         
@@ -211,9 +235,9 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
             if i == 3:
                 plt.figure()
                 plt.subplot(3,1,1)
-                plt.plot(xx,p_up_f,label='u')
+                plt.plot(xaxis,p_up_f,label='u')
                 for ind in range(len(MinMax_peaks)):
-                    plt.scatter(xx[MinMax_peaks[ind]],p_up_f[MinMax_peaks[ind]],color='g')
+                    plt.scatter(xaxis[MinMax_peaks[ind]],p_up_f[MinMax_peaks[ind]],color='g')
                     # plt.scatter([MinMax_peaks[ind]],0,color='g')
                 plt.legend()
  
@@ -229,25 +253,32 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
             xx, yy, distance, p_up_f_d1z, p_up_f_d1z_smooth = profile_noInter(x, y, up_f_d1z, p1, p2, x_resolution)
             p_up_f_d1z = p_up_f_d1z_smooth
 
+        if Xaxis is 'dist':
+            xaxis = distance
+        elif Xaxis is 'y':
+            xaxis = yy
+        else:
+            xaxis = xx
+            
         if smooth == True:
-            p_up_f_d1z = _smooth_lowpass(xx,p_up_f_d1z)
+            p_up_f_d1z = _smooth_lowpass(xaxis,p_up_f_d1z)
             
         # peak analysis
-        MinMax_peaks = _peaks_analysis(xx,p_up_f_d1z,fix_peak_nb=fix_peak_nb,
+        MinMax_peaks = _peaks_analysis(xaxis,p_up_f_d1z,fix_peak_nb=fix_peak_nb,
                                        method_peak=method_peak,proxy=None)
 
         if np.array(MinMax_peaks).any():
             # RII_minmax.append(np.hstack([[depth], MinMax_peaks]))
-            RII_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
+            RII_minmax.append(np.hstack([[depth], xaxis[MinMax_peaks]]))
         else:
             RII_minmax.append(np.hstack([[depth],[]]))
 
         if  showfig == True:
             if i == 3:
                 plt.subplot(3,1,2)
-                plt.plot(xx,p_up_f_d1z,label='dz')
+                plt.plot(xaxis,p_up_f_d1z,label='dz')
                 for ind in range(len(MinMax_peaks)):
-                    plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1z[MinMax_peaks[ind]],color='b')
+                    plt.scatter(xaxis[MinMax_peaks[ind]],p_up_f_d1z[MinMax_peaks[ind]],color='b')
                     # plt.scatter([MinMax_peaks[ind]],0,color='g')
                 plt.legend()
 
@@ -262,25 +293,32 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
             xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution)
             p_up_f_d1x = p_up_f_d1x_smooth
 
+        if Xaxis is 'dist':
+            xaxis = distance
+        elif Xaxis is 'y':
+            xaxis = yy
+        else:
+            xaxis = xx
+            
         if smooth == True:
-            p_up_f_d1x = _smooth_lowpass(xx,p_up_f_d1x)
+            p_up_f_d1x = _smooth_lowpass(xaxis,p_up_f_d1x)
             
         # peak analysis
-        MinMax_peaks = _peaks_analysis(xx,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
+        MinMax_peaks = _peaks_analysis(xaxis,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
                                        method_peak=method_peak,proxy=None)
         
         if np.array(MinMax_peaks).any():
             # RI_minmax.append(np.hstack([[depth], MinMax_peaks]))
-            RI_minmax.append(np.hstack([[depth], xx[MinMax_peaks]]))
+            RI_minmax.append(np.hstack([[depth], xaxis[MinMax_peaks]]))
         else:
             RI_minmax.append(np.hstack([[depth],[]]))
 
         if  showfig == True:
             if i == 3:
                 plt.subplot(3,1,3)
-                plt.plot(xx,p_up_f_d1x,label='dx')
+                plt.plot(xaxis,p_up_f_d1x,label='dx')
                 for ind in range(len(MinMax_peaks)):
-                    plt.scatter(xx[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color='r')
+                    plt.scatter(xaxis[MinMax_peaks[ind]],p_up_f_d1x[MinMax_peaks[ind]],color='r')
                     # plt.scatter([MinMax_peaks[ind]],0,color='g')
                 plt.legend()
             
@@ -1027,7 +1065,41 @@ def pad_edges(xp,yp,U,shape,pad_type=2):
     return xp, yp, U, shape
 
 
-def profile_noInter(x, y, v, point1, point2, size):
+def profile_extra(x, y, v, point1, point2, size, algorithm='cubic'):
+    """
+    Extract a profile between 2 points from spacial data.
+
+    Uses interpolation to calculate the data values at the profile points.
+
+    Parameters:
+
+    * x, y : 1D arrays
+        Arrays with the x and y coordinates of the data points.
+    * v : 1D array
+        Array with the scalar value assigned to the data points.
+    * point1, point2 : lists = [x, y]
+        Lists the x, y coordinates of the 2 points between which the profile
+        will be extracted.
+    * size : int
+        Number of points along the profile.
+    * algorithm : string
+        Interpolation algorithm. Either ``'cubic'``, ``'nearest'``,
+        ``'linear'`` (see scipy.interpolate.griddata).
+
+    Returns:
+
+    * [xp, yp, distances, vp] : 1d arrays
+        ``xp`` and ``yp`` are the x, y coordinates of the points along the
+        profile. ``distances`` are the distances of the profile points from
+        ``point1``. ``vp`` are the data points along the profile.
+
+    """
+
+    
+    return 
+
+
+def profile_noInter(x, y, v, point1, point2, size=None, **kwargs):
     # https://stackoverflow.com/questions/7878398/how-to-extract-an-arbitrary-line-of-values-from-a-numpy-array
     """
     Extract a profile between 2 points from spacial data.
@@ -1054,14 +1126,34 @@ def profile_noInter(x, y, v, point1, point2, size):
         ``point1``. ``vp`` are the data points along the profile.
 
     """
+    
+    Xaxis = []
+    for key, value in kwargs.items():
+        if key == 'Xaxis':
+             Xaxis = value
+             
+
     x1, y1 = point1
     x2, y2 = point2
     maxdist = np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+    
+    if size is None:
+        size = len(v)
+        
     distances = np.linspace(0, maxdist, size)
     angle = np.arctan2(y2 - y1, x2 - x1)
     xp = x1 + distances*np.cos(angle)
     yp = y1 + distances*np.sin(angle)
-    
+
+
+    if Xaxis is 'dist':
+        xaxis = distances
+    elif Xaxis is 'y':
+        xaxis = yp
+    else:
+        xaxis = xp
+        
+        
     nodes = np.array([x,y]).T
     points_p = np.array([xp,yp]).T
     # find nearest point
@@ -1072,10 +1164,26 @@ def profile_noInter(x, y, v, point1, point2, size):
 
     # window_size, poly_order = 101, 3
     # vp_smooth = savgol_filter(vp, window_size, poly_order)
-    spl = UnivariateSpline(xp, vp, s=10)
-    plt.plot(xp, spl(xp), 'g', lw=3)
-    vp_smooth = np.array(spl(xp))
+    # spl = UnivariateSpline(xp, vp, s=10)
+    # plt.plot(xp, spl(xp), 'g', lw=3)
+    # vp_smooth = np.array(spl(xp))
+    
+    xaxis = distances
+
+    plt.figure()
+    plt.plot(xaxis, vp)
+    plt.show()
+
     # vp = interp_at(x, y, v, xp, yp, algorithm=algorithm, extrapolate=True)
+    f = interpolate.interp1d(xaxis, vp, fill_value='extrapolate')
+    xnew = np.linspace(min(xaxis),
+                        max(xaxis),len(x))
+    vp_smooth = f(xnew)
+    
+    plt.figure()
+    plt.plot(xnew, vp_smooth)
+    plt.show()
+
     return xp, yp, distances, vp, vp_smooth
 
 def _closest_node(node, nodes):

@@ -1,5 +1,0 @@
-Randomn field data
-==================
-
-
-    

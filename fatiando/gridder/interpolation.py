@@ -38,10 +38,10 @@ def fill_nans(x, y, v, xp, yp, vp):
     else:
         nans = np.isnan(vp)
     vp[nans] = scipy.interpolate.griddata((x, y), v, (xp[nans], yp[nans]),
-                                          method='nearest').ravel()
+                                          method='cubic').ravel()
 
 
-def interp_at(x, y, v, xp, yp, algorithm='cubic', extrapolate=False):
+def interp_at(x, y, v, xp, yp, algorithm='cubic', extrapolate=True):
     """
     Interpolate spacial data onto specified points.
 

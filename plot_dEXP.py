@@ -14,8 +14,15 @@ from scipy.optimize import curve_fit
 import dEXP as dEXP
 
 def plot_z(mesh):
+    """
+    Get horizontal sections at z levels and plot it
 
-    # ------------------------------- Plot the data
+    Parameters:
+
+    * mesh
+        Fatiando mesh type
+
+    """
     image = mesh.props['density'].reshape(mesh.shape)
     # if scaled == 1:
     #     scale = 0.1*np.abs([image.min(), image.max()]).max()
@@ -45,8 +52,39 @@ def plot_z(mesh):
 
     return
 
-def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False):
+def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
+    """
+    Get vertical xy section of the mesh at max/2 and plot it
 
+    Parameters:
+
+    * mesh
+        Fatiando mesh type
+    * scaled
+        Txt here
+    * label
+        Txt here
+    * ax
+        Txt here
+    * markerMax
+        Txt here
+    """
+
+    x = mesh.get_xs()
+    y = mesh.get_ys()
+    z = mesh.get_zs()
+    
+    Xaxis = 'x'
+    print(len(x))
+    # p1p2 = np.array([len(x)/2, len(y)/2, len(x)/2, len(y)/2])
+    p1p2 = None
+
+    for key, value in kwargs.items():
+        if key == 'Xaxis':
+            Xaxis = value
+        if key == 'p1p2':
+            p1p2 = value
+             
     if label not in mesh.props:
         raise ValueError("mesh doesn't have a '%s' property." % (label))
 
@@ -62,35 +100,43 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False):
         fig = plt.subplots()
         ax = plt.gca()
 
-    
-    x = mesh.get_xs()
-    y = mesh.get_ys()
-    z = mesh.get_zs()
-    
-    #ax = plt.subplot(1, 2, 1)
-    ax.set_title('Model slice at y={} m'.format(y[len(y)//2]))
+    # print(p1p2)
+
+    # p1, p2 =  p1p2[0:2], p1p2[1:-1] 
+    if p1p2 is not None:
+        if Xaxis is 'x':
+            p_xaxis= p1p2[0][0]
+            id_p_xaxis = (np.abs(x - p_xaxis)).argmin()
+            ax.set_title('Model slice at x={} m'.format(y[id_p_xaxis]))
+            cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis])
+            # ax.set_xlim(y.min(), y.max())
+            # ax.set_xlabel('y (m)')
+        else:
+            p_xaxis= p1p2[0][1]
+            id_p_xaxis = (np.abs(y - p_xaxis)).argmin()
+            ax.set_title('Model slice at y={} m'.format(x[id_p_xaxis]))
+            cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :])
+            # ax.set_xlim(x.min(), x.max())
+            # ax.set_xlabel('x (m)')
+    else:
+        cmap = ax.pcolormesh(x, z, image[:, :, mesh.shape[1]//2])
+        ax.set_xlim(x.min(), x.max())
+        ax.set_xlabel('x (m)')
     ax.set_aspect('equal')
-    
-    cmap = ax.pcolormesh(x, z, image[:, :, mesh.shape[1]//2])
-    # square([x1, x2, z1, z2])
-    
-    if markerMax == True:
-        # search for the max
-        ind = np.unravel_index(np.argmax(image[:, :, mesh.shape[1]//2], axis=None), 
-                               image[:, :, mesh.shape[1]//2].shape)
-        image[:, :, mesh.shape[1]//2][ind]
-        zmax = z[ind[0]]
-        #ymax = y[ind[1]]
-        xmax = -x[ind[1]]
+
+    # if markerMax == True:
+    #     # search for the max
+    #     ind = np.unravel_index(np.argmax(image[:, :, id_p_xaxis], axis=None), 
+    #                            image[:, :, mesh.shape[1]//2].shape)
+    #     image[:, :, mesh.shape[1]//2][ind]
+    #     zmax = z[ind[0]]
+    #     #ymax = y[ind[1]]
+    #     xmax = -x[ind[1]]
         
-        ax.scatter(xmax,zmax, s=70, c='r', marker='v')
-    
-
-
+    #     ax.scatter(xmax,zmax, s=70, c='r', marker='v')
 
     ax.set_ylim(z.max(), z.min())
-    ax.set_xlim(x.min(), x.max())
-    ax.set_xlabel('x (m)')
+
     ax.set_ylabel('z (m)')
     ax.set_title(label)
     
@@ -116,6 +162,88 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False):
     # plt.savefig(pathFig +strname + '_xy_' + str(ZZ) + '.png')
 
     return plt, cmap
+
+
+def slice_mesh(x, y, mesh, label, p1, p2, ax=None, interp=True, **kwargs):
+    """
+    Get vertical xy section of the mesh at max/2 and plot it
+
+    Parameters:
+
+    * mesh
+        Fatiando mesh type
+    * scaled
+        Txt here
+    * label
+        Txt here
+        Txt here
+    * markerMax
+        Txt here
+    """
+
+    if ax == None:
+        fig = plt.subplots()
+        ax = plt.gca()
+        
+    Xaxis = []
+    for key, value in kwargs.items():
+        if key == 'Xaxis':
+             Xaxis = value
+             
+    image = mesh.props[label]
+    toslice = np.reshape(image, [mesh.shape[0], mesh.shape[1]*mesh.shape[2]])      
+    depths = mesh.get_zs()[:-1]
+    x_resolution=1000
+    
+    Z = []
+    X = []
+    Y = []
+    DIST = []
+    IMG = []
+    z = 0 * np.ones_like(x)
+    interp = True
+    for i, depth in enumerate(depths - z[0]): # Loop for RII extremas
+        u_layer = toslice[i,:]     # analysing extrema layers by layers from top to bottom 
+        
+        if interp == True:
+            xx, yy, distance, u_layer_p1p2 = gridder.profile(x, y,
+                                                             u_layer, 
+                                                             p1, p2, 
+                                                             x_resolution)
+        else:
+            xx, yy, distance, u_layer_p1p2, u_layer_p1p2_smooth  = profile_noInter(x, y,
+                                                                                   u_layer,
+                                                                                   p1, p2,
+                                                                                   x_resolution)
+    
+        zz = depth*np.ones(len(u_layer_p1p2))
+        Z.append(zz)
+        X.append(xx)
+        Y.append(yy)
+        DIST.append(distance)
+        IMG.append(u_layer_p1p2)
+
+    if 'dist' in Xaxis:
+        xaxis = DIST
+    else:
+        xaxis = X
+            
+    cmap = ax.pcolormesh(np.array(xaxis), np.array(Z),  np.array(IMG))
+
+    # if 'upwc' in label:
+    #     plt.gca().invert_yaxis()
+
+    # ax.set_ylim(np.max(Z), np.min(Z))
+    # ax.set_xlim(np.max(xaxis), np.min(xaxis))
+    ax.set_xlabel('x (m)')
+    ax.set_ylabel('z (m)')
+    ax.set_title(label)
+    ax.set_aspect('equal')
+    
+    return plt, cmap
+
+
+
 
 # def plot_line_mesh(mesh, lnb= 0, p1,p2,ax=None):
     
@@ -145,30 +273,57 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False):
 
 #     return ax
 
+
+
 def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
-    
+
+    Xaxis = []
+    for key, value in kwargs.items():
+        if key == 'Xaxis':
+             Xaxis = value
+             
+
+        
     # Extract a profile between points 1 and 2
     if interp == False:
-        xx, yy, distance, profile = dEXP.profile_noInter(x, y, data, p1, p2, 1000)
+        xx, yy, distance, profile, profile_smooth = dEXP.profile_noInter(x, y, data, p1, p2, size=None)
+        # xx, yy, distance, profile, profile_smooth = dEXP.profile_extra(x, y, data, p1, p2, 1000)
+        for key, value in kwargs.items():
+            if key == 'smooth':
+                profile = profile_smooth
     else:
         xx, yy, distance, profile = gridder.profile(x, y, data, p1, p2, 1000)
-    
+
+    if Xaxis is 'dist':
+        xaxis = distance
+    elif Xaxis is 'y':
+        xaxis = yy
+    else:
+        xaxis = xx
+
+        
     # Plot the profile and the original map data
     plt.figure()
     ax = ax or plt.gca()
-    plt.subplot(2, 1, 1)
+    plt.subplot(1, 2, 1)
     # plt.title(strname + '_data' + str(ZZ), fontsize=15)
-    plt.plot(xx, profile, '.k')
-    plt.xlim(xx.min(), xx.max())
+    plt.plot(xaxis, profile, '.k')
+    plt.xlim(xaxis.min(), xaxis.max())
     plt.grid()
-    plt.subplot(2, 1, 2)
+    plt.xlabel('x (m)')
+    plt.ylabel('voltage (V)')
+
+    plt.subplot(1, 2, 2)
     plt.title("Original data")
     plt.plot(xx, yy, '-k', label='Profile', linewidth=2)
     # scale = np.abs([data.min(), data.max()]).max()
-    plt.tricontourf(x, y, data, 50, cmap='RdBu_r', vmin=min(data), vmax=max(data))
-    plt.colorbar(orientation='horizontal', aspect=50)
+    # plt.tricontourf(x, y, data, 50, cmap='RdBu_r', vmin=min(data), vmax=max(data))
+    plt.scatter(x, y, c=data, cmap='RdBu_r', vmin=min(data), vmax=max(data))
+    plt.colorbar(orientation='vertical', aspect=50)
     plt.legend(loc='lower right')
-    plt.tight_layout()
+    plt.xlabel('x (m)')
+    plt.ylabel('y (m)')
+    # plt.tight_layout()
     plt.axis('square')
 
     for key, value in kwargs.items():

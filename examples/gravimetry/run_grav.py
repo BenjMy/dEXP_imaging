@@ -94,8 +94,8 @@ mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape,
                  zmin=0, zmax=max_elevation, nlayers=nlay, 
                  qorder=qorder)
 
-# plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
-# plt.colorbar(cmap)
+plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
+plt.colorbar(cmap)
 
 
 #%%

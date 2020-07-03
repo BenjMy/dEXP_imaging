@@ -29,8 +29,14 @@ def load_MALM_sens3d(filename=None):
     shape = data['shape']
     p1 = data['p12'][0]
     p2 = data['p12'][1]
-    xyzu = data['XYU']
-    xp, yp, z, U  = xyzu[:,0],  xyzu[:,1], xyzu[:,2],  xyzu[:,3]
     
-    return xp, yp, z, U, maxdepth, shape, p1, p2, SimName, data
+    if "HWDL" in data:
+        xyzu = data['HWDL']
+        xp, yp, z, U  = xyzu[:,0],  xyzu[:,1], xyzu[:,2],  xyzu[:,3]
+
+        return xp, yp, z, U, maxdepth, shape, p1, p2, SimName, data
+
+    else:
+        return maxdepth, shape, p1, p2, SimName, data
+    
 

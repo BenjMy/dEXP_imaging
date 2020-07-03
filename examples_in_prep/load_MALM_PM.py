@@ -11,10 +11,48 @@ import matplotlib.pyplot as plt
 from fatiando import gridder, mesher, utils
 import utils_dEXP as uEXP
 import plot_dEXP as pEXP
+import rotate
 
-def load_MALM_Porto_real(path, filename,shape,radius,rcor):
+
+def rotate_60(origin,point_torotate,angle_deg=60, showfig=False):
     
-    Xd, Yd, U_raw = np.genfromtxt(filename, delimiter='', unpack=True)
+    # X_raw, Y_raw, U_raw_r = np.genfromtxt('malm_models/XYObs_real_f_m3.txt', delimiter='', unpack=True)
+        
+    
+    # point_torotate = np.array([X_raw, Y_raw])
+    angle_rad = np.deg2rad(angle_deg)
+    Xr, Yr = rotate.rotate_around_point_lowperf(point=point_torotate,
+                                                radians=angle_rad,
+                                                origin=origin)
+    
+    # p1r, p2r = rotate.rotate_around_point_lowperf(point=np.array(p1,p2),
+    #                                             radians=angle_rad,
+    #                                             origin=(max(X_raw), min(Y_raw)))
+    
+    if showfig == True:
+        plt.figure()
+        plt.subplot(1,2,1)
+        
+        plt.scatter(point_torotate[:,0], point_torotate[:,1])
+        plt.grid()
+        plt.legend()
+        plt.xlabel('x (m)')
+        plt.ylabel('y (m)')
+        
+        plt.subplot(1,2,2)
+        plt.scatter(Xr, Yr)
+        plt.grid()
+        plt.legend()
+        plt.xlabel('x (m)')
+        plt.ylabel('y (m)')
+    
+    return Xr, Yr
+    
+
+
+def load_MALM_Porto_real(path, filename,shape,radius,rcor, showfig=False, rot=0):
+    
+    X_raw, Y_raw, U_raw = np.genfromtxt(filename, delimiter='', unpack=True)
     # U_raw = load_obs(path, filename + '.txt') # load observation data
     RemLineNb, Injection, coordE, pointsE =  load_geom(path) # find the geom file in the folder path
     nb, x , y, z = np.array(coordE[:-3]).T
@@ -25,22 +63,44 @@ def load_MALM_Porto_real(path, filename,shape,radius,rcor):
     else:
         shape = shape
     
+
+    
+    origin=(max(X_raw), min(Y_raw))
+
+    point_torotate = np.array([ X_raw, Y_raw])
+    # print(point_torotate)
+    Xd, Yd = rotate_60(origin, point_torotate, angle_deg=rot, showfig=True)
+    
     # print(AnoPosxAyA)
     coords_liner, p1, p2, B = definep1p2(path,radius,AnoPos)
     # xnew, ynew = creategrid(coords_liner, B, shape)
     
-    Xint, Yint, U_int = np.genfromtxt(path + 'XYObs_real_f_m3_grd_surf.txt', delimiter='', unpack=True)
-    print(len(Xint))
+    point_torotate = np.array([[p1[0],p2[0]],[p1[1],p2[1]]])
+    px, py = rotate_60(origin,point_torotate,angle_deg=rot, showfig=True)
+    p1 = [px[0],py[0]]
+    p2 = [px[1],py[1]]
 
+    # print(coordE)
+    point_torotate = np.array(coords_liner).T
+    print(point_torotate)
+
+    coords_linerx, coords_linery = rotate_60(origin,point_torotate,angle_deg=rot, showfig=True)
+    coords_liner = np.array([coords_linerx, coords_linery]).T
+    
+    # Xint, Yint, U_int = np.genfromtxt(path + 'XYObs_real_f_m3_grd_surf.txt', delimiter='', unpack=True)
+    # # print(len(Xint))
+
+    # point_torotate = coordE
+    # coordEx, coordEy = rotate_60(origin,point_torotate,angle_deg=rot, showfig=True)
+    # coordE = np.array([coordEx, coordEy])
+    
     
     # ------------- Raw data   -----------------------------------------
     
-    pEXP.plot_line(Xd, Yd, U_raw,p1,p2, title='U_raw') #, vmin=0.01, vmax=0.1, 
     
     # ------------- Interpolation  -----------------------------------------
     # U_int = gridder.interp_at(Xd, Yd, U_raw, xnew, ynew, algorithm='linear', extrapolate=True)
     # xp,yp,U_int = gridder.interp(xnew,ynew,U,shape)
-    pEXP.plot_line(Xint, Yint, U_int,p1,p2,title='U_int')
     
     
     # ------------- correction of B  + interpolation  ----------------------
@@ -48,47 +108,50 @@ def load_MALM_Porto_real(path, filename,shape,radius,rcor):
     Zd = np.zeros(len(Xd))
     Ucor = uEXP.cor_field_B(Xd, Yd, Zd, U_raw, B,rho=rcor,
                             plt_2 = np.array([coords_liner[:,0],coords_liner[:,1]]))
-    pEXP.plot_line(Xd, Yd, Ucor,p1,p2, title='U_cor')
 
 
     # Ucor_int = gridder.interp_at(Xd, Yd, Ucor, xnew, ynew, algorithm='linear', extrapolate=True)
     # xp,yp,Ucor_int = gridder.interp(xnew,ynew,Ucorint_tmp,shape)
 
-    Zd = np.zeros(len(Xint))
-    Uint_cor = uEXP.cor_field_B(Xint, Yint, Zd, U_int, B,rho=rcor)
+    # Zd = np.zeros(len(Xint))
+    # Uint_cor = uEXP.cor_field_B(Xint, Yint, Zd, U_int, B,rho=rcor)
 
-    pEXP.plot_line(Xint, Yint, Uint_cor,p1,p2, title='U_cor&int')
+    if showfig==True:
+        pEXP.plot_line(Xd, Yd, U_raw,p1,p2, title='U_raw') #, vmin=0.01, vmax=0.1, 
+        # pEXP.plot_line(Xint, Yint, U_int,p1,p2,title='U_int')
+        pEXP.plot_line(Xd, Yd, Ucor,p1,p2, title='U_cor')
+        # pEXP.plot_line(Xint, Yint, Uint_cor,p1,p2, title='U_cor&int')
+        
+        # --------------- plot 2d maps -----------------------------------------
+        plt.figure(figsize=(20,10))
     
-    # --------------- plot 2d maps -----------------------------------------
-    plt.figure(figsize=(20,10))
-
-    plt.subplot(2,2,1)
-    plt.scatter(Xd, Yd, c=U_raw, cmap='viridis')
-    cbar = plt.colorbar(orientation='vertical', aspect=50)
-    cbar.set_label('$u_{raw}$ (V)')
-    plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
-    plt.axis('square')
-    
-    plt.subplot(2,2,2)
-    plt.scatter(Xd, Yd, c=Ucor, cmap='viridis')
-    cbar = plt.colorbar(orientation='vertical', aspect=50)
-    cbar.set_label('$u_{Bremoved}$ (V)')
-    plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
-    plt.axis('square')
-    
-    plt.subplot(2,2,3)
-    plt.scatter(Xint, Yint, c=U_int, cmap='viridis')
-    cbar = plt.colorbar(orientation='vertical', aspect=50)
-    cbar.set_label('$u_{Binterp}$ (V)')
-    plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
-    plt.axis('square')
-    
-    plt.subplot(2,2,4)
-    plt.scatter(Xint, Yint, c=Uint_cor, cmap='viridis')
-    cbar = plt.colorbar(orientation='vertical', aspect=50)
-    cbar.set_label('$u_{Bint&rmv}$ (V)')
-    plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
-    plt.axis('square')
+        plt.subplot(2,1,1)
+        plt.scatter(Xd, Yd, c=U_raw, cmap='viridis')
+        cbar = plt.colorbar(orientation='vertical', aspect=50)
+        cbar.set_label('$u_{raw}$ (V)')
+        plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
+        plt.axis('square')
+        
+        plt.subplot(2,1,2)
+        plt.scatter(Xd, Yd, c=Ucor, cmap='viridis')
+        cbar = plt.colorbar(orientation='vertical', aspect=50)
+        cbar.set_label('$u_{Bremoved}$ (V)')
+        plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
+        plt.axis('square')
+        
+        # plt.subplot(2,2,3)
+        # plt.scatter(Xint, Yint, c=U_int, cmap='viridis')
+        # cbar = plt.colorbar(orientation='vertical', aspect=50)
+        # cbar.set_label('$u_{Binterp}$ (V)')
+        # plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
+        # plt.axis('square')
+        
+        # plt.subplot(2,2,4)
+        # plt.scatter(Xint, Yint, c=Uint_cor, cmap='viridis')
+        # cbar = plt.colorbar(orientation='vertical', aspect=50)
+        # cbar.set_label('$u_{Bint&rmv}$ (V)')
+        # plt.plot(coords_liner[:,0],coords_liner[:,1],'*-')
+        # plt.axis('square')
     
     # ---------------------------------------
     zp = 0
@@ -96,13 +159,17 @@ def load_MALM_Porto_real(path, filename,shape,radius,rcor):
     # ---------------------------------------
     
     p = [p1,p2]
-    U = [U_raw, Ucor, U_int, Uint_cor]
-    coord_xyz = [x,y,z]
-    coord_xyz_int = [Xint, Yint,zp]
+    # U = [U_raw, Ucor, U_int, Uint_cor]
+    U = [U_raw, Ucor]
+
+    
+    coord_xyz = [Xd, Yd, np.zeros(len(Yd))]
+    # coord_xyz_int = [Xint, Yint,zp]
     
     max_elevation = 50
 
-    return coord_xyz, coord_xyz_int, U, coords_liner, shape, max_elevation, p
+    # return coord_xyz, coord_xyz_int, U, coords_liner, shape, max_elevation, p
+    return coord_xyz, coord_xyz, U, coords_liner, shape, max_elevation, p
 
 def definep1p2(path,radius,AnoPosp1p2):
     # print(AnoPosXY)
@@ -204,7 +271,7 @@ def squaremat(AnoPosXYmat,r=130):
     coords_liner= np.asarray(coords_liner)
     
     slope = (coords_liner[2,1]-coords_liner[3,1])/(coords_liner[2,0]-coords_liner[3,0]) # (yb-ya)/(xb-xa)
-    slope = slope +0.06
+    slope = np.deg2rad(60+90)
     x1 = xa + r*np.cos(slope)
     y1 = ya + r*np.sin(slope)
     

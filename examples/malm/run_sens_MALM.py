@@ -53,9 +53,11 @@ DF_FIT = []
 XXZZ = []
 CTm = []
 
-filenames = ['MSoilR1000.0AnoR1Z-3.75L5h2.5',
-             'MSoilR1000.0AnoR1Z-13.75L5h2.5',
-             'MSoilR1000.0AnoR1Z-23.75L5h2.5']
+# filenames = ['MSoilR1000.0AnoR1Z-3.75L5h2.5',
+#              'MSoilR1000.0AnoR1Z-13.75L5h2.5',
+#              'MSoilR1000.0AnoR1Z-23.75L5h2.5']
+
+filenames = ['MSoilR1000.0AnoR1Z-23.75L5h2.5']
 
 for fi in filenames:
     print(fi)
