@@ -13,6 +13,24 @@ from scipy.optimize import curve_fit
 # my own functions
 import dEXP as dEXP
 
+def plot_field(x, y, field, shape):
+
+    # Make maps of all fields calculated
+    fig = plt.figure()
+    ax = plt.gca()
+    plt.rcParams['font.size'] = 10
+    X, Y = x.reshape(shape), y.reshape(shape)    
+    scale = np.abs([field.min(), field.max()]).max()
+    # ax.set_title(field_name)
+    plot = ax.pcolormesh(X, Y, field.reshape(shape), cmap='RdBu_r',
+                         vmin=-scale, vmax=scale)
+    plt.colorbar(plot, ax=ax, aspect=30, pad=0)
+    ax.set_xlabel('x (m)')
+    ax.set_ylabel('y (m)')
+    plt.tight_layout(pad=0.5)
+    plt.show()
+    
+    
 def plot_z(mesh):
     """
     Get horizontal sections at z levels and plot it
@@ -99,20 +117,26 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
     if ax == None:
         fig = plt.subplots()
         ax = plt.gca()
-
-    # print(p1p2)
-
-    # p1, p2 =  p1p2[0:2], p1p2[1:-1] 
+       
     if p1p2 is not None:
+        p_xaxis = []
+        for i in p1p2[0]:
+            if(i in p1p2[1]):
+                p_xaxis.append(i)
+        
+        if len(p_xaxis)>1:
+            print('len must be <2')
+        
         if Xaxis is 'x':
-            p_xaxis= p1p2[0][0]
+            # p_xaxis= p1p2[0][0]
+            print('paxis=' + str(p_xaxis))
             id_p_xaxis = (np.abs(x - p_xaxis)).argmin()
             ax.set_title('Model slice at x={} m'.format(y[id_p_xaxis]))
             cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis])
             # ax.set_xlim(y.min(), y.max())
             # ax.set_xlabel('y (m)')
         else:
-            p_xaxis= p1p2[0][1]
+            # p_xaxis= p1p2[0][1]
             id_p_xaxis = (np.abs(y - p_xaxis)).argmin()
             ax.set_title('Model slice at y={} m'.format(x[id_p_xaxis]))
             cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :])
@@ -138,7 +162,7 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
     ax.set_ylim(z.max(), z.min())
 
     ax.set_ylabel('z (m)')
-    ax.set_title(label)
+    # ax.set_title(label)
     
     if 'upwc' in label:
         plt.gca().invert_yaxis()
@@ -467,9 +491,9 @@ def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_s
                 # plt.legend()
                 # the text bounding box
                 plt.ylabel(" ")
-                bbox = {'fc': '0.8', 'pad': 0}
-                ax.text(-0.15, 0.3, 'depth', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
-                ax.text(-0.15, 0.8, 'altitude', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
+                # bbox = {'fc': '0.8', 'pad': 0}
+                # ax.text(-0.15, 0.3, 'depth', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
+                # ax.text(-0.15, 0.8, 'altitude', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
 
     return ax
     

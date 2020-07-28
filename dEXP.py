@@ -101,7 +101,7 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
         else:
             xaxis = xx
         
-        # print(xaxis)
+        print(xaxis)
 
         
         if smooth == True:
@@ -1153,7 +1153,14 @@ def profile_noInter(x, y, v, point1, point2, size=None, **kwargs):
     else:
         xaxis = xp
         
-        
+    # print('yp')
+    # print(yp)
+    # print('xp')
+    # print(xp)
+    # print('dist')
+    # print(distances)
+    # print(np.diff(distances))
+ 
     nodes = np.array([x,y]).T
     points_p = np.array([xp,yp]).T
     # find nearest point
@@ -1164,25 +1171,36 @@ def profile_noInter(x, y, v, point1, point2, size=None, **kwargs):
 
     # window_size, poly_order = 101, 3
     # vp_smooth = savgol_filter(vp, window_size, poly_order)
-    # spl = UnivariateSpline(xp, vp, s=10)
-    # plt.plot(xp, spl(xp), 'g', lw=3)
-    # vp_smooth = np.array(spl(xp))
+    # print(xaxis)
+    # spl = UnivariateSpline(xaxis, vp, s=10)
+    # plt.plot(xaxis, spl(xaxis), 'g', lw=3)
+    # vp_smooth = np.array(spl(xaxis))
     
-    xaxis = distances
-
-    plt.figure()
-    plt.plot(xaxis, vp)
-    plt.show()
-
-    # vp = interp_at(x, y, v, xp, yp, algorithm=algorithm, extrapolate=True)
-    f = interpolate.interp1d(xaxis, vp, fill_value='extrapolate')
+    # xaxis = distances
+    # xnew = np.linspace(min(xaxis),
+    #                 max(xaxis),len(x))
+    # vp_smooth = gridder.interp_at(x, y, v, xp, yp, algorithm='cubic', extrapolate=True)
+    
+    #%%
+    _smooth_lowpass
+    
+    #%%
+    f = interpolate.interp1d(xaxis, vp, fill_value='extrapolate',kind='cubic')
     xnew = np.linspace(min(xaxis),
                         max(xaxis),len(x))
     vp_smooth = f(xnew)
-    
-    plt.figure()
-    plt.plot(xnew, vp_smooth)
-    plt.show()
+
+    # plt.figure()
+    # plt.subplot(2,1,1)
+    # plt.plot(xaxis, vp,label='raw')
+    # plt.legend()
+    # plt.subplot(2,1,2)
+    # plt.plot(xnew, vp_smooth,label='smooth')
+    # # plt.plot(xp, vp_smooth,label='smooth')
+    # plt.show()
+    # plt.legend()
+    # # plt.title('')
+
 
     return xp, yp, distances, vp, vp_smooth
 

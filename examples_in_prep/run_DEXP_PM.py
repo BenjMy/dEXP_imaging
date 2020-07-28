@@ -32,7 +32,7 @@ os.chdir(MainPath)
 out = MALM.load_MALM_Porto_real(MainPath + '/malm_models/',
                           './malm_models/XYObs_real_f_m3.txt',
                           shape=(100,100),
-                          radius=125,
+                          radius=50,
                           rcor=10,
                           rot=60,
                           showfig=False)
@@ -77,6 +77,7 @@ smooth = False
 
 
 
+
 # %% change p1p2 axis 
 
 # plt.figure()
@@ -86,7 +87,7 @@ smooth = False
 # plt.xlabel('x (m)')
 # plt.ylabel('y (m)')
     
-# p1,p2 = uEXP.perp_p1p2(p1,p2, offset=0)
+p1,p2 = uEXP.perp_p1p2(p1,p2, offset=0)
 
 # %% zeros sym
 
@@ -109,7 +110,7 @@ smooth = False
 
 
 #%%
-shape = (200,200)
+shape = (50,50)
 xp_int,yp_int,U_int = gridder.interp(xp,yp,U,shape,extrapolate=True)
 
 
@@ -128,7 +129,7 @@ for i in range(len(p12x)):
 plt.xlabel('x (m)')
 plt.ylabel('y (m)')
 
-prl =100
+prl =50
 xint_scipy, yint_scipy = gridder.regular((min(xp)-prl, max(xp)+prl, 
                           min(yp)-prl, max(yp)+prl),shape=shape)
 
@@ -146,6 +147,12 @@ xint_scipy, yint_scipy, U_int_scipy = InterpData.T
 
 
 #%% 
+
+# %%
+# len(U)
+pEXP.plot_field(xint_scipy,yint_scipy,U_int_scipy, shape)
+
+# %%
 
 plt.figure()
 plt.subplot(1,2,1)
@@ -180,11 +187,11 @@ plt.ylabel('y (m)')
 
 
 xx, yy, distance, profile = pEXP.plot_line(xint_scipy,yint_scipy,U_int_scipy,p1,p2,
-                                           interp=False, smooth=True, Xaxis='y')
+                                            interp=False, smooth=True, Xaxis='x')
 
 
 xx, yy, distance, profile = pEXP.plot_line(xint_scipy,yint_scipy,U_int_scipy,p1,p2,
-                                           interp=True, Xaxis='y')
+                                           interp=True, Xaxis='x')
 
 
 # # xx, yy, distance, profile = pEXP.plot_line(xg, yg,U_int ,p1,p2, interp=False, smooth=smooth)
@@ -235,21 +242,22 @@ plt.axis('square')
 
 #%% ------------------------------- Plot the derivatives
 
-# xderiv = transform.derivx(xp, yp, U, shape,order=qorder)
-# yderiv = transform.derivy(xp, yp, U, shape,order=qorder)
-# zderiv = transform.derivz(xp, yp, U, shape,order=qorder)
+xderiv = transform.derivx(xpad,ypad, U_pad, shape_pad,order=qorder)
+yderiv = transform.derivy(xpad,ypad, U_pad, shape_pad,order=qorder)
+zderiv = transform.derivz(xpad,ypad, U_pad, shape_pad,order=qorder)
 
-# # interp = True
-# pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp, smooth=smooth)
-# pEXP.plot_line(xp, yp, yderiv ,p1,p2,title='yderiv',savefig=False, interp=interp, smooth=smooth)
-# pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp, smooth=smooth)
+# interp = True
+pEXP.plot_line(xpad,ypad, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp, smooth=smooth)
+pEXP.plot_line(xpad,ypad, yderiv ,p1,p2,title='yderiv',savefig=False, interp=interp, smooth=smooth)
+pEXP.plot_line(xpad,ypad, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp, smooth=smooth)
 
 # pEXP.plot_line(xp_int,yp_int,U_int ,p1,p2, interp=interp, smooth=smooth)
 
 
 #%% ------- upward continuation of the field data
 xp, yp, U, shape = xpad,ypad,U_pad,shape_pad
-   
+# xp, yp, U, shape = xint_scipy,yint_scipy,U_int_scipy, shape
+
 zp = np.zeros(len(xp))
 
 mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape, 
@@ -258,21 +266,21 @@ mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape,
 
 #%% 
 
-Xaxis = 'y'
-image.shape
-image = mesh.props[label_prop].reshape(mesh.shape)
-mins, maxs = [image.min(),image.max()]
-fig = plt.subplots()
-ax = plt.gca()
+# Xaxis = 'y'
+# image.shape
+# image = mesh.props[label_prop].reshape(mesh.shape)
+# mins, maxs = [image.min(),image.max()]
+# fig = plt.subplots()
+# ax = plt.gca()
 
 
 #%%
-pEXP.plot_xy(mesh, label=label_prop) #, ldg=)
+# pEXP.plot_xy(mesh, label=label_prop) #, ldg=)
 
-pEXP.plot_xy(mesh, label=label_prop, Xaxis='x') #, ldg=)
+# pEXP.plot_xy(mesh, label=label_prop, Xaxis='x') #, ldg=)
 pEXP.plot_xy(mesh, label=label_prop, Xaxis='x', p1p2=p) #, ldg=)
 
-p1p2 = np.array([1,1,1,1])
+# p1p2 = np.array([1,1,1,1])
 
 
 # plt, cmap = pEXP.slice_mesh(xp, yp, mesh, label_prop, p1, p2, interp=True, Xaxis='y')
@@ -286,7 +294,7 @@ dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
                                       interp=interp,smooth=smooth,
                                       method_peak='find_peaks',
                                       showfig=True,
-                                      Xaxis='y')  
+                                      Xaxis='x')  
 
 # or  find_peaks or peakdet or spline_roots
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
@@ -294,7 +302,7 @@ dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
                                       smooth=smooth,
                                       method_peak='find_peaks',
                                       showfig=True,
-                                      Xaxis='y')  
+                                      Xaxis='x')  
 
 # dfI, dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
 #                                       label=label_prop,
@@ -306,7 +314,9 @@ dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
     
 fig = plt.figure()
 ax = plt.gca()
-pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis='y')
+# pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis='y')
+pEXP.plot_xy(mesh, label=label_prop, Xaxis='x', p1p2=p) #, ldg=)
+
 # pEXP.slice_mesh(xp, yp, mesh, label_prop, p1, p2, 
 #                             interp=True, ax=ax, Xaxis='dist')
 pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
@@ -337,8 +347,10 @@ fig = plt.figure()
 ax = plt.gca()
 
 # pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
-pEXP.slice_mesh(xp, yp, mesh, label_prop, p1, p2, 
-                            interp=True, ax=ax, Xaxis='dist')
+# pEXP.slice_mesh(xp, yp, mesh, label_prop, p1, p2, 
+#                             interp=True, ax=ax, Xaxis='y')
+pEXP.plot_xy(mesh, label=label_prop, Xaxis='x', p1p2=p,ax=ax) #, ldg=)
+
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
 df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
