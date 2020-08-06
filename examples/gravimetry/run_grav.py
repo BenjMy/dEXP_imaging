@@ -84,8 +84,9 @@ pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
 xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
 p1 =[min(yp),0]
 p2 =[max(yp),0]
+x_axis='y'
 
-pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
+pEXP.plot_line(xp, yp,U,p1,p2, interp=interp,Xaxis=x_axis)
 
 #%% 
 # Upward continuation of the field data
@@ -94,9 +95,8 @@ mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape,
                  zmin=0, zmax=max_elevation, nlayers=nlay, 
                  qorder=qorder)
 
-plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
+plt, cmap = pEXP.plot_xy(mesh, label=label_prop,Xaxis=x_axis)
 plt.colorbar(cmap)
-
 
 #%%
 # ridges identification
@@ -109,24 +109,29 @@ plt.colorbar(cmap)
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                       label=label_prop,
                                       fix_peak_nb=2,
-                                      method_peak='find_peaks')  
+                                      method_peak='find_peaks',
+                                      showfig=True,
+                                      Xaxis=x_axis)
 
 #%% 
 # Plot ridges over continuated section
 
 fig = plt.figure()
 ax = plt.gca()
-pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis=x_axis)
 pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
+
 
 #%% 
 # Filter ridges regionally constrainsted)
    
 
 dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                            minDepth=1000,maxDepth=3000,
+                                            minDepth=1000,
+                                            maxDepth=3000,
                                             minlength=3,rmvNaN=True)
 df_f = dfI_f, dfII_f, dfIII_f
+# df_f = dfI, dfII, dfIII
 
 #%% 
 # Plot ridges fitted over continuated section
@@ -139,8 +144,37 @@ pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
 df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
 
-pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
+# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
+#                           ridge_type=[0,1,2],ridge_nb=None)
+pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-6000,
                           ridge_type=[0,1,2],ridge_nb=None)
 square([x1, x2, -z1, -z2])
 plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
 
+#%% 
+#  ridges analysis
+
+z0 = -2000
+points, fit, SI, EXTnb = dEXP.scalFUN(dfI_f,EXTnb=[1],z0=z0)
+pEXP.plot_scalFUN(points, fit, z0=z0)
+
+
+# z0 = -2000
+# points, fit, SI, EXTnb = dEXP.scalFUN(dfI_f,EXTnb=[3],z0=z0)
+# pEXP.plot_scalFUN(points, fit, z0=z0)
+
+
+#%% 
+#  ridges analysis
+mesh_dexp, label_dexp = dEXP.dEXP(xp, yp, zp, U, shape, 
+                 zmin=0, zmax=max_elevation, nlayers=nlay, 
+                 qorder=qorder,
+                 SI=SI)
+
+fig = plt.figure()
+ax = plt.gca()
+
+pEXP.plot_xy(mesh_dexp, label=label_dexp,markerMax=True, SI=SI,
+             p1p2=np.array([p1,p2]), ax=ax) #, ldg=)
+square([x1, x2, -z1, -z2])
+plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])

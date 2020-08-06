@@ -15,6 +15,7 @@ from fatiando.vis.mpl import square
 # my own functions
 import dEXP as dEXP
 import plot_dEXP as pEXP
+import utils_dEXP as uEXP
 
 # icsd functions
 from icsd3d.importers.read import load_obs, load_geom
@@ -232,7 +233,7 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
     # ------------- correction of B  + interpolation  ----------------------
     # remove influence of B
     if field==False:
-        Ucor = dEXP.cor_field_B(x,y,z, U_raw, B,rho=10)
+        Ucor = uEXP.cor_field_B(x,y,z, U_raw, B,rho=10)
     else:
         Ucor = U_raw
     

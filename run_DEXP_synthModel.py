@@ -40,7 +40,7 @@ smooth = False
 dataset = MALM.load_MALM_LandfillPorto(path=Main, 
                                         filename=file,
                                         shape = (300,300),
-                                        field=False,
+                                        field=True,
                                         interp = interp,
                                         radius=30) # length of p1p2 profile
 coord_xyz, coord_xyz_int = dataset[0:2]
@@ -50,8 +50,14 @@ coords_liner = dataset[3]
 shape, max_elevation = dataset[4:6]
 
 dict_data = dataset[7]
+
+# HZ = [Ha,zA,thickness]
+
 xA = (dict_data['HZ'][0][0]+dict_data['HZ'][0][1])/2
 x1 = dict_data['HZ'][0][2]
+y1 = dict_data['HZ'][0][0]
+y2 = dict_data['HZ'][0][1]
+
 z1 = dict_data['HZ'][1]
 z2 = z1 - dict_data['HZ'][2]
 
@@ -107,6 +113,7 @@ plt.show()
 # %% change p1p2 axis 
 
 p1,p2 = uEXP.perp_p1p2(p1,p2, offset=0)
+x_axis = 'y'
 
 # %% zeros sym
 # U  = MALM.zeros_sym(Uini,bool_above,value=0)
@@ -128,8 +135,9 @@ p1,p2 = uEXP.perp_p1p2(p1,p2, offset=0)
 #%% ------------------------------- Plot the data 
 
 # _, p1, p2, _ = MALM.definep1p2(path=Main,radius=300)
-xx, yy, distance, profile = pEXP.plot_line(xp, yp, U ,p1,p2, interp=interp)
+# xx, yy, distance, profile = pEXP.plot_line(xp, yp, U ,p1,p2, interp=interp, smooth=False, xaxis = x_axis)
 # xx, yy, distance, profile = pEXP.plot_line(xp, yp, U_f ,p1,p2, interp=interp)
+xx, yy, distance, profile = pEXP.plot_line(xp, yp, U ,p1,p2, interp=True, smooth=False, xaxis = x_axis)
 
 #%% ------------------------------- Pad the edges of grids
 
@@ -138,14 +146,15 @@ xx, yy, distance, profile = pEXP.plot_line(xp, yp, U ,p1,p2, interp=interp)
 
 #%% ------------------------------- Plot the derivatives
 
-# xderiv = transform.derivx(xp, yp, U, shape,order=1)
-# yderiv = transform.derivy(xp, yp, U, shape,order=1)
-# zderiv = transform.derivz(xp, yp, U, shape,order=1)
+xderiv = transform.derivx(xp, yp, U, shape,order=0)
+yderiv = transform.derivy(xp, yp, U, shape,order=0)
+zderiv = transform.derivz(xp, yp, U, shape,order=0)
 
-# # interp = True
-# pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp)
-# pEXP.plot_line(xp, yp, yderiv ,p1,p2,title='yderiv',savefig=False, interp=interp)
-# pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp)
+# interp = True
+pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
+pEXP.plot_line(xp, yp, yderiv ,p1,p2,title='yderiv',savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
+pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
+
 
 #%% ------- upward continuation of the field data
 
@@ -153,7 +162,7 @@ mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape,
                   zmin=0, zmax=max_elevation, nlayers=nlay, 
                   qorder=qorder)
 
-plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
+plt, cmap = pEXP.plot_xy(mesh, label=label_prop,Xaxis=x_axis)
 plt.colorbar(cmap)
         
 
@@ -182,9 +191,11 @@ plt.colorbar(cmap)
 
 # or  find_peaks or peakdet or spline_roots
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
-                                      label=label_prop,fix_peak_nb=4,
+                                      label=label_prop,fix_peak_nb=2,
                                       smooth=smooth,
-                                      method_peak='find_peaks')  
+                                      method_peak='find_peaks',
+                                      showfig=True,
+                                      Xaxis=x_axis) 
 
 # dfI, dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
 #                                       label=label_prop,
@@ -196,7 +207,7 @@ dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
     
 fig = plt.figure()
 ax = plt.gca()
-pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis=x_axis)
 pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
 
 #%% ------------------------------- filter ridges regionally constrainsted)
@@ -209,7 +220,8 @@ pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
 dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
                                             minAlt_ridge,maxAlt_ridge,
                                             minlength=8,rmvNaN=True,
-                                            xmin=284200, xmax=284300)
+                                            xmin=284200, xmax=284300,
+                                            Xaxis=x_axis)
 
 # dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
 #                                            minAlt_ridge,maxAlt_ridge,
@@ -223,7 +235,7 @@ df_f = dfI_f, dfII_f, dfIII_f
 fig = plt.figure()
 ax = plt.gca()
 
-pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis=x_axis)#, ldg=)
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
 df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
@@ -232,7 +244,11 @@ pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
                           ridge_type=[0,1,2],ridge_nb=None)
 
 # x1, x2, z1, z2 = XXZZ[i]
-square([x1, x1+0.01, z1, z2])
+# square([x1, x1+0.01, z1, z2])
+square([y1, y2, z1, z2])
+
+uEXP.multipage('DEXP_PortoM_synthetic.pdf')
+
 # plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 
 

@@ -96,12 +96,19 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
     print(len(x))
     # p1p2 = np.array([len(x)/2, len(y)/2, len(x)/2, len(y)/2])
     p1p2 = None
-
+    dEXP_bool = False
+    
     for key, value in kwargs.items():
         if key == 'Xaxis':
             Xaxis = value
         if key == 'p1p2':
             p1p2 = value
+        if key == 'markerMax':
+            markerMax = value
+        if key == 'SI':
+            SI = value
+            
+
              
     if label not in mesh.props:
         raise ValueError("mesh doesn't have a '%s' property." % (label))
@@ -132,14 +139,16 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
             print('paxis=' + str(p_xaxis))
             id_p_xaxis = (np.abs(x - p_xaxis)).argmin()
             ax.set_title('Model slice at x={} m'.format(y[id_p_xaxis]))
-            cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis])
+            cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :])
+            # cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis])
             # ax.set_xlim(y.min(), y.max())
             # ax.set_xlabel('y (m)')
         else:
             # p_xaxis= p1p2[0][1]
             id_p_xaxis = (np.abs(y - p_xaxis)).argmin()
             ax.set_title('Model slice at y={} m'.format(x[id_p_xaxis]))
-            cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :])
+            cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis])
+            # cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :])
             # ax.set_xlim(x.min(), x.max())
             # ax.set_xlabel('x (m)')
     else:
@@ -166,6 +175,28 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
     
     if 'upwc' in label:
         plt.gca().invert_yaxis()
+
+
+
+
+    if markerMax == True:
+        if Xaxis is 'x':
+            x_axis = x
+            id_p_xaxis = (np.abs(x - p_xaxis)).argmin()
+            ind = np.unravel_index(np.argmax(image[:, id_p_xaxis, :], axis=None), 
+                                  image[:, id_p_xaxis, :].shape)
+        else:
+            # search for the max
+            x_axis = y
+            id_p_xaxis = (np.abs(y - p_xaxis)).argmin()
+            ind = np.unravel_index(np.argmax(image[:, :, id_p_xaxis], axis=None), 
+                                   image[:, :, id_p_xaxis].shape)
+        z_exp = z[ind[0]]
+        x_axis_exp = x_axis[ind[1]]
+        print('Markermax_z=' + str(z_exp))
+        print('Markermax_x=' + str(x_axis_exp))
+        ax.scatter(x_axis_exp,z_exp, s=70, c='r', marker='v')
+        ax.legend(['SI=' + str(np.round(SI,1))])
 
     #ax = plt.subplot(1, 2, 2)
     #ax.set_title('Model slice at x={} m'.format(x[len(x)//2]))
@@ -321,9 +352,9 @@ def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
     if Xaxis is 'dist':
         xaxis = distance
     elif Xaxis is 'y':
-        xaxis = yy
-    else:
         xaxis = xx
+    else:
+        xaxis = yy
 
         
     # Plot the profile and the original map data
@@ -332,9 +363,17 @@ def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
     plt.subplot(1, 2, 1)
     # plt.title(strname + '_data' + str(ZZ), fontsize=15)
     plt.plot(xaxis, profile, '.k')
-    plt.xlim(xaxis.min(), xaxis.max())
+    # plt.xlim(xaxis.min(), xaxis.max())
     plt.grid()
-    plt.xlabel('x (m)')
+    
+    if Xaxis is 'dist':
+        plt.xlabel('distance (m)')
+    elif Xaxis is 'y':
+        plt.xlabel('x (m)')
+    else:
+        plt.xlabel('y (m)')
+
+        
     plt.ylabel('voltage (V)')
 
     plt.subplot(1, 2, 2)
@@ -420,7 +459,7 @@ def plot_ridges_harmonic(RI=None,RII=None,RIII=None,ax=None,
     return ax
 
 
-def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_source=None):
+def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_source=None, **kwargs):
     """
     Plot ridges in the source domain and observe intersection point
 
@@ -483,7 +522,15 @@ def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_s
                     ax.set_ylim([-ymax*3,ymax])   
                 else:
                     ax.set_ylim([z_max_source,ymax])   
-        
+
+                for key, value in kwargs.items():
+                    if key == 'xmin':
+                        x_min = value
+                        ax.set_xlim([x_min,None])   
+                    if key == 'xmax':
+                        x_max = value
+                        ax.set_xlim([None,x_max])                   
+                    
                 ax.set_xlabel('x (m)', size=20)
                 # ax.set_ylabel('depth (m)')
                 # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
@@ -491,6 +538,8 @@ def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_s
                 # plt.legend()
                 # the text bounding box
                 plt.ylabel(" ")
+                # plt.axis('square')
+
                 # bbox = {'fc': '0.8', 'pad': 0}
                 # ax.text(-0.15, 0.3, 'depth', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
                 # ax.text(-0.15, 0.8, 'altitude', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
@@ -498,7 +547,7 @@ def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_s
     return ax
     
 
-def plot_scalFUN(points, fit, ax=None, z0=None):
+def plot_scalFUN(points, fit, ax=None, z0=None, label=None):
     """
     Plot scalfun function analysis
 
@@ -530,15 +579,16 @@ def plot_scalFUN(points, fit, ax=None, z0=None):
     for z in enumerate(z0):
         ax.plot(fit[z[0]][:,0], fit[z[0]][:,1], '--',
                  label='fit_z0=' + str(z[1]), color='red')
-        ax.scatter(points[z[0]][:,0], points[z[0]][:,1],marker='*')
-        print(points[z[0]][:,0])
+        ax.scatter(points[z[0]][:,0], points[z[0]][:,1],marker='*', 
+                   label='Ridge id:' + str(label))
+        # print(points[z[0]][:,0])
         ax.set_xlim([0,max(points[z[0]][:,0])])
     ax.set_ylim([-5,5])        
-    ax.set_xlabel('q (m)', size=20)
-    ax.set_ylabel('$\\tau_{f}$', size=20)
+    ax.set_xlabel('q (m) = 1/elevation', size=20)
+    ax.set_ylabel('$\\tau_{f}$ (Structural index)', size=20)
     # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
-    plt.grid()
-    plt.legend()
+    ax.grid()
+    ax.legend()
     
     return ax
 

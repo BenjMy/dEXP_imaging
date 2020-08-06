@@ -69,14 +69,14 @@ def load_MALM_Porto_real(path, filename,shape,radius,rcor, showfig=False, rot=0)
 
     point_torotate = np.array([ X_raw, Y_raw])
     # print(point_torotate)
-    Xd, Yd = rotate_60(origin, point_torotate, angle_deg=rot, showfig=True)
+    Xd, Yd = rotate_60(origin, point_torotate, angle_deg=rot, showfig=False)
     
     # print(AnoPosxAyA)
     coords_liner, p1, p2, B = definep1p2(path,radius,AnoPos)
     # xnew, ynew = creategrid(coords_liner, B, shape)
     
     point_torotate = np.array([[p1[0],p2[0]],[p1[1],p2[1]]])
-    px, py = rotate_60(origin,point_torotate,angle_deg=rot, showfig=True)
+    px, py = rotate_60(origin,point_torotate,angle_deg=rot, showfig=False)
     p1 = [px[0],py[0]]
     p2 = [px[1],py[1]]
 
@@ -84,7 +84,7 @@ def load_MALM_Porto_real(path, filename,shape,radius,rcor, showfig=False, rot=0)
     point_torotate = np.array(coords_liner).T
     print(point_torotate)
 
-    coords_linerx, coords_linery = rotate_60(origin,point_torotate,angle_deg=rot, showfig=True)
+    coords_linerx, coords_linery = rotate_60(origin,point_torotate,angle_deg=rot, showfig=False)
     coords_liner = np.array([coords_linerx, coords_linery]).T
     
     # Xint, Yint, U_int = np.genfromtxt(path + 'XYObs_real_f_m3_grd_surf.txt', delimiter='', unpack=True)

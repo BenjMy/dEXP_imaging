@@ -12,6 +12,7 @@ from dEXP import _fit
 import plot_dEXP as pEXP
 import set_parameters as para
 import examples.magnetic.fwdmag.fwd_mag_sphere as magfwd
+from fatiando.gravmag import prism, imaging, transform
 
 
 #%%
@@ -31,6 +32,18 @@ interp = True
 # pEXP.plot_line(xp, yp, U,p1,p2, interp=False, Xaxis='x')
 
 pEXP.plot_line(xp, yp, U,p1,p2, interp=True, Xaxis=x_axis)
+
+
+#%% ------------------------------- Plot the derivatives
+
+xderiv = transform.derivx(xp, yp, U, shape,order=0)
+yderiv = transform.derivy(xp, yp, U, shape,order=0)
+zderiv = transform.derivz(xp, yp, U, shape,order=0)
+
+# interp = True
+pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp, Xaxis=x_axis)
+pEXP.plot_line(xp, yp, yderiv ,p1,p2,title='yderiv',savefig=False, interp=interp, Xaxis=x_axis)
+pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp, Xaxis=x_axis)
 
 #%%
 # Upward continuation of the field data with discretisation in altitude controlled by the number of layers (nlay) and the maximum elevation desired (max_elevation)

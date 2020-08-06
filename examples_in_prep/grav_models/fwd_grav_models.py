@@ -20,15 +20,20 @@ za= 3000
 zb= 3500
 dens = 1200
 l= 500
-offset = 0
+offset = 3000
 simname = 'za' + str(za) + '_zb' + str(zb) + '_l' + str(l) + '_ofs' + str(offset) + '_dens' + str(dens) 
-model = [mesher.Prism(-500, 500, -500, 500, za, zb, {'density': dens})]
-#model = [mesher.Prism(-4000, 0, -4000, -2000, za, zb, {'density': 1200}),
-#         mesher.Prism(-1000, 1000, -1000, 1000, 5, 7000, {'density': -800})]
+
+
+# model = [mesher.Prism(-l-offset, l-offset, -l-offset/20, l-offset, za, zb, {'density': dens})]
+# simname= 'mod_asy_rect_z3.2km_rectArea'
+simname= 'sym_square_z3.2km_rectArea'  
+
+# model = [mesher.Prism(-4000, 0, -4000, -3500, za, zb, {'density': 1200})]
+model =   [mesher.Prism(-1000, 1000, -1000, 1000, za, zb, {'density': 1200})]
 
 shape = (200, 200)
 #xp, yp, zp = gridder.scatter((-6000, 6000, -6000, 6000), shape[0]*shape[1], z=0)
-xp, yp, zp = gridder.regular((-6000, 6000, -6000, 6000), shape, z=0)
+xp, yp, zp = gridder.regular((-12000, 12000, -6000, 6000), shape, z=0)
 
 # gz = utils.contaminate(prism.gz(xp, yp, zp, model), 0.1)
 gz = prism.gz(xp, yp, zp, model)

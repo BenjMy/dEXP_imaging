@@ -9,13 +9,31 @@ import matplotlib.pyplot as plt
 import math 
 from numpy import inf
 from fatiando import gridder, mesher, utils
+from matplotlib.backends.backend_pdf import PdfPages
 
 #%% Functions SPECIFIC FOR MISE-A-LA-MASSE data preparation to dEXP transformation 
 
 def cor_field_B(x,y,z,u,B,rho=100,**kwargs):
     """
     Calculates the potential field (electric) produced by a current injection in B (return electrode) for a
-    given homogeneous electrical resistivity rho
+    given homogeneous electrical resistivity rho.
+
+    Parameters
+    ----------
+    * x, y : 1D-arrays
+        The x and y coordinates of the grid points
+    * z : float or 1D-array
+        The z coordinate of the grid points
+    * u : 1D-array
+        The potential field at the grid points
+    * Bu : 1D-array
+        The position of the return electrode B
+    * rho : int
+        The estimated electrical resistivity of the medium
+    Returns
+    -------
+    u_cor : 1D-arrays
+        The corrected from the B return electrode influence potential field at the grid points
     """
     I = 1 # injected current (A)
     num = rho*I
@@ -247,3 +265,10 @@ def load_surfer(fname, dtype='float64'):
     return data
 
 
+def multipage(filename, figs=None, dpi=200):
+    pp = PdfPages(filename)
+    if figs is None:
+        figs = [plt.figure(n) for n in plt.get_fignums()]
+    for fig in figs:
+        fig.savefig(pp, format='pdf')
+    pp.close()
