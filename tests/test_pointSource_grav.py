@@ -23,20 +23,25 @@ from fatiando.gravmag import prism, imaging, transform
 # Define the coordinates for two point masses
 # easting = [5e3, 15e3]
 # northing = [7e3, 13e3]
-easting = [5e3]
-northing = [7e3]
+easting = [7e3]
+northing = [10e3]
 
 # The vertical coordinate is positive upward so negative numbers represent
 # depth
 # upward = [-0.5e3, -1e3]
-upward = [-0.5e3]
+upward = [-1e3]
 points = [easting, northing, upward]
 # We're using "negative" masses to represent a "mass deficit" since we assume
 # measurements are gravity disturbances, not actual gravity values.
 # masses = [3e11, -10e11]
 masses = [3e11]
-
-shape_grid = (100,100)
+max_elevation = np.abs(upward)*3
+nlay = 25
+qorder= 1
+zp = 0
+interp = True
+smooth = False
+shape_grid = (200,200)
 # Define computation points on a grid at 500m above the ground
 coordinates = vd.grid_coordinates(
     region=[0, 20e3, 0, 20e3], shape=shape_grid, extra_coords=500
@@ -48,12 +53,7 @@ gravity = hm.point_mass_gravity(
 )
 #%%
 
-max_elevation = np.abs(upward)*3
-nlay = 25
-qorder= 0
-zp = 500
-interp = True
-smooth = False
+
 #%%
 print(gravity)
 # Plot the results on a map
@@ -76,7 +76,7 @@ ax.set_ylabel("km")
 plt.tight_layout()
 plt.show()
 
-xp,yp = coordinates[:2]
+yp,xp = coordinates[:2]
 xp = np.hstack(np.reshape(xp,[1,xp.shape[0]**2]))
 yp = np.hstack(np.reshape(yp,[1,yp.shape[0]**2]))
 gravity = np.hstack(np.reshape(gravity,[1,gravity.shape[0]**2]))
@@ -86,11 +86,11 @@ for slicedir in enumerate('x'):
         print(slicedir[1])
         x_axis = slicedir[1] # direction of p1p2 profil
         SI = 1.5
-        p1 =[0,(northing[0])]
-        p2 =[20e3,(northing[0])]
+        p1 =[0,(easting[0])]
+        p2 =[20e3,(easting[0])]
     else:
-       p1 =[(easting[0]),0]
-       p2 =[(easting[0]),20e3]
+       p1 =[(northing[0]),0]
+       p2 =[(northing[0]),20e3]
        x_axis = slicedir[1] # direction of p1p2 profil
        SI = 2
         
@@ -130,18 +130,24 @@ for slicedir in enumerate('x'):
                                           label=label_prop,
                                           method_peak='find_peaks',
                                           showfig=True,
+                                          interp=True,smooth=True,
                                           Xaxis=x_axis)  
 
     #%%
     # Ridges identification at all levels: plot extremas obtained via find_peaks function (numpy) for all 3 types of extremas familly RI, RII and RIII
-    dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+    D  = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                           label=label_prop,
                                           method_peak='find_peaks',
                                           qorder=qorder,
-                                          fix_peak_nb=2,
+                                          interp=True,smooth=True,
+                                          fix_peak_nb=1,
+                                          returnAmp=True,
                                           showfig=True,
                                           Xaxis=x_axis)  
-
+    dfI, dfII, dfIII =  D[0:3]
+    hI, hII, hIII  = D[3:6]
+    H  = D[3:6]
+    
     #%%
     # filter ridges using a minimum length criterium and and filter for a specific range of altitude
     # a =2.25
@@ -152,13 +158,17 @@ for slicedir in enumerate('x'):
     #     xf_min = a*y1
     #     xf_max = a*y2        
 
-    dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                                minDepth=100,
-                                                maxDepth=3000,
-                                                minlength=8,
-                                                rmvNaN=True,
-                                                xmin=0, xmax=20e3)
-    df_f = dfI_f, dfII_f, dfIII_f
+    D_f = dEXP.filter_ridges(dfI,dfII,dfIII,
+                                minDepth=500,
+                                maxDepth=5000,
+                                minlength=8,
+                                rmvNaN=True,
+                                xmin=1000, xmax=19000,
+                                heights=[hI, hII, hIII])
+    
+    dfI_f, dfII_f, dfIII_f =  D_f[0:3]
+    hI_f, hII_f, hIII_f = D_f[3:6]
+    df_f = D_f[0:3]
 
     #%%
     # plot filtered ridges fitted over continuated section
@@ -172,7 +182,7 @@ for slicedir in enumerate('x'):
     df_fit = dEXP.fit_ridges(df_f, rmvOutliers=False) # fit ridges on filtered data
     pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
                               ridge_type=[0,1,2],ridge_nb=None)
-    if x_axis=='y':
+    if x_axis=='x':
         plt.scatter(easting, upward,marker=(5, 1),c='red')
         plt.annotate(str(masses),[easting, upward])
     else:   
@@ -180,16 +190,39 @@ for slicedir in enumerate('x'):
         plt.annotate(str(masses),[northing, upward])
 
     #%% 
+
+    qratio = [1,0]
+    mesh_dexp, label_dexp = dEXP.dEXP_ratio(xp, yp, zp, gravity, shape_grid, 
+                     zmin=0, zmax=max_elevation, nlayers=nlay, 
+                     qorders=qratio)
+    fig = plt.figure()
+    ax = plt.gca()
+    
+    plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
+                 markerMax=True,qratio=str(qratio),
+                 p1p2=np.array([p1,p2]), ax=ax, Xaxis=x_axis) #, ldg=)
+    plt.colorbar(cmap)
+
+    if x_axis=='x':
+        plt.scatter(easting, np.abs(upward),marker=(5, 1),c='red')
+        plt.annotate(str(masses),[easting, upward])
+    else:   
+        plt.scatter(northing, upward,marker=(5, 1),c='red')
+        plt.annotate(str(masses),[northing, upward])
+        
+        
+    #%% 
     #  ridges analysis: scaling function to determine the SI index
     # RI and RII : zeros of the first horizontal and first vertical derivatives of the potential field
     # RIII :zeros of the potential field itself
     
-    z0 = -(z1 + z2)/2 # choose an estimate of the depth of the anomaly
+    z0 = upward # choose an estimate of the depth of the anomaly
     # z0 = -100 # choose an estimate of the depth of the anomaly
 
     ncol = 0
     for r_type in range(len(df_f)): # loop over ridges type I, II, III
-        ncol = ncol + df_f[r_type].shape[1]-1
+        if df_f[r_type].shape[1]>1:
+            ncol = ncol + df_f[r_type].shape[1]-1
 
 
     fig, axs = plt.subplots(1,ncol, figsize=(15, 6), facecolor='w', edgecolor='k')
@@ -212,12 +245,12 @@ for slicedir in enumerate('x'):
             
             nc = nc + 1
         
-    SI_mean = np.mean(SI_est)  
+    SI_mean = np.mean(np.abs(SI_est)) 
     
     #%% 
     #  ridges analysis
-    # SI = 1.5
-    mesh_dexp, label_dexp = dEXP.dEXP(xp, yp, zp, U, shape, 
+    SI_mean = 0
+    mesh_dexp, label_dexp = dEXP.dEXP(xp, yp, zp, gravity, shape_grid, 
                      zmin=0, zmax=max_elevation, nlayers=nlay, 
                      qorder=qorder,
                      SI=SI_mean)
@@ -230,13 +263,13 @@ for slicedir in enumerate('x'):
                  p1p2=np.array([p1,p2]), ax=ax, Xaxis=x_axis) #, ldg=)
     plt.colorbar(cmap)
 
-    if x_axis=='y':
-        square([x1, x2, z1, z2])
-        plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
+    if x_axis=='x':
+        plt.scatter(easting, np.abs(upward),marker=(5, 1),c='red')
+        plt.annotate(str(masses),[easting, upward])
     else:   
-        square([y1, y2, z1, z2])
-        plt.annotate(dens,[(y1 + y2)/2, -(z1+z2)/2])
+        plt.scatter(northing, upward,marker=(5, 1),c='red')
+        plt.annotate(str(masses),[northing, upward])
 
-
+    #%% 
 
 uEXP.multipage(dataname + '_test_DEXP_SI_punctual.pdf')

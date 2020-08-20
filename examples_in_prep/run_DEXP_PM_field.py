@@ -78,6 +78,9 @@ smooth = True
 
 
 
+# xx, yy, distance, profile = pEXP.plot_line(xp, yp,U,p1,p2,
+#                                             interp=True, smooth=False, Xaxis=x_axis)
+
 
 # %% change p1p2 axis 
 
@@ -91,6 +94,7 @@ smooth = True
 # p1,p2 = uEXP.perp_p1p2(p1,p2, offset=0)
 # x_axis = 'y'
 x_axis = 'x'
+# x_axis = 'dist'
 
 # %% zeros sym
 
@@ -113,7 +117,7 @@ x_axis = 'x'
 
 
 #%%
-shape = (50,50)
+shape = (100,100)
 xp_int,yp_int,U_int = gridder.interp(xp,yp,U,shape,extrapolate=False)
 
 
@@ -132,7 +136,7 @@ for i in range(len(p12x)):
 plt.xlabel('x (m)')
 plt.ylabel('y (m)')
 
-prl = 200
+prl = 100
 # shape = shape  (max(xp)-min(xp))/
 # shape = (115,115)
 xint_scipy, yint_scipy = gridder.regular((min(xp)-prl, max(xp)+prl, 
@@ -143,7 +147,7 @@ xint_scipy, yint_scipy = gridder.regular((min(xp)-prl, max(xp)+prl,
 U_int_scipy = gridder.interp_at(xp,yp,U, xint_scipy, yint_scipy, algorithm='cubic', extrapolate=False)
 InterpData = np.array([xint_scipy, yint_scipy, U_int_scipy]).T
 where_are_NaNs = np.isnan(InterpData)
-InterpData[where_are_NaNs] = 0
+InterpData[where_are_NaNs] = 0.0074
 xint_scipy, yint_scipy, U_int_scipy = InterpData.T
 
 #%% Solution 2
@@ -154,6 +158,10 @@ xint_scipy, yint_scipy, U_int_scipy = InterpData.T
 # %%
 # len(U)
 pEXP.plot_field(xint_scipy,yint_scipy,U_int_scipy, shape)
+
+# pEXP.plot_field(xp_int,yp_int,U_int, shape)
+# xx, yy, distance, profile = pEXP.plot_line(xp_int,yp_int,U_int,p1,p2,
+#                                             interp=True, smooth=False, Xaxis=x_axis)
 
 # %%
 
@@ -190,11 +198,11 @@ plt.ylabel('y (m)')
 
 
 xx, yy, distance, profile = pEXP.plot_line(xint_scipy,yint_scipy,U_int_scipy,p1,p2,
-                                            interp=False, smooth=True, Xaxis=x_axis)
+                                            interp=False, smooth=True, Xaxis=x_axis, showfig=True)
 
 
 # xx, yy, distance, profile = pEXP.plot_line(xint_scipy,yint_scipy,U_int_scipy,p1,p2,
-#                                             interp=True, Xaxis='x_axis')
+#                                             interp=interp, smooth=smooth, Xaxis=x_axis)
 
 # xx, yy, distance, profile = pEXP.plot_line(xint_scipy,yint_scipy,U_int_scipy,p1,p2,
 #                                             interp=True,smooth=True, Xaxis='x_axis')
@@ -236,6 +244,11 @@ xx, yy, distance, profile = pEXP.plot_line(xint_scipy,yint_scipy,U_int_scipy,p1,
 
 xpad,ypad,U_pad, shape_pad = dEXP.pad_edges(xint_scipy,yint_scipy,U_int_scipy,shape,
                                             pad_type=0) # reflexion=5
+
+# xpad,ypad,U_pad, shape_pad = dEXP.pad_edges(xp, yp,U,shape_raw,
+#                                             pad_type=0) # reflexion=5
+
+
 # pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
 # pEXP.plot_line(xpad, ypad,U_pad,p1,p2, interp=interp)
 
@@ -249,15 +262,21 @@ plt.axis('square')
 #%% ------------------------------- Plot the derivatives
 # xp, yp, U, shape = xpad,ypad,U_pad,shape_pad
 xp, yp, U, shape = xint_scipy,yint_scipy,U_int_scipy, shape
+# xp, yp, U, shape = xp, yp, U, (60,60)
+# len(xp)
+# len(yp)
 
 xderiv = transform.derivx(xp, yp, U, shape,order=qorder)
 yderiv = transform.derivy(xp, yp, U, shape,order=qorder)
 zderiv = transform.derivz(xp, yp, U, shape,order=qorder)
 
 # interp = True
-pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
-pEXP.plot_line(xp, yp, yderiv ,p1,p2,title='yderiv',savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
-pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
+pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, 
+               interp=interp, smooth=smooth,  Xaxis=x_axis,showfig=True)
+pEXP.plot_line(xp, yp, yderiv ,p1,p2,title='yderiv',savefig=False, 
+               interp=interp, smooth=smooth,  Xaxis=x_axis,showfig=True)
+pEXP.plot_line(xp, yp, zderiv ,p1,p2,title='zderiv',savefig=False, 
+               interp=interp, smooth=smooth,  Xaxis=x_axis,showfig=True)
 
 # # pEXP.plot_line(xp_int,yp_int,U_int ,p1,p2, interp=interp, smooth=smooth)
 # pEXP.plot_line(xp, yp, xderiv ,p1,p2,title='xderiv',savefig=False, interp=True, smooth=smooth,  Xaxis=x_axis)
@@ -306,13 +325,28 @@ dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
                                       Xaxis=x_axis)  
 
 # or  find_peaks or peakdet or spline_roots
-dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
-                                      label=label_prop,fix_peak_nb=nb_of_peak,
-                                      smooth=smooth,
-                                      method_peak='find_peaks',
-                                      showfig=True,
-                                      Xaxis=x_axis)  
+# dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
+#                                       label=label_prop,fix_peak_nb=nb_of_peak,
+#                                       smooth=smooth,
+#                                       method_peak='find_peaks',
+#                                       showfig=True,
+#                                       Xaxis=x_axis)  
 
+D = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+                                      label=label_prop,
+                                      method_peak='find_peaks',
+                                      fix_peak_nb=3,
+                                      returnAmp=True,
+                                      showfig=True,
+                                      Xaxis=x_axis,
+                                      interp=interp,
+                                      smooth = smooth,
+                                      qorder=qorder)  
+
+dfI, dfII, dfIII =  D[0:3]
+hI, hII, hIII  = D[3:6]
+heights  = D[3:6]
+    
 # dfI, dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
 #                                       label=label_prop,
 #                                       # minAlt_ridge=minAlt_ridge,
@@ -321,15 +355,22 @@ dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,interp=interp,
  
 #%% ------------------------------- plot ridges over continuated section
     
+# fig = plt.figure()
+# ax = plt.gca()
+# # pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis='y')
+# pEXP.plot_xy(mesh, label=label_prop, Xaxis=x_axis, p1p2=p,ax=ax) #, ldg=)
+
+# # pEXP.slice_mesh(xp, yp, mesh, label_prop, p1, p2, 
+# #                             interp=True, ax=ax, Xaxis='dist')
+# pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
+
 fig = plt.figure()
 ax = plt.gca()
-# pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis='y')
-pEXP.plot_xy(mesh, label=label_prop, Xaxis=x_axis, p1p2=p,ax=ax) #, ldg=)
 
-# pEXP.slice_mesh(xp, yp, mesh, label_prop, p1, p2, 
-#                             interp=True, ax=ax, Xaxis='dist')
-pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
-
+plt, cmap = pEXP.plot_xy(mesh, label=label_prop, Xaxis=x_axis, p1p2=np.array([p1, p2]), ax=ax) #, ldg=)
+plt.colorbar(cmap)
+pEXP.plot_ridges_harmonic(dfI, dfII, dfIII,ax=ax,label=True)
+    
 
 #%% ------------------------------- filter ridges regionally constrainsted)
    
@@ -374,4 +415,37 @@ pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
                           xmin=5.036e6+50, 
                           xmax=5.036e6+400)
 
-uEXP.multipage('DEXP_PortoM_zerofill.pdf')
+#%% DEXP ratio
+
+qratio = [1,0]
+mesh_dexp, label_dexp = dEXP.dEXP_ratio(xp, yp, zp, U, shape, 
+                 zmin=0, zmax=max_elevation, nlayers=nlay, 
+                 qorders=qratio)
+fig = plt.figure()
+ax = plt.gca()
+plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
+             markerMax=False,qratio=str(qratio),
+             p1p2=np.array([p1,p2]), ax=ax, Xaxis='y') #, ldg=)
+plt.colorbar(cmap)
+
+qratio = [1,0]
+mesh_dexp, label_dexp = dEXP.dEXP_ratio(xp, yp, zp, U, shape, 
+                 zmin=0, zmax=max_elevation, nlayers=nlay, 
+                 qorders=qratio)
+fig = plt.figure()
+ax = plt.gca()
+plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
+             markerMax=True,qratio=str(qratio),
+             p1p2=np.array([p1,p2]), ax=ax, Xaxis=x_axis) #, ldg=)
+plt.colorbar(cmap)
+
+# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
+#                           ridge_type=[0,1,2],ridge_nb=None,
+#                           xmin=5.036e6+50, 
+#                           xmax=5.036e6+400)
+
+# plt.savefig(dataname +  '_fig_DEXP_Ratio_' + x_axis + '.png', r=400)
+ 
+    
+# uEXP.multipage('DEXP_PortoM_zerofill.pdf')
+

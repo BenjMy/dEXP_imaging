@@ -93,11 +93,10 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
     z = mesh.get_zs()
     
     Xaxis = 'x'
-    print(len(x))
-    # p1p2 = np.array([len(x)/2, len(y)/2, len(x)/2, len(y)/2])
     p1p2 = None
     dEXP_bool = False
-    
+    SI = None
+    q_ratio = None
     for key, value in kwargs.items():
         if key == 'Xaxis':
             Xaxis = value
@@ -107,7 +106,8 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
             markerMax = value
         if key == 'SI':
             SI = value
-            
+        if key == 'qratio':
+            q_ratio = value
 
              
     if label not in mesh.props:
@@ -178,25 +178,29 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
 
 
 
-
     if markerMax == True:
         if Xaxis is 'x':
-            x_axis = x
-            id_p_xaxis = (np.abs(x - p_xaxis)).argmin()
-            ind = np.unravel_index(np.argmax(image[:, id_p_xaxis, :], axis=None), 
-                                  image[:, id_p_xaxis, :].shape)
-        else:
-            # search for the max
             x_axis = y
-            id_p_xaxis = (np.abs(y - p_xaxis)).argmin()
+            id_p_xaxis = (np.abs(x_axis - p_xaxis)).argmin()
             ind = np.unravel_index(np.argmax(image[:, :, id_p_xaxis], axis=None), 
                                    image[:, :, id_p_xaxis].shape)
+        else:
+            # search for the max
+            x_axis = x
+            id_p_xaxis = (np.abs(x_axis - p_xaxis)).argmin()
+            ind = np.unravel_index(np.argmax(image[:, id_p_xaxis, :], axis=None), 
+                                  image[:, id_p_xaxis, :].shape)
+        
         z_exp = z[ind[0]]
         x_axis_exp = x_axis[ind[1]]
         print('Markermax_z=' + str(z_exp))
         print('Markermax_x=' + str(x_axis_exp))
         ax.scatter(x_axis_exp,z_exp, s=70, c='r', marker='v')
-        ax.legend(['SI=' + str(np.round(SI,1))])
+        
+        if SI is not None:
+            ax.legend(['SI=' + str(np.round(SI,1))])
+        if q_ratio is not None:
+            ax.legend(['q-ratio=' + str(q_ratio)])
 
     #ax = plt.subplot(1, 2, 2)
     #ax.set_title('Model slice at x={} m'.format(x[len(x)//2]))
@@ -333,19 +337,23 @@ def slice_mesh(x, y, mesh, label, p1, p2, ax=None, interp=True, **kwargs):
 def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
 
     Xaxis = []
+    smooth_bool = False
+    showfig = False
     for key, value in kwargs.items():
         if key == 'Xaxis':
              Xaxis = value
-             
-
+        if key == 'smooth':
+             smooth_bool = value  
+        if key == 'showfig':
+             showfig = value  
         
     # Extract a profile between points 1 and 2
     if interp == False:
-        xx, yy, distance, profile, profile_smooth = dEXP.profile_noInter(x, y, data, p1, p2, size=None)
+        xx, yy, distance, profile, profile_smooth = dEXP.profile_noInter(x, y, data, p1, p2, size=None,
+                                                                         showfig=showfig)
         # xx, yy, distance, profile, profile_smooth = dEXP.profile_extra(x, y, data, p1, p2, 1000)
-        for key, value in kwargs.items():
-            if key == 'smooth':
-                profile = profile_smooth
+        if smooth_bool == True:
+            profile = profile_smooth
     else:
         xx, yy, distance, profile = gridder.profile(x, y, data, p1, p2, 1000)
 

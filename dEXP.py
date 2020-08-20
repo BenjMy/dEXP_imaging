@@ -71,6 +71,7 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
     
     method_peak = 'find_peaks'
     x_resolution = len(x)
+    Xaxis = 'x'
     # --------------------------------------------
     # parameters to parse into find_peaks function
     for key, value in kwargs.items():
@@ -122,7 +123,7 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
         if interp == True:
             xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, x_resolution)
         else:
-            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth  = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution)
+            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth  = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution, showfig=False)
 
         if Xaxis is 'dist':
             xaxis = distance
@@ -135,7 +136,7 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
             p_up_f_d1x = _smooth_lowpass(xaxis,p_up_f_d1x)
             
         # peak analysis
-        MinMax_peaks = _peaks_analysis(xaxis,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
+        MinMax_peaks, MinMax_peaks_p = _peaks_analysis(xaxis,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
                                        method_peak=method_peak,proxy=None)   
 
         if  showfig == True:
@@ -219,6 +220,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
     depths = mesh.get_zs()[:-1]
     x_resolution = len(x)
     Xaxis = 'x'
+    peakp_out = False
     for key, value in kwargs.items():
         if key == 'minAlt_ridge':
             minAlt_ridge = value 
@@ -236,7 +238,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
             peakp_out = True
                        
     # --------------------------------------------
-    iplot = 0
+    iplot = 4
     
     if label not in mesh.props:
         raise ValueError("mesh doesn't have a '%s' property." % (label))
@@ -286,10 +288,10 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
                 plt.legend()
  
     for i, depth in enumerate(depths - z[0]): # Loop over RII extremas
-        upw_u_l = upw_u[i,:]    # analysing extrema layers by layers from top to bottom  
-
+        upw_u_l = upw_u[i,:]    # analysing extrema layers by layers from top to bottom           
+            
         # 1st vertical derivate of the continued field
-        up_f_d1z = transform.derivz(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=qorder+1)
+        up_f_d1z = transform.derivz(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
         
         if interp == True:
             xx, yy, distance, p_up_f_d1z = gridder.profile(x, y, up_f_d1z, p1, p2, x_resolution)
@@ -337,11 +339,11 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         if Xaxis is 'dist':
             raise ValueError("Impossible to calculate the derivative in this profil direction") 
         elif Xaxis is 'y':
-            up_f_d1x = transform.derivx(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=qorder+1)
+            up_f_d1x = transform.derivx(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
         else:
-            up_f_d1x = transform.derivy(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=qorder+1)
+            up_f_d1x = transform.derivy(x, y, upw_u_l,(mesh.shape[1],mesh.shape[1]),order=1)
+                        
             
-        
         if interp == True:
             xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, x_resolution)
         else:
@@ -415,6 +417,7 @@ def _peaks_analysis(x_axis, p_up_f, fix_peak_nb=None,
                 p_max = p_max[p_max[:,pxy].argsort()[::-1]]
         
             # --- repeat for the min --------
+            # print(p_up_f)
             Min_peaks, _ = find_peaks(-p_up_f)
             # print(Min_peaks)
             # print(Min_peaks_p)
@@ -445,6 +448,7 @@ def _peaks_analysis(x_axis, p_up_f, fix_peak_nb=None,
 
 def _select_ridges_nb(fix_peak_nb,p_max,p_min):
 
+    # print('_select_ridges_nb')
     # --- select a fixed number  --------
     if fix_peak_nb<p_max.shape[0]:
         Max_peaks_select =  p_max[0:fix_peak_nb,0].astype(int)
@@ -562,7 +566,7 @@ def _connect_ridges_lines(df,max_distances,gap_thresh):
     #     dfI = dfI.add_prefix('EX_xpos')
     
     
-def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, **kwargs):
+def filter_ridges(dfIf,dfIIf,dfIIIf,minDepth,maxDepth, minlength=3, rmvNaN=False, **kwargs):
     """
     Filter non-rectiligne ridges (denoising)
 
@@ -620,56 +624,56 @@ def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, *
     #                         RII_split.append(np.array(dfII_sort[k[1]].iloc[jumps[j]:-1]))
                     
     #                 RII_split.append(np.hstack([[depth],[]]))
-
-
+    
+    height1f, height2f, height3f = [None, None, None] 
     for key, value in kwargs.items():
         if key == 'heights':
-            height1, height2, height3 = value 
-            print(height2)
+            height1f, height2f, height3f = value 
+            # print(height2)
     # -----------------------------------------------------------------------#
     # select a range of ridges within x limits
     for key, value in kwargs.items():
         if key == 'xmin':
             minx = value 
 
-            for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
-                id_2NaN = np.where(dfI[k[1]]< minx)
-                dfI[k[1]].iloc[id_2NaN] = np.nan
-                if height1 is not None:
-                   height1[k[1]].iloc[id_2NaN] = np.nan
+            for k in enumerate(dfIf.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfIf[k[1]]< minx)
+                dfIf[k[1]].iloc[id_2NaN] = np.nan
+                if height1f is not None:
+                   height1f[k[1]].iloc[id_2NaN] = np.nan
 
-            for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
-                id_2NaN = np.where(dfII[k[1]]< minx)
-                dfII[k[1]].iloc[id_2NaN] = np.nan
-                if height2 is not None:
-                   height2[k[1]].iloc[id_2NaN] = np.nan
+            for k in enumerate(dfIIf.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfIIf[k[1]]< minx)
+                dfIIf[k[1]].iloc[id_2NaN] = np.nan
+                if height2f is not None:
+                   height2f[k[1]].iloc[id_2NaN] = np.nan
                    
-            for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
-                id_2NaN = np.where(dfIII[k[1]]< minx)
-                dfIII[k[1]].iloc[id_2NaN] = np.nan
-                if height3 is not None:
-                   height3[k[1]].iloc[id_2NaN] = np.nan
+            for k in enumerate(dfIIIf.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfIIIf[k[1]]< minx)
+                dfIIIf[k[1]].iloc[id_2NaN] = np.nan
+                if height3f is not None:
+                   height3f[k[1]].iloc[id_2NaN] = np.nan
                    
         if key == 'xmax':
             maxx = value 
 
-            for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
-                id_2NaN = np.where(dfI[k[1]]> maxx)
-                dfI[k[1]].iloc[id_2NaN] = np.nan
-                if height1 is not None:
-                    height1[k[1]].iloc[id_2NaN] = np.nan
+            for k in enumerate(dfIf.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfIf[k[1]]> maxx)
+                dfIf[k[1]].iloc[id_2NaN] = np.nan
+                if height1f is not None:
+                    height1f[k[1]].iloc[id_2NaN] = np.nan
                     
-            for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
-                id_2NaN = np.where(dfII[k[1]]> maxx)
-                dfII[k[1]].iloc[id_2NaN] = np.nan
-                if height2 is not None:
-                    height2[k[1]].iloc[id_2NaN] = np.nan
+            for k in enumerate(dfIIf.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfIIf[k[1]]> maxx)
+                dfIIf[k[1]].iloc[id_2NaN] = np.nan
+                if height2f is not None:
+                    height2f[k[1]].iloc[id_2NaN] = np.nan
                     
-            for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
-                id_2NaN = np.where(dfIII[k[1]]> maxx)
-                dfIII[k[1]].iloc[id_2NaN] = np.nan
-                if height3 is not None:
-                    height3[k[1]].iloc[id_2NaN] = np.nan
+            for k in enumerate(dfIIIf.columns[1:]): # loop over ridges of the same familly
+                id_2NaN = np.where(dfIIIf[k[1]]> maxx)
+                dfIIIf[k[1]].iloc[id_2NaN] = np.nan
+                if height3f is not None:
+                    height3f[k[1]].iloc[id_2NaN] = np.nan
                 
             # idfI_col_2rmv = []
             # for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
@@ -709,78 +713,78 @@ def filter_ridges(dfI,dfII,dfIII,minDepth,maxDepth, minlength=3, rmvNaN=False, *
     # -----------------------------------------------------------------------#
     # remove lines NaN (produce when a peak defined only for some elevation levels)
     if rmvNaN == True:
-        if dfI.isnull().values.any():
+        if dfIf.isnull().values.any():
             print('NaN or Inf detected - trying to remove')
-            dfI.dropna(axis=1, inplace=True) # remove collumns
-            dfI = dfI[~dfI.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
+            dfIf.dropna(axis=1, inplace=True) # remove collumns
+            dfIf = dfIf[~dfIf.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
             
-            if height1 is not None:
-                height1.dropna(axis=1, inplace=True) # remove collumns
-                height1 = height1[~height1.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
+            if height1f is not None:
+                height1f.dropna(axis=1, inplace=True) # remove collumns
+                height1f = height1f[~height1f.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
        
-        if dfII.isnull().values.any():
-            dfII.dropna(axis=1, inplace=True) # remove collumns
-            dfII = dfII[~dfII.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
+        if dfIIf.isnull().values.any():
+            dfIIf.dropna(axis=1, inplace=True) # remove collumns
+            dfIIf = dfIIf[~dfIIf.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
             
-            if height2 is not None:
-                print(height2)
-                height2.dropna(axis=1, inplace=True) # remove collumns
-                height2 = height2[~height2.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
-                print(height2)
+            if height2f is not None:
+                # print(height2)
+                height2f.dropna(axis=1, inplace=True) # remove collumns
+                height2f = height2f[~height2f.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
+                # print(height2)
 
-        if dfIII.isnull().values.any():
-            dfIII.dropna(axis=1, inplace=True) # remove collumns
-            dfIII = dfIII[~dfIII.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
+        if dfIIIf.isnull().values.any():
+            dfIIIf.dropna(axis=1, inplace=True) # remove collumns
+            dfIIIf = dfIIIf[~dfIIIf.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
             
-            if height3 is not None:
-                height3.dropna(axis=1, inplace=True) # remove collumns
-                height3 = height3[~height3.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
+            if height3f is not None:
+                height3f.dropna(axis=1, inplace=True) # remove collumns
+                height3f = height3f[~height3f.isin([np.nan, np.inf, -np.inf]).any(1)] #remove lines
        
     # -----------------------------------------------------------------------#
     # regional filtering between two elevations. 
     # Particulary useful to remove noise for data close to the surface
-    if dfI is not None:
-        dfI = dfI.loc[(dfI['elevation'] > minDepth) & (dfI['elevation'] < maxDepth)]
-        if height1 is not None:
-            height1 = height1.loc[(height1['elevation'] > minDepth) & (height1['elevation'] < maxDepth)]
+    if dfIf is not None:
+        dfIf = dfIf.loc[(dfIf['elevation'] > minDepth) & (dfIf['elevation'] < maxDepth)]
+        if height1f is not None:
+            height1f = height1f.loc[(height1f['elevation'] > minDepth) & (height1f['elevation'] < maxDepth)]
 
-    if dfII is not None:
-        dfII = dfII.loc[(dfII['elevation'] > minDepth) & (dfII['elevation'] < maxDepth)]
-        if height2 is not None:
-            height2 = height2.loc[(height2['elevation'] > minDepth) & (height2['elevation'] < maxDepth)]
+    if dfIIf is not None:
+        dfIIf = dfIIf.loc[(dfIIf['elevation'] > minDepth) & (dfIIf['elevation'] < maxDepth)]
+        if height2f is not None:
+            height2f = height2f.loc[(height2f['elevation'] > minDepth) & (height2f['elevation'] < maxDepth)]
 
-    if dfI is not None:
-        dfIII = dfIII.loc[(dfIII['elevation'] > minDepth) & (dfIII['elevation'] < maxDepth)]
-        if height3 is not None:
-            height3 = height3.loc[(height3['elevation'] > minDepth) & (height3['elevation'] < maxDepth)]
+    if dfIIIf is not None:
+        dfIIIf = dfIIIf.loc[(dfIIIf['elevation'] > minDepth) & (dfIIIf['elevation'] < maxDepth)]
+        if height3f is not None:
+            height3f = height3f.loc[(height3f['elevation'] > minDepth) & (height3f['elevation'] < maxDepth)]
 
     # -----------------------------------------------------------------------#
     # check length of ridges (remove column if less than N points)
-    if dfI is not None:
-        smallCol = dfI.count()
+    if dfIf is not None:
+        smallCol = dfIf.count()
         idrmv = np.where(smallCol<minlength)[0].tolist()
-        dfI = dfI.drop(dfI.columns[idrmv], axis=1)
-        if height1 is not None:
-            height1 = height1.drop(height1.columns[idrmv], axis=1)
+        dfIf = dfIf.drop(dfIf.columns[idrmv], axis=1)
+        if height1f is not None:
+            height1f = height1f.drop(height1f.columns[idrmv], axis=1)
 
-    if dfII is not None:
-        smallCol = dfII.count()
+    if dfIIf is not None:
+        smallCol = dfIIf.count()
         idrmv = np.where(smallCol<minlength)[0].tolist()
-        dfII = dfII.drop(dfII.columns[idrmv], axis=1)
-        if height2 is not None:
-            height2 = height2.drop(height2.columns[idrmv], axis=1)
+        dfIIf = dfIIf.drop(dfIIf.columns[idrmv], axis=1)
+        if height2f is not None:
+            height2f = height2f.drop(height2f.columns[idrmv], axis=1)
             
-    if dfIII is not None:
-        smallCol = dfIII.count()
+    if dfIIIf is not None:
+        smallCol = dfIIIf.count()
         idrmv = np.where(smallCol<minlength)[0].tolist()
-        dfIII = dfIII.drop(dfIII.columns[idrmv], axis=1)
-        if height3 is not None:
-            height3 = height3.drop(height3.columns[idrmv], axis=1)
+        dfIIIf = dfIIIf.drop(dfIIIf.columns[idrmv], axis=1)
+        if height3f is not None:
+            height3f = height3f.drop(height3f.columns[idrmv], axis=1)
             
-    if height1 is not None:
-        return dfI, dfII, dfIII, height1,height2, height3
+    if height1f is not None:
+        return dfIf, dfIIf, dfIIIf, height1f,height2f, height3f
     else:
-        return dfI, dfII, dfIII
+        return dfIf, dfIIf, dfIIIf
 
 def fit_ridges(df, rmvOutliers=False):
     """
@@ -908,7 +912,7 @@ def scalFUN(df, EXTnb=[1], z0=0, **kwargs):
         Text here
 
     """
-    
+    rmvOutliers = False
     for key, value in kwargs.items():
         rmvOutliers = value
         
@@ -940,31 +944,37 @@ def scalFUN(df, EXTnb=[1], z0=0, **kwargs):
     
     num = np.gradient(np.log(np.abs(df[i])))
     den = np.gradient(np.log(df['elevation']))
-    print('num')
-    print(num)
+    # print('num')
+    # print(num)
 
+    # plt.figure()
+    # # plt.scatter(np.log(df['elevation']),np.log(np.abs(df[i])))
+    # plt.scatter(np.log(1/df['elevation']),np.log(np.abs(df[i])))
+    # plt.xlabel('log (1/z)')
+    # plt.ylabel('log (ridge amplitude)')
+
+    
     # print(den)
     Tau = num/den
     # print(df[i])
 
     # dzz = np.log(df[1]['elevation'].iloc[1])-np.log(df[0]['elevation'].iloc[0])
-    # Tau = np.gradient(np.log(np.abs(df[i])),np.log(df['elevation']))
+    Tau2 = np.gradient(np.log(np.abs(df[i])),np.log(df['elevation']))
     # Tau2 = np.gradient(np.log(np.abs(df[i])),4.2)
     # print('Tau')
     # print(Tau)
     # print('Tau2')
     # print(Tau2)
 
+
     q = 1./df['elevation']
     
-    # plt.figure()
-    # plt.scatter(q,Tau)
-    
-    # factor = (df['elevation'] - z0)/df['elevation']
+
+    factor = (df['elevation'] - z0)/df['elevation']
     # factor = df['elevation']/(df['elevation'] - z0)
     # factor = 1/(z0)
-    factor = 1
-    Tau = Tau*factor
+    # factor = 1
+    Tau = Tau2*factor
     
     points = np.array([q,Tau]).T  
     x_fit, f, si  = _fit(q,Tau,xmin=0,SI=True)
@@ -1110,7 +1120,68 @@ def dEXP(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0, SI=1):
     label_prop = 'dexp_q' + str(qorder)
     mesh_dexp.addprop(label_prop, np.array(csd))
     return mesh_dexp, label_prop
-  
+
+
+def dEXP_ratio(x, y, z, data, shape, zmin, zmax, nlayers, qorders=[1,0]):
+    """
+    DEXP ratio model (NOT YET validated)
+    Abbas, M. A., and Fedi, M. (2014). Automatic DEXP
+    imaging of potential fields independent of the structural index. Geophysical Journal
+    International, 199 (3), 1625-1632.
+
+    Calculates a physical property distribution given potential field data on a
+    **regular grid**. Uses depth weights.
+    Parameters:
+
+    * x, y : 1D-arrays
+        The x and y coordinates of the grid points
+    * z : float or 1D-array
+        The z coordinate of the grid points
+    * data : 1D-array
+        The potential field at the grid points
+    * shape : tuple = (ny, nx)
+        The shape of the grid
+    * zmin, zmax : float
+        The top and bottom, respectively, of the region where the physical
+        property distribution is calculated
+    * nlayers : int
+        The number of layers used to divide the region where the physical
+        property distribution is calculated
+    * qorders : 1D-array
+        The order of the derivatives for the ratio calculation
+
+    Returns:
+
+    * mesh : :class:`fatiando.mesher.PrismMesh`
+        The estimated physical property distribution set in a prism mesh (for
+        easy 3D plotting)
+
+    """
+    mesh_dexp = _makemesh(x, y, shape, zmin, zmax, nlayers)
+    # This way, if z is not an array, it is now
+    z = z * np.ones_like(x)
+    # Remove the last z because I only want depths to the top of the layers
+    depths = mesh_dexp.get_zs()[:-1]
+    weights = (np.abs(depths)) ** ((qorders[0]-qorders[1])/2)
+    csd = []
+    # Offset by the data z because in the paper the data is at z=0
+    for depth, weight in zip(depths - z[0], weights):
+
+        # continued field calculation
+        upw_f= transform.upcontinue(x, y, data, shape, depth)
+
+        # qorder vertical derivate of the continued field
+        upw_f_dq_0 = transform.derivz(x, y, upw_f, shape,order=qorders[0])
+        upw_f_dq_1 = transform.derivz(x, y, upw_f, shape,order=qorders[1])
+        ratio = upw_f_dq_0/upw_f_dq_1
+        # the continued field weigted (=DEXP)
+        upw_f_dq_w= weight*ratio
+        csd.extend(upw_f_dq_w)
+
+    label_prop = 'dexp_q' + str(qorders)
+    mesh_dexp.addprop(label_prop, np.array(csd))
+    return mesh_dexp, label_prop
+
     
 # def auto_dEXP():
 def _jumpAnalysis(x):
@@ -1334,7 +1405,7 @@ def profile_noInter(x, y, v, point1, point2, size=None, **kwargs):
     """
     Extract a profile between 2 points from spacial data.
 
-    NO interpolation to calculate the data values at the profile points.
+    NO interpolation to calculate the data values at the profile points (find nearest point).
 
     Parameters:
 
@@ -1358,10 +1429,12 @@ def profile_noInter(x, y, v, point1, point2, size=None, **kwargs):
     """
     
     Xaxis = []
+    showfig = False
     for key, value in kwargs.items():
         if key == 'Xaxis':
              Xaxis = value
-             
+        if key == 'showfig':
+            showfig = value        
 
     x1, y1 = point1
     x2, y2 = point2
@@ -1408,28 +1481,27 @@ def profile_noInter(x, y, v, point1, point2, size=None, **kwargs):
     
     #%%
     # if smooth == True:
-    vp_smooth = _smooth_lowpass(xaxis,vp)
-            
+    vp_smooth_0 = _smooth_lowpass(xaxis,vp)
+    vp_smooth_1 = _smooth1d(xaxis,vp)
+    vp_smooth_2 = _smooth1d_old(xaxis,vp)
+
     # print(xaxis)
     
     # f = interpolate.interp1d(xaxis, vp, fill_value='extrapolate',kind='cubic')
     # xnew = np.linspace(min(xaxis),
     #                     max(xaxis),len(x))
     # vp_smooth = f(xnew)
-
-    # plt.figure()
-    # plt.subplot(2,1,1)
-    # plt.plot(xaxis, vp,label='raw')
-    # plt.legend()
-    # plt.subplot(2,1,2)
-    # plt.plot(xnew, vp_smooth,label='smooth')
-    # # plt.plot(xp, vp_smooth,label='smooth')
-    # plt.show()
-    # plt.legend()
-    # # plt.title('')
+    if showfig==True:
+        plt.figure()
+        plt.plot(xaxis, vp,label='raw',marker='+')
+        plt.plot(xaxis, vp_smooth_0,label='lowpass')
+        plt.plot(xaxis, vp_smooth_1,label='hanning_window')
+        plt.plot(xaxis, vp_smooth_2,label='CubicSmoothingSpline')
+        plt.show()
+        plt.legend()
 
 
-    return xp, yp, distances, vp, vp_smooth
+    return xp, yp, distances, vp, vp_smooth_0
 
 def _closest_node(node, nodes):
     nodes = np.asarray(nodes)
@@ -1515,11 +1587,13 @@ def peakdet(v, delta, x = None):
 
 def _smooth1d_old(x_axis, p_up):
     import csaps
-    p_up_smooth = csaps.CubicSmoothingSpline(x_axis, p_up, smooth=0.25)
-    # p_up_smooth = UnivariateSpline(x_axis, p_up, s=3)
-    return np.array(p_up_smooth(x_axis))
+    spl = csaps.CubicSmoothingSpline(x_axis, p_up, smooth=0.005)
+    # spl = UnivariateSpline(x_axis, p_up, s=3)
+    # spl.set_smoothing_factor(0.005)
+    
+    return np.array(spl(x_axis))
 
-def _smooth1d(x_axis, p_up ,window_len=11,window='hanning'):
+def _smooth1d(x_axis, p_up ,window_len=6,window='hanning'):
     """smooth the data using a window with requested size."""
     
     from scipy.signal import savgol_filter
@@ -1527,29 +1601,33 @@ def _smooth1d(x_axis, p_up ,window_len=11,window='hanning'):
     
     # itp = interp1d(x,y, kind='linear')
     window_size, poly_order = 201, 2
-    yy_sg = savgol_filter(p_up, window_size, poly_order)
-    # print(yy_sg)
-    # print(yy_sg)
-
-    return yy_sg
-
-def butter_lowpass_filter(data, cutoff, fs, nyq, order):
-    normal_cutoff = cutoff / nyq
-    # Get the filter coefficients 
-    b, a = butter(order, normal_cutoff, btype='low', analog=False)
-    y = filtfilt(b, a, data)
-    return y
+    filtdata = savgol_filter(p_up, window_size, poly_order)
     
+    # filtdata = _smooth_lowpass(x_axis,yy_sg)
+    # print(yy_sg)
+    # print(yy_sg)
+
+    return filtdata
+
 def _smooth_lowpass(x_axis, p_up):
     
     # Filter requirements.
     fs = abs(1/(x_axis[0] - x_axis[1]))      # sample rate, Hz
-    cutoff = 0.025      # desired cutoff frequency of the filter, Hz ,      slightly higher than actual 1.2 Hz
+    cutoff = 0.040      # desired cutoff frequency of the filter, Hz ,      slightly higher than actual 1.2 Hz
     nyq = 0.5 * fs  # Nyquist Frequency
-    order = 2      # sin wave can be approx represented as quadratic
+    order = 1      # sin wave can be approx represented as quadratic
         
-    filtdata = butter_lowpass_filter(p_up, cutoff, fs, nyq, order)
-    return filtdata
+    filtdata = butter_lowpass_filter(p_up, cutoff, nyq, order)
+    
+    return np.array(filtdata)
+
+def butter_lowpass_filter(p_up, cutoff, nyq, order):
+    normal_cutoff = cutoff / nyq
+    # Get the filter coefficients 
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)
+    y = filtfilt(b, a, p_up)
+    return y
+    
 
 def smooth2d(x, y, U, sigma = 10):
 

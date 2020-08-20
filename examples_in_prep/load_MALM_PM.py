@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from fatiando import gridder, mesher, utils
 import utils_dEXP as uEXP
 import plot_dEXP as pEXP
-import rotate
+import utils.rotate as rotate
 
 
 def rotate_60(origin,point_torotate,angle_deg=60, showfig=False):

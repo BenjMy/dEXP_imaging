@@ -77,9 +77,9 @@ for slicedir in enumerate('xy'):
     #%% ------------------------------- Plot the derivatives
     # http://campar.in.tum.de/Chair/HaukeHeibelGaussianDerivatives
     
-    xderiv = transform.derivx(xp, yp, U, shape,order=1)
-    yderiv = transform.derivy(xp, yp, U, shape,order=1)
-    zderiv = transform.derivz(xp, yp, U, shape,order=1)
+    xderiv = transform.derivx(xp, yp, U, shape,order=qorder)
+    yderiv = transform.derivy(xp, yp, U, shape,order=qorder)
+    zderiv = transform.derivz(xp, yp, U, shape,order=qorder)
     
     # # plt.plot(xderiv)
     # # plt.plot(yderiv)
@@ -114,25 +114,45 @@ for slicedir in enumerate('xy'):
 
     #%%
     # Ridges identification: plot all extremas obtained via find_peaks function (numpy) for a given altitude
-    # dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
-    #                                       label=label_prop,
-    #                                       method_peak='find_peaks',
-    #                                       showfig=True,
-    #                                       Xaxis=x_axis)  
+    dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
+                                          label=label_prop,
+                                          method_peak='find_peaks',
+                                          showfig=True,
+                                          Xaxis=x_axis,
+                                          qorder=qorder)  
 
     #%%
     # Ridges identification at all levels: plot extremas obtained via find_peaks function (numpy) for all 3 types of extremas familly RI, RII and RIII
     D = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                           label=label_prop,
                                           method_peak='find_peaks',
-                                          fix_peak_nb=2,
+                                          fix_peak_nb=3,
                                           returnAmp=True,
                                           showfig=True,
-                                          Xaxis=x_axis)  
+                                          Xaxis=x_axis,
+                                          interp=interp,
+                                          qorder=qorder)  
 
     dfI, dfII, dfIII =  D[0:3]
     hI, hII, hIII  = D[3:6]
     heights  = D[3:6]
+    #%%
+    # plot filtered ridges fitted over continuated section
+        
+    fig = plt.figure()
+    ax = plt.gca()
+    
+    plt, cmap = pEXP.plot_xy(mesh, label=label_prop, Xaxis=x_axis, p1p2=np.array([p1, p2]), ax=ax) #, ldg=)
+    plt.colorbar(cmap)
+    pEXP.plot_ridges_harmonic(dfI, dfII, dfIII,ax=ax,label=True)
+    # df_fit = dEXP.fit_ridges(D[0:3], rmvOutliers=True) # fit ridges on filtered data
+    # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
+    #                           ridge_type=[0,1,2],ridge_nb=None)
+    if x_axis=='y':
+        square([x1, x2, -z1, -z2])
+    else:   
+        square([y1, y2, -z1, -z2])
+    plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
     
     #%%
     # filter ridges using a minimum length criterium and and filter for a specific range of altitude
@@ -145,13 +165,14 @@ for slicedir in enumerate('xy'):
         xf_max = a*x2        
 
     D_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                            minDepth=500,
-                            maxDepth=3000,
+                            minDepth=200,
+                            maxDepth=2000,
                             minlength=8,
                             rmvNaN=True,
                             xmin=xf_min, xmax=xf_max,
-                            heights=np.array([hI, hII, hIII]))
+                            heights=[hI, hII, hIII])
     
+    D_f=D
     dfI_f, dfII_f, dfIII_f =  D_f[0:3]
     hI_f, hII_f, hIII_f = D_f[3:6]
     df_f = D_f[0:3]
@@ -174,6 +195,30 @@ for slicedir in enumerate('xy'):
         square([y1, y2, -z1, -z2])
     plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
 
+    #%% DEXP ratio
+
+    qratio = [1,0]
+    mesh_dexp, label_dexp = dEXP.dEXP_ratio(xp, yp, zp, U, shape, 
+                     zmin=0, zmax=max_elevation, nlayers=nlay, 
+                     qorders=qratio)
+    fig = plt.figure()
+    ax = plt.gca()
+    
+    plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
+                 markerMax=True,qratio=str(qratio),
+                 p1p2=np.array([p1,p2]), ax=ax, Xaxis=x_axis) #, ldg=)
+    plt.colorbar(cmap)
+
+    if x_axis=='y':
+        square([x1, x2, z1, z2])
+        plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
+    else:   
+        square([y1, y2, z1, z2])
+        plt.annotate(dens,[(y1 + y2)/2, -(z1+z2)/2])
+        
+    plt.savefig(dataname +  '_fig_DEXP_Ratio_' + x_axis + '.png', r=400)
+     
+        
     #%% 
     #  ridges analysis: scaling function to determine the SI index
 
@@ -186,10 +231,14 @@ for slicedir in enumerate('xy'):
         ncol = ncol + df_f[r_type].shape[1]-1
 
 
-    fig, axs = plt.subplots(1,ncol, figsize=(15, 6), facecolor='w', edgecolor='k')
-    # fig.subplots_adjust(hspace = .5, wspace=.001)
-    axs = axs.ravel()
-   
+
+    if ncol<2:
+        fig, ax = plt.subplots()
+    else:
+        fig, axs = plt.subplots(1,ncol, figsize=(15, 6), facecolor='w', edgecolor='k')
+        # fig.subplots_adjust(hspace = .5, wspace=.001)
+        axs = axs.ravel()
+
     # for i in range(ncol):
     # df_f[1]['elevation'].iloc[1]
     # dzz = np.log(df_f[1]['elevation'].iloc[1])-np.log(df_f[0]['elevation'].iloc[0])
@@ -202,7 +251,12 @@ for slicedir in enumerate('xy'):
             # df_f[r_type].columns[1:]    
             points, fit, SI_est_tmp , EXTnb = dEXP.scalFUN(df_height[r_type],EXTnb=k[1],z0=z0,
                                                            rmvOutliers=True)
-            pEXP.plot_scalFUN(points, fit, z0=z0, 
+            if ncol<2:
+                pEXP.plot_scalFUN(points, fit, z0=z0, 
+                  label='R'+ str(r_type+1) + k[1], 
+                  ax=ax) # scaling 
+            else:
+                pEXP.plot_scalFUN(points, fit, z0=z0, 
                               label='R'+ str(r_type+1) + k[1], 
                               ax=axs[nc]) # scaling 
             SI_est.append(SI_est_tmp)
@@ -219,7 +273,7 @@ for slicedir in enumerate('xy'):
 
     #%% 
     #  ridges analysis
-    # SI = 1.5
+    # SI_mean = 3
     mesh_dexp, label_dexp = dEXP.dEXP(xp, yp, zp, U, shape, 
                      zmin=0, zmax=max_elevation, nlayers=nlay, 
                      qorder=qorder,
@@ -240,7 +294,8 @@ for slicedir in enumerate('xy'):
         square([y1, y2, z1, z2])
         plt.annotate(dens,[(y1 + y2)/2, -(z1+z2)/2])
 
+    plt.savefig(dataname +  '_fig_DEXP_' + x_axis + '.png', r=400)
 
     #%% 
 
-uEXP.multipage(dataname + '_test_DEXP_SI.pdf',  dpi=25)
+# uEXP.multipage(dataname + '_test_DEXP_SI.pdf',  dpi=25)
