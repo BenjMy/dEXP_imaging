@@ -19,6 +19,7 @@ import examples.magnetic.fwdmag.fwd_mag_sphere as magfwd
 import examples.gravimetry.loadgrav.grav_models as grav
 import utils_dEXP as uEXP
 
+import utils.rotate as Rot
 import numpy as np
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
@@ -51,11 +52,12 @@ interp = True
 qorder = 0
 
 
-for slicedir in enumerate('xy'):
+for slicedir in enumerate('x'):
     if slicedir[1]=='x':
         print(slicedir[1])
         p1 =[(x1+x2)/2,min(yp)]
         p2 =[(x1+x2)/2,max(yp)]
+        # p1, p2 = Rot.rotate_around_point_lowperf(np.array([p1,p2]), radians=0.5, origin=(min(xp), min(yp)))
         x_axis = slicedir[1] # direction of p1p2 profil
         SI = 1.5
     else:

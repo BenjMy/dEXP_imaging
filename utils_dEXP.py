@@ -265,7 +265,7 @@ def load_surfer(fname, dtype='float64'):
     return data
 
 
-def multipage(filename, figs=None, dpi=200):
+def multipage(filename, figs=None, dpi=20):
     pp = PdfPages(filename)
     if figs is None:
         figs = [plt.figure(n) for n in plt.get_fignums()]

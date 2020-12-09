@@ -123,7 +123,7 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
         if interp == True:
             xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, x_resolution)
         else:
-            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth  = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution, showfig=False)
+            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_dict  = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution, showfig=False)
 
         if Xaxis is 'dist':
             xaxis = distance
@@ -131,9 +131,15 @@ def ridges_minmax_plot(x, y, mesh, p1, p2, qorder=0, z=0,
             xaxis = xx
         else:
             xaxis = yy
+
+        if smooth is not False:
+            if smooth == True:
+                p_up_f_d1x = _smooth_lowpass(xaxis,p_up_f_d1x)
+            else:
+                p_up_f_d1x = p_up_f_d1x_dict[smooth]
                 
-        if smooth == True:
-            p_up_f_d1x = _smooth_lowpass(xaxis,p_up_f_d1x)
+        # if smooth == True:
+        #     p_up_f_d1x = _smooth_lowpass(xaxis,p_up_f_d1x)
             
         # peak analysis
         MinMax_peaks, MinMax_peaks_p = _peaks_analysis(xaxis,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
@@ -221,6 +227,8 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
     x_resolution = len(x)
     Xaxis = 'x'
     peakp_out = False
+    iplot = 4
+
     for key, value in kwargs.items():
         if key == 'minAlt_ridge':
             minAlt_ridge = value 
@@ -236,9 +244,9 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
              Xaxis = value
         if key == 'returnAmp':
             peakp_out = True
-                       
+        if key == 'iplot':
+            iplot = value               
     # --------------------------------------------
-    iplot = 4
     
     if label not in mesh.props:
         raise ValueError("mesh doesn't have a '%s' property." % (label))
@@ -253,7 +261,7 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         if interp == True:
             xx, yy, distance, p_up_f = gridder.profile(x, y, upw_u_l, p1, p2, x_resolution)
         else:
-            xx, yy, distance, p_up_f, p_up_f_smooth = profile_noInter(x, y, upw_u_l, p1, p2, x_resolution)
+            xx, yy, distance, p_up_f, p_up_f_dict = profile_noInter(x, y, upw_u_l, p1, p2, x_resolution)
 
         if Xaxis is 'dist':
             xaxis = distance
@@ -262,9 +270,19 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         else:
             xaxis = yy
             
-        if smooth == True:
-            p_up_f = _smooth_lowpass(xaxis,p_up_f)
+        # if smooth is not None:
+        #     p_up_f = _smooth_lowpass(xaxis,p_up_f)
+        #     p_up_f = 
+        # p_up_f = np.array(p_up_f)
+        if smooth is not False:
+            if smooth == True:
+                p_up_f_d1z = _smooth_lowpass(xaxis,p_up_f)
+            else:
+                p_up_f = p_up_f_dict[smooth]
+        p_up_f = np.array(p_up_f)
 
+        # print(p_up_f)
+                
         # peak analysis
         MinMax_peaks, MinMax_peaks_p = _peaks_analysis(xaxis, p_up_f,fix_peak_nb=fix_peak_nb,
                                        method_peak=method_peak,proxy=None)
@@ -296,8 +314,8 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         if interp == True:
             xx, yy, distance, p_up_f_d1z = gridder.profile(x, y, up_f_d1z, p1, p2, x_resolution)
         else:
-            xx, yy, distance, p_up_f_d1z, p_up_f_d1z_smooth = profile_noInter(x, y, up_f_d1z, p1, p2, x_resolution)
-            p_up_f_d1z = p_up_f_d1z_smooth
+            xx, yy, distance, p_up_f_d1z, p_up_f_d1z_dict = profile_noInter(x, y, up_f_d1z, p1, p2, x_resolution)
+            # p_up_f_d1z = p_up_f_d1z_smooth
 
         if Xaxis is 'dist':
             xaxis = distance
@@ -306,9 +324,16 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         else:
             xaxis = yy
             
-        if smooth == True:
-            p_up_f_d1z = _smooth_lowpass(xaxis,p_up_f_d1z)
-            
+        # if smooth == True:
+        #     p_up_f_d1z = _smooth_lowpass(xaxis,p_up_f_d1z)
+                # p_up_f = np.array(p_up_f)
+
+        if smooth is not False:
+            if smooth == True:
+                p_up_f_d1z = _smooth_lowpass(xaxis,p_up_f_d1z)
+            else:
+                p_up_f_d1z = p_up_f_d1z_dict[smooth]
+                
         # peak analysis
         MinMax_peaks, MinMax_peaks_p = _peaks_analysis(xaxis,p_up_f_d1z,fix_peak_nb=fix_peak_nb,
                                        method_peak=method_peak,proxy=None)
@@ -347,8 +372,8 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
         if interp == True:
             xx, yy, distance, p_up_f_d1x = gridder.profile(x, y, up_f_d1x, p1, p2, x_resolution)
         else:
-            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_smooth = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution)
-            p_up_f_d1x = p_up_f_d1x_smooth
+            xx, yy, distance, p_up_f_d1x, p_up_f_d1x_dict = profile_noInter(x, y, up_f_d1x, p1, p2, x_resolution)
+            # p_up_f_d1x = p_up_f_d1x_smooth
 
         if Xaxis is 'dist':
             xaxis = distance
@@ -356,10 +381,13 @@ def ridges_minmax(x, y, mesh, p1, p2, qorder=0, z=0, label='upwc',fix_peak_nb=No
             xaxis = xx
         else:
             xaxis = yy
-            
-        if smooth == True:
-            p_up_f_d1x = _smooth_lowpass(xaxis,p_up_f_d1x)
-            
+        
+        if smooth is not False:
+            if smooth == True:
+                p_up_f_d1x = _smooth_lowpass(xaxis,p_up_f_d1x)
+            else:
+                p_up_f_d1x = p_up_f_d1x_dict[smooth]
+                
         # peak analysis
         MinMax_peaks, MinMax_peaks_p = _peaks_analysis(xaxis,p_up_f_d1x,fix_peak_nb=fix_peak_nb,
                                        method_peak=method_peak,proxy=None)
@@ -580,6 +608,10 @@ def filter_ridges(dfIf,dfIIf,dfIIIf,minDepth,maxDepth, minlength=3, rmvNaN=False
     * minDepth
         Text here
     * maxDepth
+    * kwargs
+    heights: dataframe
+        contains heights of ridges of type I
+
 
     Returns:
 
@@ -1199,7 +1231,7 @@ def _jumpAnalysis(x):
 
 def _removeOutliers(x, outlierConstant=1):
     a = np.array(x)
-    print(a)
+    # print(a)
     upper_quartile = np.percentile(a, 75)
     lower_quartile = np.percentile(a, 25)
     # print('upper_quartile: ' + str(upper_quartile))
@@ -1214,7 +1246,7 @@ def _removeOutliers(x, outlierConstant=1):
         if y >= quartileSet[0] and y <= quartileSet[1]:
             resultList.append(y)
             iTrue.append(i)
-    print(iTrue)
+    # print(iTrue)
     return resultList, iTrue, quartileSet
 
 def _fit(x,y,**kwargs):
@@ -1436,13 +1468,14 @@ def profile_noInter(x, y, v, point1, point2, size=None, **kwargs):
         if key == 'showfig':
             showfig = value        
 
+            
     x1, y1 = point1
     x2, y2 = point2
     maxdist = np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
     
     if size is None:
         size = len(v)
-        
+
     distances = np.linspace(0, maxdist, size)
     angle = np.arctan2(y2 - y1, x2 - x1)
     xp = x1 + distances*np.cos(angle)
@@ -1459,17 +1492,33 @@ def profile_noInter(x, y, v, point1, point2, size=None, **kwargs):
     nodes = np.array([x,y]).T
     points_p = np.array([xp,yp]).T
     # find nearest point
+    
+    # from progressbar import ProgressBar
+    # pbar = ProgressBar()
+    # vp = []
+    # for p in pbar(points_p):
+    #     ind = _closest_node(p, nodes)
+    #     vp.append(v[ind])
+
+    # from progressbar import ProgressBar
+    # pbar = ProgressBar()
     vp = []
     for p in points_p:
         ind = _closest_node(p, nodes)
         vp.append(v[ind])
+    
+    vp_smooth_dict = _smooth_allfcts(xaxis,vp,showfig)    
+    
+    return xp, yp, distances, vp, vp_smooth_dict
+        
+def _smooth_allfcts(xaxis,vp,showfig=False):
 
     # window_size, poly_order = 101, 3
     # vp_smooth = savgol_filter(vp, window_size, poly_order)
     # print(xaxis)
     # spl = UnivariateSpline(xaxis, vp, s=10)
     # plt.plot(xaxis, spl(xaxis), 'g', lw=3)
-    # vp_smooth = np.array(spl(xaxis))
+    # vp_smooth_spline = np.array(spl(xaxis))
     
     # xaxis = distances
     # xnew = np.linspace(min(xaxis),
@@ -1481,27 +1530,41 @@ def profile_noInter(x, y, v, point1, point2, size=None, **kwargs):
     
     #%%
     # if smooth == True:
+        
     vp_smooth_0 = _smooth_lowpass(xaxis,vp)
+    
     vp_smooth_1 = _smooth1d(xaxis,vp)
     vp_smooth_2 = _smooth1d_old(xaxis,vp)
+    vp_smooth_3 = _smooth_lowpass(xaxis,vp_smooth_1)
 
-    # print(xaxis)
-    
     # f = interpolate.interp1d(xaxis, vp, fill_value='extrapolate',kind='cubic')
     # xnew = np.linspace(min(xaxis),
-    #                     max(xaxis),len(x))
-    # vp_smooth = f(xnew)
+    #                     max(xaxis),len(xaxis))
+    # vp_smooth_4 = f(xnew)
+    from scipy.ndimage.filters import uniform_filter1d
+    N = int(len(vp_smooth_2)/20)
+    vp_smooth_4 = uniform_filter1d(vp_smooth_2, size=N,mode='nearest',cval=min(vp_smooth_2))
+
     if showfig==True:
         plt.figure()
         plt.plot(xaxis, vp,label='raw',marker='+')
         plt.plot(xaxis, vp_smooth_0,label='lowpass')
         plt.plot(xaxis, vp_smooth_1,label='hanning_window')
+        plt.plot(xaxis, vp_smooth_3,label='hanning_window + lowpass')
         plt.plot(xaxis, vp_smooth_2,label='CubicSmoothingSpline')
+        plt.plot(xaxis, vp_smooth_4,label='CubicSmoothingSpline + interp1d')
         plt.show()
         plt.legend()
 
-
-    return xp, yp, distances, vp, vp_smooth_0
+    vp_smooth_dict = {
+                  "Lowpass": vp_smooth_0,
+                  "Hanning": vp_smooth_1,
+                  "Hanning+Lowpass": vp_smooth_3,
+                  "CubicSmoothingSpline": vp_smooth_2,
+                  'CubicSmoothingSpline + interp1d':vp_smooth_4
+                }
+    
+    return vp_smooth_dict
 
 def _closest_node(node, nodes):
     nodes = np.asarray(nodes)
@@ -1596,27 +1659,35 @@ def _smooth1d_old(x_axis, p_up):
 def _smooth1d(x_axis, p_up ,window_len=6,window='hanning'):
     """smooth the data using a window with requested size."""
     
-    from scipy.signal import savgol_filter
+    # from scipy.signal import savgol_filter
     # from scipy.interpolate import interp1d
     
     # itp = interp1d(x,y, kind='linear')
-    window_size, poly_order = 201, 2
+    ws = int(len(p_up)/3)
+    if ws % 2 == 0:
+        ws = ws +1
+
+    window_size, poly_order = ws , 2
     filtdata = savgol_filter(p_up, window_size, poly_order)
     
-    # filtdata = _smooth_lowpass(x_axis,yy_sg)
-    # print(yy_sg)
-    # print(yy_sg)
-
     return filtdata
 
-def _smooth_lowpass(x_axis, p_up):
+def _smooth_lowpass(x_axis, p_up, **kwargs):
+    
+    cutoff = 0.015      # desired cutoff frequency of the filter, Hz ,      slightly higher than actual 1.2 Hz
+    for key, value in kwargs.items():
+        if key == 'cutoff':
+             cutoff = value
+    
     
     # Filter requirements.
     fs = abs(1/(x_axis[0] - x_axis[1]))      # sample rate, Hz
-    cutoff = 0.040      # desired cutoff frequency of the filter, Hz ,      slightly higher than actual 1.2 Hz
     nyq = 0.5 * fs  # Nyquist Frequency
     order = 1      # sin wave can be approx represented as quadratic
-        
+    # print('cutoff '+ str(cutoff))
+    # print('fs '+ str(fs))
+    # print('order '+ str(order))
+   
     filtdata = butter_lowpass_filter(p_up, cutoff, nyq, order)
     
     return np.array(filtdata)
@@ -1633,7 +1704,7 @@ def smooth2d(x, y, U, sigma = 10):
 
     plt.figure()
     plt.subplot(1,2,1)
-    plt.scatter(x, y, c=U, cmap='viridis',vmax=0.25)
+    plt.scatter(x, y, c=U, cmap='viridis',vmax=max(U), vmin=min(U))
     plt.colorbar()
     plt.axis('square')
     # plt.show()
@@ -1644,7 +1715,7 @@ def smooth2d(x, y, U, sigma = 10):
     U_f = np.copy(U)
     U_f = U2d_f.reshape(U.shape)
     plt.subplot(1,2,2)
-    plt.scatter(x, y, c=U_f, cmap='viridis',vmax=0.25)
+    plt.scatter(x, y, c=U_f, cmap='viridis',vmax=max(U), vmin=min(U))
     plt.colorbar()
     plt.axis('square')
     plt.show()

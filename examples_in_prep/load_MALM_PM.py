@@ -20,6 +20,7 @@ def rotate_60(origin,point_torotate,angle_deg=60, showfig=False):
         
     
     # point_torotate = np.array([X_raw, Y_raw])
+    print(point_torotate)
     angle_rad = np.deg2rad(angle_deg)
     Xr, Yr = rotate.rotate_around_point_lowperf(point=point_torotate,
                                                 radians=angle_rad,

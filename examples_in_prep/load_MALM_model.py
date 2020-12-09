@@ -200,6 +200,7 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
         RemLineNb, Injection, coordE, pointsE =  load_geom(path) # find the geom file in the folder path
         nb, x , y, z = np.array(coordE[:-3]).T
         AnoPos = []
+        data_struct = []
 
     # path2files="example_2add_later/Landfill_3d/Ano_0_E13/" # Test elec outside landfill
     # # path2files="example_2add_later/Landfill_3d/Ano_0_E89/" # Test 2 elec outside landfill
@@ -222,7 +223,10 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
     # ------------- Raw data   -----------------------------------------
     
     # pEXP.plot_line(x, y, U_raw,p1,p2, title='U_raw', interp=interp) #, vmin=0.01, vmax=0.1, 
-    
+    print(len(x))
+    print(len(U_raw))
+    print(len(xnew))
+
     # ------------- Interpolation  -----------------------------------------
     U_int = gridder.interp_at(x, y, U_raw, xnew, ynew, algorithm='cubic', extrapolate=True)
     # xp,yp,U_int = gridder.interp(xnew,ynew,U,shape)
@@ -283,8 +287,9 @@ def load_MALM_LandfillPorto(path, filename, shape=None, field=True, interp=True,
     coord_xyz_int = [xnew, ynew,zp]
     
     max_elevation = 50
-
+    
     return coord_xyz, coord_xyz_int, U, coords_liner, shape, max_elevation, p, data_struct
+
 
 
 def mirrorImage( a, b, c, x1, y1): 
@@ -326,7 +331,7 @@ def isabove(xvcol, yvcol, Ucol, p1,p2):
     
     plt.figure()
     plt.subplot(1,2,1)
-    plt.scatter(xvcol, yvcol,c=Ucol, cmap='viridis', vmax=0.25, vmin=0)
+    plt.scatter(xvcol, yvcol,c=Ucol, cmap='viridis', vmax=max(Ucol), vmin=0)
     # plt.scatter(xvcol[c_above==True], yvcol[c_above==True],c='red', cmap='viridis')
     # plt.scatter(xvcol[c_above==False], yvcol[c_above==False],c='black', cmap='viridis')
 
@@ -337,7 +342,7 @@ def isabove(xvcol, yvcol, Ucol, p1,p2):
     plt.axis('square')
     
     plt.subplot(1,2,2)
-    plt.scatter(xvcol_a, yvcol_a,c=U_a, cmap='viridis', vmax=0.25, vmin=0)
+    plt.scatter(xvcol_a, yvcol_a,c=U_a, cmap='viridis', vmax=max(Ucol), vmin=0)
     plt.colorbar()
     plt.axis('square')
 
@@ -384,7 +389,7 @@ def mirrorU_alongLine(U,p,c_above,a,b,c):
         
    pmirror = np.vstack(pmirror)
    Umirror = np.array(Umirror)
-   plt.scatter(pmirror[:,0],pmirror[:,1],c=Umirror, cmap='viridis',vmax=0.25)
+   plt.scatter(pmirror[:,0],pmirror[:,1],c=Umirror, cmap='viridis',vmax=max(Umirror))
    plt.colorbar()
    plt.axis('square')
     
@@ -450,5 +455,38 @@ def zeros_sym(U,c_above,value=0):
     
     return Uzeros
     
+
+def rotate_and_rescale_all(X_raw,Y_raw,coordE,p1,p2,coords_liner):
+    
+    # rotate all data
+    origin=(max(X_raw), min(Y_raw))
+    
+    
+    point_torotate = np.array([ X_raw, Y_raw])
+    Xdraw, Ydraw = rotate_60(origin, point_torotate, angle_deg=rot, showfig=False)
+    Xd = Xdraw-min(Xdraw)
+    Yd = Ydraw-min(Ydraw)
+    
+    point_torotate = np.array([coordE[:,1],  coordE[:,2]])
+    coordErx, coordEry = rotate_60(origin, point_torotate, angle_deg=rot, showfig=False)
+    coordErx = coordErx-min(Xdraw)
+    coordEry = coordEry-min(Ydraw)
+    
+    point_torotate = np.array([[p1[0],p2[0]],[p1[1],p2[1]]])
+    px, py = rotate_60(origin,point_torotate,angle_deg=rot, showfig=False)
+    px = px-min(Xdraw)
+    py = py-min(Ydraw)
+    
+    p1 = [px[0],py[0]]
+    p2 = [px[1],py[1]]
+    
+    point_torotate = np.array(coords_liner).T
+    coords_linerx, coords_linery = rotate_60(origin,point_torotate,angle_deg=rot, showfig=False)
+    coords_linerx = coords_linerx-min(Xdraw)
+    coords_linery = coords_linery-min(Ydraw)
+    
+    coords_liner = np.array([coords_linerx, coords_linery]).T
+
+    return Xd, Yd, coordErx,coordEry,coords_liner,p1,p2
 
     

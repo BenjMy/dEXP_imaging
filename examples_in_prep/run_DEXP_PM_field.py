@@ -35,7 +35,7 @@ out = MALM.load_MALM_Porto_real(MainPath + '/malm_models/',
                           radius=200,
                           rcor=10,
                           rot=60,
-                          showfig=False)
+                          showfig=True)
 
 coord_xyz, coord_xyz_int = out[0:2]
 Uload = out[2]
@@ -71,6 +71,22 @@ smooth = True
 # len(U)
 # len(xp)
 
+# plt.figure()
+# plt.scatter(xp, yp)
+# plt.colorbar()
+# plt.plot(coords_liner[:,0],coords_liner[:,1],'-')
+# plt.axis('square')
+# plt.scatter((Ha[0]+Ha[1])/2,Ha[2])
+
+plt.figure()
+plt.scatter(xp, yp, c=U , cmap='viridis',vmax=0.05)
+plt.colorbar()
+plt.axis('square')
+plt.show()
+
+print(U[0:2])
+
+
 # NameSave = 'Togrid.txt'
 # f = open(NameSave,'w')
 # np.savetxt(f, np.array([xp, yp, U]).T, delimiter='\t',fmt='%1.6f')   # X is an array
@@ -104,9 +120,10 @@ x_axis = 'x'
 
 #%% ------------------------------- smooth the data 
 
-# U = dEXP.smooth2d(xp, yp, U, sigma=10)
+# U = dEXP.smooth2d(xp, yp, U, sigma=5)
 
 #%% ------------------------------- Plot the data 
+# U = np.copy(Us)
 
 # _, p1, p2, _ = MALM.definep1p2(path=Main,radius=300)
 # xx, yy, distance, profile = pEXP.plot_line(xp, yp, U ,p1,p2, interp=True)
@@ -136,7 +153,7 @@ for i in range(len(p12x)):
 plt.xlabel('x (m)')
 plt.ylabel('y (m)')
 
-prl = 100
+prl = 60
 # shape = shape  (max(xp)-min(xp))/
 # shape = (115,115)
 xint_scipy, yint_scipy = gridder.regular((min(xp)-prl, max(xp)+prl, 
@@ -149,6 +166,10 @@ InterpData = np.array([xint_scipy, yint_scipy, U_int_scipy]).T
 where_are_NaNs = np.isnan(InterpData)
 InterpData[where_are_NaNs] = 0.0074
 xint_scipy, yint_scipy, U_int_scipy = InterpData.T
+
+plt.scatter(xint_scipy,yint_scipy)
+plt.scatter(xp,yp)
+
 
 #%% Solution 2
 # Extrapolate = True
@@ -197,7 +218,7 @@ plt.xlabel('x (m)')
 plt.ylabel('y (m)')
 
 
-xx, yy, distance, profile = pEXP.plot_line(xint_scipy,yint_scipy,U_int_scipy,p1,p2,
+xx, yy, distance, profile, ax, plt = pEXP.plot_line(xint_scipy,yint_scipy,U_int_scipy,p1,p2,
                                             interp=False, smooth=True, Xaxis=x_axis, showfig=True)
 
 
@@ -435,10 +456,14 @@ mesh_dexp, label_dexp = dEXP.dEXP_ratio(xp, yp, zp, U, shape,
 fig = plt.figure()
 ax = plt.gca()
 plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
-             markerMax=True,qratio=str(qratio),
+             markerMax=True,qratio=str(qratio),Vminmax=[0,0.075],
              p1p2=np.array([p1,p2]), ax=ax, Xaxis=x_axis) #, ldg=)
-plt.colorbar(cmap)
-
+cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
+cbar.set_label('ratio voltage (V)')
+# plt.xlim([200,600])
+plt.savefig('ratios_field.png', dpi=450)    
+    
+    
 # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
 #                           ridge_type=[0,1,2],ridge_nb=None,
 #                           xmin=5.036e6+50, 

@@ -66,17 +66,47 @@ dens  = data_struct['density']
 
 x1, x2, y1, y2, z1, z2 = np.array(model[0].get_bounds())
 
-p1 =[min(yp),0]
-p2 =[max(yp),0]
+# p1 =[min(yp),0]
+# p2 =[max(yp),0]
+
+p1 =[-6000,0]
+p2 =[6000,0]
 
 max_elevation=z2*1.2
 scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 interp = True
 qorder = 0
 
+max_elevation/nlay
 #%% 
 # Plot the data 
-pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+xx, yy, distance, profile, ax, plt = pEXP.plot_line(xp, yp, U,p1,p2, interp=True)
+zderiv = transform.derivz(xp, yp, U, shape,order=1)
+
+xx, yy, distance, dz, ax, plt = pEXP.plot_line(xp, yp, zderiv, p1,p2, interp=True, title='zderiv')
+
+
+fig, ax1 = plt.subplots()
+
+color = 'tab:red'
+ax1.set_xlabel('x(m)')
+ax1.set_ylabel('Amplitude of the\n potential field', color=color)
+ax1.plot(xx, profile, color=color)
+ax1.tick_params(axis='y', labelcolor=color)
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+color = 'tab:blue'
+ax2.set_ylabel('dz', color=color)  # we already handled the x-label with ax1
+ax2.plot(xx, dz, color=color)
+ax2.tick_params(axis='y', labelcolor=color)
+ax2.set_ylim([-0.0001,3e-4])
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+# ax1.set_aspect(aspect=1e4)
+
+
+
 
 #%% 
 # Pad the edges of grids (if necessary)

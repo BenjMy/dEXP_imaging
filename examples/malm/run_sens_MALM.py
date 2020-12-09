@@ -42,6 +42,7 @@ import examples.malm.loadmalm.Load_sens_MALM as MALM
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
 
+import numpy as np
 
 #%%
 # MALM DATA synthetic anomaly: analysis of sensitivity
@@ -53,17 +54,20 @@ DF_FIT = []
 XXZZ = []
 CTm = []
 
-# filenames = ['MSoilR1000.0AnoR1Z-3.75L5h2.5',
-#              'MSoilR1000.0AnoR1Z-13.75L5h2.5',
-#              'MSoilR1000.0AnoR1Z-23.75L5h2.5']
+filenames = ['MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0',
+              'MSoilR10AnoR1Z-13.75W15H2.5L5S0Noise0',
+              'MSoilR100AnoR1Z-13.75W15H2.5L5S0Noise0',
+              'MSoilR1000AnoR1Z-13.75W15H2.5L5S0Noise0']
 
-filenames = ['MSoilR1000.0AnoR1Z-23.75L5h2.5']
-
+# filenames = ['MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0',
+#               'MSoilR10AnoR1Z-13.75W15H2.5L5S0Noise0']
+x_axis='y'
 for fi in filenames:
     print(fi)
     x_raw, y_raw, z_raw, U_raw, maxdepth, shape_raw, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
                                                                 fi + '.pkl')
-    shape = (150,150)
+
+    shape = (200,200)
     xp,yp,U = gridder.interp(x_raw,y_raw,U_raw,shape)
     
     
@@ -77,7 +81,7 @@ for fi in filenames:
     #%%
     # ridges analysis parameters
     nlay = 25
-    max_elevation = 20
+    max_elevation = 30
     minAlt_ridge = max_elevation*0.05
     maxAlt_ridge = max_elevation*0.65
     
@@ -125,8 +129,10 @@ for fi in filenames:
     # or  find_peaks or peakdet or spline_roots
     dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                           label=label_prop,
-                                          fix_peak_nb=2,
-                                          method_peak='find_peaks')  
+                                          fix_peak_nb=5,
+                                          method_peak='find_peaks',
+                                          showfig=True,
+                                          Xaxis=x_axis)  
     
      
     #%% 
@@ -162,6 +168,7 @@ for fi in filenames:
     # square([x1, x2, z1, z2])
     # plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
 
+
     #%% 
     # save data loop
 
@@ -188,7 +195,7 @@ x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 
-
+    
 i = 1
 plt.figure()
 ax = plt.gca()
@@ -201,6 +208,7 @@ x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 
+
 i = 2
 plt.figure()
 ax = plt.gca()
@@ -212,6 +220,20 @@ pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+
+
+i = 3
+plt.figure()
+ax = plt.gca()
+pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
+dfI_f,dfII_f,dfIII_f = DF_F[i]
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
+pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
+                          ridge_type=[0,1,2],ridge_nb=None)
+x1, x2, z1, z2 = XXZZ[i]
+square([x1, x2, z1, z2])
+plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+
 
 
 # # Loop on source depth

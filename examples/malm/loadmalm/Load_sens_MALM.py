@@ -19,7 +19,6 @@ def load_MALM_sens3d(filename=None):
 
     # different version of the pickle file
     if "HWDL" in data:
-        print("this will execute")
         maxdepth = data['HWDL'][2] * 1.5
     elif "HWD" in data:
         maxdepth = data['HWD'][2] * 1.5
@@ -34,9 +33,16 @@ def load_MALM_sens3d(filename=None):
         xyzu = data['HWDL']
         xp, yp, z, U  = xyzu[:,0],  xyzu[:,1], xyzu[:,2],  xyzu[:,3]
 
-        return xp, yp, z, U, maxdepth, shape, p1, p2, SimName, data
+        # return xp, yp, z, U, maxdepth, shape, p1, p2, SimName, data
+    elif "HWD" in data:
+        xyzu = data['uAz0_grid']
+        xp, yp, z, U  = xyzu[:,0],  xyzu[:,1], xyzu[:,2],  xyzu[:,3]
+        
+    elif "HWDLs" in data:
+        xyzu = data['XYU']
+        xp, yp, z, U  = xyzu[:,0],  xyzu[:,1], xyzu[:,2],  xyzu[:,3]
 
-    else:
-        return maxdepth, shape, p1, p2, SimName, data
-    
+        # return maxdepth, shape, p1, p2, SimName, data
+    return xp, yp, z, U, maxdepth, shape, p1, p2, SimName, data
+
 

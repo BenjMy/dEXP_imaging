@@ -13,22 +13,37 @@ from scipy.optimize import curve_fit
 # my own functions
 import dEXP as dEXP
 
-def plot_field(x, y, field, shape):
+def plot_field(x, y, field, shape, **kwargs):
 
+    Vminmax = None
+    for key, value in kwargs.items():
+        if key == 'Vminmax':
+            Vminmax = value
+            mins = value[0]
+            maxs = value[1]    
+            
     # Make maps of all fields calculated
     fig = plt.figure()
     ax = plt.gca()
     plt.rcParams['font.size'] = 10
     X, Y = x.reshape(shape), y.reshape(shape)    
-    scale = np.abs([field.min(), field.max()]).max()
+    
+    if Vminmax is None:
+        scale = np.abs([field.min(), field.max()]).max()
+        mins = -scale
+        maxs = scale
+        
     # ax.set_title(field_name)
     plot = ax.pcolormesh(X, Y, field.reshape(shape), cmap='RdBu_r',
-                         vmin=-scale, vmax=scale)
-    plt.colorbar(plot, ax=ax, aspect=30, pad=0)
+                         vmin=mins, vmax=maxs)
+    cbar = plt.colorbar(plot, ax=ax)
+    cbar.set_label('voltage (V)')
     ax.set_xlabel('x (m)')
     ax.set_ylabel('y (m)')
     plt.tight_layout(pad=0.5)
     plt.show()
+    
+    return ax, plt
     
     
 def plot_z(mesh):
@@ -88,6 +103,7 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
         Txt here
     """
 
+
     x = mesh.get_xs()
     y = mesh.get_ys()
     z = mesh.get_zs()
@@ -97,6 +113,7 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
     dEXP_bool = False
     SI = None
     q_ratio = None
+    Vminmax = None
     for key, value in kwargs.items():
         if key == 'Xaxis':
             Xaxis = value
@@ -108,19 +125,27 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
             SI = value
         if key == 'qratio':
             q_ratio = value
-
+        if key == 'Vminmax':
+            Vminmax= value
+            vmin = Vminmax[0]
+            vmax = Vminmax[1]
+            
              
     if label not in mesh.props:
         raise ValueError("mesh doesn't have a '%s' property." % (label))
 
     image = mesh.props[label].reshape(mesh.shape)
 
-    if scaled == 1:
-        scale = 0.1*np.abs([image.min(), image.max()]).max()
-        mins, maxs = [-scale, scale]
+    if Vminmax is not None:
+        mins, maxs = [vmin,vmax]
     else:
-        mins, maxs = [image.min(),image.max()]
-    
+        if scaled == 1:
+            scale = 1e-5*np.abs([image.min(), image.max()]).max()
+            mins, maxs = [-scale, scale]
+        else:
+            mins, maxs = [image.min(),image.max()]
+            # mins, maxs = 0,0.01
+        
     if ax == None:
         fig = plt.subplots()
         ax = plt.gca()
@@ -130,6 +155,11 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
         for i in p1p2[0]:
             if(i in p1p2[1]):
                 p_xaxis.append(i)
+            else:
+                print(p_xaxis)
+                print(p1p2)
+                print('need to rotate first')
+
         
         if len(p_xaxis)>1:
             print('len must be <2')
@@ -138,21 +168,21 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
             # p_xaxis= p1p2[0][0]
             print('paxis=' + str(p_xaxis))
             id_p_xaxis = (np.abs(x - p_xaxis)).argmin()
-            ax.set_title('Model slice at x={} m'.format(y[id_p_xaxis]))
-            cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :])
+            ax.set_title('Model slice at x={} m'.format(int(y[id_p_xaxis])))
+            cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :],vmin=mins, vmax=maxs)
             # cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis])
             # ax.set_xlim(y.min(), y.max())
             # ax.set_xlabel('y (m)')
         else:
             # p_xaxis= p1p2[0][1]
             id_p_xaxis = (np.abs(y - p_xaxis)).argmin()
-            ax.set_title('Model slice at y={} m'.format(x[id_p_xaxis]))
-            cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis])
+            ax.set_title('Model slice at y={} m'.format(int(x[id_p_xaxis])))
+            cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis],vmin=mins, vmax=maxs)
             # cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :])
             # ax.set_xlim(x.min(), x.max())
             # ax.set_xlabel('x (m)')
     else:
-        cmap = ax.pcolormesh(x, z, image[:, :, mesh.shape[1]//2])
+        cmap = ax.pcolormesh(x, z, image[:, :, mesh.shape[1]//2],vmin=mins, vmax=maxs)
         ax.set_xlim(x.min(), x.max())
         ax.set_xlabel('x (m)')
     ax.set_aspect('equal')
@@ -179,28 +209,33 @@ def plot_xy(mesh,scaled=0,label=None, ax=None, markerMax=False, **kwargs):
 
 
     if markerMax == True:
-        if Xaxis is 'x':
-            x_axis = y
-            id_p_xaxis = (np.abs(x_axis - p_xaxis)).argmin()
-            ind = np.unravel_index(np.argmax(image[:, :, id_p_xaxis], axis=None), 
-                                   image[:, :, id_p_xaxis].shape)
-        else:
-            # search for the max
-            x_axis = x
-            id_p_xaxis = (np.abs(x_axis - p_xaxis)).argmin()
-            ind = np.unravel_index(np.argmax(image[:, id_p_xaxis, :], axis=None), 
-                                  image[:, id_p_xaxis, :].shape)
-        
-        z_exp = z[ind[0]]
-        x_axis_exp = x_axis[ind[1]]
-        print('Markermax_z=' + str(z_exp))
-        print('Markermax_x=' + str(x_axis_exp))
-        ax.scatter(x_axis_exp,z_exp, s=70, c='r', marker='v')
+        if p1p2 is not None:
+            if Xaxis is 'x':
+                x_axis = x
+                id_p_xaxis = (np.abs(x_axis - p_xaxis)).argmin()
+                ind = np.unravel_index(np.argmax(image[:, id_p_xaxis, :], axis=None), 
+                                      image[:, id_p_xaxis, :].shape)
+            else:
+                # search for the max
+                x_axis = y
+                id_p_xaxis = (np.abs(x_axis - p_xaxis)).argmin()
+                ind = np.unravel_index(np.argmax(image[:, :, id_p_xaxis], axis=None), 
+                                       image[:, :, id_p_xaxis].shape) 
+            z_exp = z[ind[0]]
+            if Xaxis is 'x':
+                x_axis_exp = y[ind[1]]
+            elif Xaxis is 'y':
+                x_axis_exp = x[ind[1]]
+    
+            # x_axis_exp = x_axis[ind[1]]
+            print('Markermax_z=' + str(z_exp))
+            print('Markermax_x=' + str(x_axis_exp))
+            ax.scatter(x_axis_exp,z_exp, s=70, c='r', marker='.')
         
         if SI is not None:
             ax.legend(['SI=' + str(np.round(SI,1))])
         if q_ratio is not None:
-            ax.legend(['q-ratio=' + str(q_ratio)])
+            ax.legend(['q-ratio=' + str(q_ratio)]) # bbox_to_anchor=(1.05, 0.05), loc='lower left')
 
     #ax = plt.subplot(1, 2, 2)
     #ax.set_title('Model slice at x={} m'.format(x[len(x)//2]))
@@ -333,29 +368,42 @@ def slice_mesh(x, y, mesh, label, p1, p2, ax=None, interp=True, **kwargs):
 #     return ax
 
 
-
 def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
 
     Xaxis = []
-    smooth_bool = False
+    Vminmax = []
+    smooth_type = False
     showfig = False
+    vmin=min(data)
+    vmax=max(data)
+    limx=None
+    limy=None
+    x_resolution=None
+    
     for key, value in kwargs.items():
         if key == 'Xaxis':
              Xaxis = value
         if key == 'smooth':
-             smooth_bool = value  
+             smooth_type = value  
         if key == 'showfig':
-             showfig = value  
-        
+             showfig = value
+        if key == 'Vminmax':
+            Vminmax= value
+            vmin = Vminmax[0]
+            vmax = Vminmax[1]
+        if key == 'limx':
+            limx= value
+        if key == 'limy':
+            limy= value
+        if key == 'x_resolution':
+            x_resolution= value 
     # Extract a profile between points 1 and 2
     if interp == False:
-        xx, yy, distance, profile, profile_smooth = dEXP.profile_noInter(x, y, data, p1, p2, size=None,
+        xx, yy, distance, profile, vp_smooth_dict = dEXP.profile_noInter(x, y, data, p1, p2, size=x_resolution,
                                                                          showfig=showfig)
-        # xx, yy, distance, profile, profile_smooth = dEXP.profile_extra(x, y, data, p1, p2, 1000)
-        if smooth_bool == True:
-            profile = profile_smooth
+        # xx, yy, distance, profile, profile_smooth = dEXP.profile_extra(x, y, data, p1, p2, 1000)      
     else:
-        xx, yy, distance, profile = gridder.profile(x, y, data, p1, p2, 1000)
+        xx, yy, distance, profile = gridder.profile(x, y, data, p1, p2, 1000, 'nearest')
 
     if Xaxis is 'dist':
         xaxis = distance
@@ -364,6 +412,12 @@ def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
     else:
         xaxis = yy
 
+    if smooth_type is not False:
+        if smooth_type == True:
+            profile = vp_smooth_dict['Lowpass']  
+        else:
+            profile = vp_smooth_dict[smooth_type]    
+                
         
     # Plot the profile and the original map data
     plt.figure()
@@ -389,13 +443,22 @@ def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
     plt.plot(xx, yy, '-k', label='Profile', linewidth=2)
     # scale = np.abs([data.min(), data.max()]).max()
     # plt.tricontourf(x, y, data, 50, cmap='RdBu_r', vmin=min(data), vmax=max(data))
-    plt.scatter(x, y, c=data, cmap='RdBu_r', vmin=min(data), vmax=max(data))
+    plt.scatter(x, y, c=data, cmap='RdBu_r', vmin=vmin, vmax=vmax)
     plt.colorbar(orientation='vertical', aspect=50)
     plt.legend(loc='lower right')
     plt.xlabel('x (m)')
     plt.ylabel('y (m)')
-    # plt.tight_layout()
+    
+    
+    
     plt.axis('square')
+
+    if limx is not None:
+        plt.xlim(limx[0],limx[1])
+    if limx is not None:
+        plt.ylim(limy[0],limy[1])
+        
+        # plt.tight_layout()
 
     for key, value in kwargs.items():
         # print("{0} = {1}".format(key, value))
@@ -411,7 +474,7 @@ def plot_line(x,y,data,p1,p2,ax=None,interp=True,**kwargs):
         
     plt.show()
 
-    return xx, yy, distance, profile
+    return xx, yy, distance, profile, ax, plt
 
 
 def plot_ridges_harmonic(RI=None,RII=None,RIII=None,ax=None,
@@ -494,7 +557,6 @@ def plot_ridges_sources(df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_s
             if len(np.array(df_fit[r_type[1]]))>1:
                 ridge_nb_n_tmp = np.arange(0,df_fit[r_type[1]].shape[1])
                 ridge_nb_n.append(ridge_nb_n_tmp)
-                # print(ridge_nb_n)
             else:
                 ridge_nb_n.append(None)
     else:
