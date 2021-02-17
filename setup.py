@@ -16,8 +16,8 @@ if __name__ == '__main__':
         author='Benjamin Mary',
         author_email='benjamin.mary@unipd.it',
         license='MIT',
-        packages=find_packages("../dEXP_imaging"),
-        package_dir={'': 'dEXP_imaging'},
+        packages=find_packages("fatiando"),
+        package_dir={'': 'fatiando'},
         # install_requires=[
         #     'dicttoxml',
         #     'jupyter',
