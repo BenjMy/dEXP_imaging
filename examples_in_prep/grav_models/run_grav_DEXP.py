@@ -45,6 +45,7 @@ import dEXP as dEXP
 from dEXP import _fit
 import plot_dEXP as pEXP
 import set_parameters as para
+import load_examples as load
 
 # exemples
 import examples.gravimetry.loadgrav.grav_models as grav
@@ -54,10 +55,15 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
 
 
+file2load = load.getExampleFile('gravimetry/loadgrav/za3000_zb3500_l500_ofs0_dens1200.pkl')
 #%% 
 # load model previously generated using Fatiando a terra package
+data_struct = grav.load_grav_fatiando(name=file2load)
 
-data_struct = grav.load_grav_fatiando(name='loadgrav/za3000_zb3500_l500_ofs0_dens1200')
+#data_struct = grav.load_grav_fatiando(name=r'C:\Users\gcass\AppData\Local\Temp\BenjMy\dEXP_imaging\master\lib\examples\gravimetry\loadgrav')
+
+
+#data_struct = grav.load_grav_fatiando(name='loadgrav/za3000_zb3500_l500_ofs0_dens1200')
 xp,yp,zp,U = data_struct['xyzg']
 shape = data_struct['shape']
 model = data_struct['model']
