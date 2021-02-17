@@ -16,12 +16,8 @@ if __name__ == '__main__':
         author='Benjamin Mary',
         author_email='benjamin.mary@unipd.it',
         license='MIT',
-        #packages=find_packages("lib"),
-        # package_dir={'': 'lib'},
-        package_dir={   'package_1':"lib", 
-                        'package_2':"examples",
-                        'package_3':"fatiando"}
-
+        packages=find_packages("lib"),
+        package_dir={'': 'lib'},
         # install_requires=[
         #     'dicttoxml',
         #     'jupyter',
