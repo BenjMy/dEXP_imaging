@@ -18,9 +18,9 @@ if __name__ == '__main__':
         license='MIT',
         #packages=find_packages("lib"),
         # package_dir={'': 'lib'},
-        package_dir={   package_1:"lib", 
-                        package_2:"examples",
-                        package_3:"fatiando"}
+        package_dir={   'package_1':"lib", 
+                        'package_2':"examples",
+                        'package_3':"fatiando"}
 
         # install_requires=[
         #     'dicttoxml',
