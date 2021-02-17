@@ -9,7 +9,7 @@ Created on Thu Oct  8 18:45:42 2020
 import os
 
 from fatiando.vis import mpl #, myv
-from fatiando import gridder, mesher, utils
+from fatiando import gridder, mesher
 from fatiando.gravmag import prism, imaging, transform
 from fatiando.vis.mpl import square
 
@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
 
 # icsd functions
-from icsd3d.importers.read import load_obs, load_geom
+#from icsd3d.importers.read import load_obs, load_geom
 
 
 #%% ------------------------------- MALM DATA
@@ -41,8 +41,8 @@ smooth = 'CubicSmoothingSpline' #'Hanning+Lowpass'
 interp = False
 # path2files = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/ph_low/'
 file = ['NoAno', 'Ano']
-path2files = ['E:/Padova/Redaction/Articles/10_InversionUsingGravityPotMethod/data/phNO/',
-              'E:/Padova/Redaction/Articles/10_InversionUsingGravityPotMethod/data/ph_low_top_12.5m/'
+path2files = ['E:/Padova/Redaction/Articles/1b_InversionUsingGravityPotMethod/data/phNO/',
+              'E:/Padova/Redaction/Articles/1b_InversionUsingGravityPotMethod/data/ph_low_top_12.5m/'
               ]
 
 # path2files = ['E:/Padova/Redaction/Articles/10_InversionUsingGravityPotMethod/data/phNO/',
