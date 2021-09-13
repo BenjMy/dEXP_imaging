@@ -8,7 +8,7 @@ version_long = '0.1.0.dev0'
 
 if __name__ == '__main__':
     setup(
-        name='dep_imaging',
+        name='dexp_imaging',
         version=version_long,
         description='Potential field inversion of MALM data',
         long_description=open('Readme.md', 'r').read(),
@@ -16,8 +16,8 @@ if __name__ == '__main__':
         author='Benjamin Mary',
         author_email='benjamin.mary@unipd.it',
         license='MIT',
-        packages=find_packages("lib"),
-        package_dir={'': 'lib'},
+        packages=find_packages("lib") + find_packages('fatiando'),
+        #package_dir={'': 'lib'},
         # install_requires=[
         #     'dicttoxml',
         #     'jupyter',
