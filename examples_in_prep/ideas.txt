@@ -1,5 +1,0 @@
-- influence of return B electrode and correction
-- use of derivatives of order q in dexp
-- determination of structural index
-
-- SP anomaly
