@@ -1,0 +1,17 @@
+# run: conda env create --file environment.yml
+name: pyDEXP-env
+dependencies:
+- python>=3.5
+- anaconda
+- pip
+- pip:
+  - numpy
+  - scipy
+  - matplotlib
+  - jupyter
+  - sphinx
+  - sphinx-gallery
+  - sphinx_bootstrap_theme
+  - numpydoc
+  - pandas
+  - pygimli
