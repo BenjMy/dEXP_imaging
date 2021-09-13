@@ -11,7 +11,7 @@ from collections import OrderedDict
 from scipy.optimize import curve_fit
 
 # my own functions
-import dEXP as dEXP
+import lib.dEXP as dEXP
 
 def plot_field(x, y, field, shape, **kwargs):
 

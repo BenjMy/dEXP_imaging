@@ -10,7 +10,7 @@ from fatiando.vis import mpl #, myv
 from fatiando import gridder, mesher, utils
 from fatiando.gravmag import prism, imaging, transform
 from fatiando.vis.mpl import square
-import dEXP as dEXP
+import lib.dEXP as dEXP
 import pickle
 
 
