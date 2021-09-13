@@ -13,13 +13,17 @@ import datetime
 #
 sys.path.append(os.path.relpath('../lib/'))
 sys.path.insert(0, os.path.abspath('../lib/'))
-sys.path.append(os.path.relpath('../fatiando/'))
-sys.path.insert(0, os.path.abspath('../fatiando/'))
+sys.path.append(os.path.relpath('../'))
+sys.path.insert(0, os.path.abspath('../'))
+
+
+sys.path.append(os.path.pardir)
+
+
 # sys.path.append(os.path.pardir)
 
 
 #sys.path.append(os.path.abspath('..{}'.format(os.path.sep)))
-import fatiando
 import dEXP as dEXP
 import plot_dEXP as pEXP
 import utils_dEXP as uEXP
@@ -206,7 +210,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'icsd', 'ICSD Documentation',
+    (master_doc, 'pyDEXP', 'pyDEXP Documentation',
      [author], 1)
 ]
 
