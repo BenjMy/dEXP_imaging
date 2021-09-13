@@ -13,8 +13,8 @@ import datetime
 #
 sys.path.append(os.path.relpath('../lib/'))
 sys.path.insert(0, os.path.abspath('../lib/'))
-sys.path.append(os.path.relpath('../fatiando/'))
-sys.path.insert(0, os.path.abspath('../fatiando/'))
+#sys.path.append(os.path.relpath('../fatiando/'))
+#sys.path.insert(0, os.path.abspath('../fatiando/'))
 # sys.path.append(os.path.pardir)
 
 
