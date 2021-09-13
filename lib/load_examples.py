@@ -12,7 +12,7 @@ exampleDataRepository = ''.join((
     DEXP_ExampleDataPath,  # Organization and repository
     #'master/'  # Branch
 ))
-import pygimli as pg
+#import pygimli as pg
 
 def getExampleFile(path, load=False, verbose=False):
     """Download and return a filename to the example repository.
