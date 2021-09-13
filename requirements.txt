@@ -7,3 +7,4 @@ sphinx-gallery
 sphinx_bootstrap_theme
 numpydoc
 pandas
+pygimli
