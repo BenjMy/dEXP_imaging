@@ -4,5 +4,5 @@
 https://dexp-imaging.readthedocs.io/en/latest/
 
 ### Dependencies
-- pygimli
-- fatiando 0.5
+- pygimli (for the ERT and MALM forward modelling)
+- fatiando 0.5 (for derivation of the potential field and upward continuation)
