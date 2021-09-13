@@ -7,4 +7,4 @@ sphinx-gallery
 sphinx_bootstrap_theme
 numpydoc
 pandas
-pygimli
+# pygimli is installed via conda
