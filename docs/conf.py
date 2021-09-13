@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.abspath('../fatiando/'))
 
 
 #sys.path.append(os.path.abspath('..{}'.format(os.path.sep)))
+import fatiando
 import dEXP as dEXP
 import plot_dEXP as pEXP
 import utils_dEXP as uEXP
