@@ -1,4 +1,4 @@
-# dEXP
+# pydEXP
 ### Documentation
 
 https://dexp-imaging.readthedocs.io/en/latest/
