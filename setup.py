@@ -18,7 +18,7 @@ if __name__ == '__main__':
         license='MIT',
         packages=find_packages("lib","fatiando")
         #package_dir={'': 'lib'},
-        #install_requires=['pygimli']
+        install_requires=['csaps']
         #     'dicttoxml',
         #     'jupyter',
         #     'ipywidgets',
