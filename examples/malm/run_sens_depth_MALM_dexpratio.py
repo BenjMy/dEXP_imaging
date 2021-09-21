@@ -1,5 +1,5 @@
 """
-Sensitivity analysis of DEXP to depth on Mise-Ã -la-masse 
+Sensitivity analysis of DEXP to depth on Mise-Ã -la-masse 
 --------------------------------------------------------
 
 This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of electrical sources positions and depth using the dEXP tranformation method.

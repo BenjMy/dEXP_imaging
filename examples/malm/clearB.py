@@ -21,16 +21,18 @@ Rücker, C., Günther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library f
 ----
 """
 
-import utils_dEXP as uEXP
-import dEXP as dEXP
-import plot_dEXP as pEXP
-import set_parameters as para
+import lib.utils_dEXP as uEXP
+import lib.dEXP as dEXP
+import lib.plot_dEXP as pEXP
+import lib.set_parameters as para
 
 from fatiando.vis.mpl import square
 from fatiando import gridder
 import matplotlib.pyplot as plt
+from mpl_axes_aligner import align
 
-import examples.malm.loadmalm.Load_sens_MALM as MALM
+
+import loadmalm.Load_sens_MALM as MALM
 
 #%%
 # Import MALM data total field U_{T} = U{a} - U{b}
@@ -38,13 +40,16 @@ import examples.malm.loadmalm.Load_sens_MALM as MALM
 # filenames = ['MSoilR1000.0AnoR1Z-13.75W15H2.5L5S0Noise0', # Ratio = 1000
 #               'MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0']
 
-# filenames = ['MSoilR1000.0AnoR1Z-13.75W15H2.5L5S0Noise0']
-filenames = ['MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0']
+filenames = ['MSoilR1000.0AnoR1Z-13.75W15H2.5L5S0Noise0']
+#filenames = ['MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0']
 
 for fi in filenames:
     # Load data
-    maxdepth, shape, p1, p2, SimName, model_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
+    xp, yp, z, U, maxdepth, shape, p1, p2, SimName, model_prop= MALM.load_MALM_sens3d(filename='./loadmalm/' +
                                                                 fi + '.pkl')
+    
+    
+   
     Bpos= model_prop['EA_EB_EN'][1]
     uT_elecs= model_prop['u_elecs']
     xyzs = model_prop['elecs']
@@ -146,13 +151,14 @@ DF_FIT = []
 XXZZ = []
 CTm = []
 
-
+import numpy 
 for i, ui in enumerate(U):   
     print(i)
-    
+    print(numpy.mean(ui))
+
     #%% 
     # Plot the data 
-    # pEXP.plot_line(xp, yp, ui,p1,p2, interp=interp)
+    # pEXP.plot_line(xp, yp, ui,p1,p2, interp=interp, Xaxis='y')
     
     #%% 
     # Pad the edges of grids (if necessary)
@@ -167,27 +173,33 @@ for i, ui in enumerate(U):
                      zmin=0, zmax=max_elevation, nlayers=nlay, 
                      qorder=qorder)
     
-    # plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
+    # plt, cmap = pEXP.plot_xy(mesh, label=label_prop, Xaxis='y')
     # plt.colorbar(cmap)
     
     
     #%%
     # Ridges identification
-    # dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
-    #                                       label=label_prop,
-    #                                       fix_peak_nb=2,
-    #                                       method_peak='find_peaks')  
+    dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
+                                          label=label_prop,
+                                          fix_peak_nb=2,
+                                          Xaxis='y',
+                                          method_peak='find_peaks',
+                                          showfig=True)  
     
     # or  find_peaks or peakdet or spline_roots
-    dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+    D  = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                           label=label_prop,
                                           fix_peak_nb=fix_peak_nb,
                                           method_peak='find_peaks',
+                                          Xaxis='y',
                                           smooth=smooth,
-                                          showfig=True
+                                          returnAmp=True,
+                                          showfig=True                                         
                                           )  
-    
-     
+    dfI, dfII, dfIII =  D[0:3]
+    hI, hII, hIII  = D[3:6]
+    heights  = D[3:6]
+         
     #%% 
     # Plot ridges over continuated section
     
@@ -198,12 +210,30 @@ for i, ui in enumerate(U):
     
     #%%
     # Filter ridges (regionally constrainsted)
+
+    D_f = dEXP.filter_ridges(dfI,dfII,dfIII,
+                                        minDepth=minAlt_ridge, 
+                                        maxDepth=maxAlt_ridge,
+                                        minlength=5,rmvNaN=True,
+                                        xmin=100, xmax=300,
+                                        Xaxis='y',
+                                        heights=heights)
+
+    # df_f = dfI_f, dfII_f, dfIII_f
+
+    dfI_f, dfII_f, dfIII_f =  D_f[0:3]
+    hI_f, hII_f, hIII_f  = D_f[3:6]
+    heights  = D_f[3:6]
+         
     
-    dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                                minDepth=minAlt_ridge,maxDepth=maxAlt_ridge,
-                                                minlength=7,rmvNaN=True)
-                                                #,
-                                                #xmin=100, xmax=300)
+    
+    # dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
+    #                                            Xaxis='y',
+    #                                            minDepth=minAlt_ridge,
+    #                                            maxDepth=maxAlt_ridge,
+    #                                            minlength=7,rmvNaN=True)
+    #                                             #,
+    #                                             #xmin=100, xmax=300)
     df_f = dfI_f, dfII_f, dfIII_f
        
         
@@ -238,28 +268,108 @@ for i, ui in enumerate(U):
 
 
 i = 0
-plt.figure()
-ax = plt.gca()
-pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
+# plt.figure()
+# ax = plt.gca()
+# plt, cmap = pEXP.plot_xy(MESH[i], label=LABEL[i], Xaxis='y', ax=ax,
+#                            Vminmax=[0,10]) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False,legend=False)   
-pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
-# plt.xlim([100,300])
-x1, x2, z1, z2 = XXZZ[i]
-square([x1, x2, z1, z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
-plt.title('Total field uT')
 
-i = 1
-plt.figure()
-ax = plt.gca()
-pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
-dfI_f,dfII_f,dfIII_f = DF_F[i]
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
-pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
+# pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False,legend=False)   
+# pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
+#                           ridge_type=[0,1,2],ridge_nb=None)
+# # plt.xlim([100,300])
+# cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
+# cbar.set_label('upwc\nvoltage (V)')
+# x1, x2, z1, z2 = XXZZ[i]
+# square([x1, x2, z1, z2])
+# plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+# plt.title('Total field uT')
+
+fig, ax1 = plt.subplots(figsize=(15,3))
+
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
-plt.title('Field uA')
+
+
+plt, cmap = pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax1, Xaxis='y',
+          Vminmax=[0,10])
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
+
+df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
+
+ax2 = pEXP.plot_ridges_sources(DF_FIT[i], ax=ax1, z_max_source=-max_elevation*1.2,
+                      ridge_type=[0,1,2],ridge_nb=None)
+
+labels_ax1 = ax1.get_yticks() 
+labels_ax1= labels_ax1[labels_ax1>0]
+
+labels_ax2 = ax2.get_yticks() 
+labels_ax2= labels_ax2[labels_ax2<0]
+
+ax1.set_yticks(labels_ax1)
+ax2.set_yticks(labels_ax2)
+
+# Adjust the plotting range of two y axes
+org1 = 0.0  # Origin of first axis
+org2 = 0.0  # Origin of second axis
+pos = 0.5  # Position the two origins are aligned
+align.yaxes(ax1, org1, ax2, org2, pos)
+
+
+# cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
+# cbar.set_label('upwc voltage (V)')
+# plt.tight_layout()
+# pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax1)
+# plt.xlim([200,600])
+
+
+# plt.savefig('ridgesfield.png', dpi=450)
+
+
+
+
+#%% 
+i = 1
+dfI_f,dfII_f,dfIII_f = DF_F[i]
+
+# pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False,legend=False)   
+# pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
+#                           ridge_type=[0,1,2],ridge_nb=None)
+# # plt.xlim([100,300])
+# cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
+# cbar.set_label('upwc\nvoltage (V)')
+# x1, x2, z1, z2 = XXZZ[i]
+# square([x1, x2, z1, z2])
+# plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+# plt.title('Total field uT')
+
+fig, ax1 = plt.subplots(figsize=(15,3))
+
+x1, x2, z1, z2 = XXZZ[i]
+square([x1, x2, z1, z2])
+
+
+plt, cmap = pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax1, Xaxis='y',
+          Vminmax=[0,10])
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
+
+df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
+
+ax2 = pEXP.plot_ridges_sources(DF_FIT[i], ax=ax1, z_max_source=-max_elevation*1.2,
+                      ridge_type=[0,1,2],ridge_nb=None)
+
+labels_ax1 = ax1.get_yticks() 
+labels_ax1= labels_ax1[labels_ax1>0]
+
+labels_ax2 = ax2.get_yticks() 
+labels_ax2= labels_ax2[labels_ax2<0]
+
+ax1.set_yticks(labels_ax1)
+ax2.set_yticks(labels_ax2)
+
+# Adjust the plotting range of two y axes
+org1 = 0.0  # Origin of first axis
+org2 = 0.0  # Origin of second axis
+pos = 0.5  # Position the two origins are aligned
+align.yaxes(ax1, org1, ax2, org2, pos)
+

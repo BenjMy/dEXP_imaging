@@ -41,23 +41,26 @@ from fatiando.gravmag import prism, imaging, transform
 from fatiando.vis.mpl import square
 
 # my own functions
-import dEXP as dEXP
-from dEXP import _fit
-import plot_dEXP as pEXP
-import set_parameters as para
+import lib.dEXP as dEXP
+from lib.dEXP import _fit
+import lib.plot_dEXP as pEXP
+import lib.set_parameters as para
 
 # exemples
 import examples.gravimetry.loadgrav.grav_models as grav
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import ticker
+
 plt.rcParams['font.size'] = 15
 
 
 #%% 
 # load model previously generated using Fatiando a terra package
+os.getcwd()
+data_struct = grav.load_grav_fatiando(name='loadgrav/za3000_zb3500_l500_ofs0_dens1200.pkl')
 
-data_struct = grav.load_grav_fatiando(name='loadgrav/za3000_zb3500_l500_ofs0_dens1200')
 xp,yp,zp,U = data_struct['xyzg']
 shape = data_struct['shape']
 model = data_struct['model']
@@ -86,7 +89,43 @@ p1 =[min(yp),0]
 p2 =[max(yp),0]
 x_axis='y'
 
-pEXP.plot_line(xp, yp,U,p1,p2, interp=interp,Xaxis=x_axis)
+#%%
+xx, yy, distance, profile, ax, plt = pEXP.plot_line(xp, yp,U,p1,p2, interp=interp,Xaxis=x_axis)
+
+
+#%% Take the z-derivative
+
+# p1 =[0,-6000]
+# p2 =[0,6000]
+
+zderiv = transform.derivz(xp, yp, U, shape,order=1)
+xx, yy, distance, dz, ax, plt = pEXP.plot_line(xp, yp, zderiv, p1,p2, interp=True, title='zderiv')
+
+#%% 
+
+# Plot field against its 1st vertical derivative
+
+fig, ax1 = plt.subplots(figsize=(10,2))
+
+color = 'tab:red'
+ax1.set_xlabel('x(m)')
+ax1.set_ylabel('Amplitude of the\n potential field (V)', color=color)
+ax1.plot(xx, profile, color=color, linewidth=2)
+ax1.tick_params(axis='y', labelcolor=color)
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+color = 'tab:blue'
+ax2.set_ylabel('$1^{st}$ derivative\n($V.m^2$)', color=color)  # we already handled the x-label with ax1
+ax2.plot(xx, dz, color=color, linewidth=2)
+ax2.tick_params(axis='y', labelcolor=color)
+ax2.set_ylim([-0.0001,3e-4])
+ax2.yaxis.set_major_formatter(ticker.FormatStrFormatter('%1.0e'))
+ax2.set_xlim([-5000,5000])
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+ax1.set_aspect(aspect=1e4)
+
 
 #%% 
 # Upward continuation of the field data
@@ -154,9 +193,9 @@ plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
 #%% 
 #  ridges analysis
 
-z0 = -2000
-points, fit, SI, EXTnb = dEXP.scalFUN(dfI_f,EXTnb=[1],z0=z0)
-pEXP.plot_scalFUN(points, fit, z0=z0)
+#z0 = -2000
+#points, fit, SI, EXTnb = dEXP.scalFUN(dfI_f,EXTnb=[1],z0=z0)
+#pEXP.plot_scalFUN(points, fit, z0=z0)
 
 
 # z0 = -2000
