@@ -5,8 +5,8 @@ pyDEXP is a open-source python package aiming at processing potential field data
 
 **References**
 
-- Uieda, L., V. C. Oliveira Jr, and V. C. F. Barbosa (2013), Modeling the Earth with Fatiando a Terra, Proceedings of the 12th Python in Science Conference, pp. 91 - 98.
-- Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
+* Uieda, L., V. C. Oliveira Jr, and V. C. F. Barbosa (2013), Modeling the Earth with Fatiando a Terra, Proceedings of the 12th Python in Science Conference, pp. 91 - 98.
+* Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
 
 Quick use
 ---------
@@ -21,8 +21,8 @@ From the same `dEXP_imaging` directory you can import the module from source usi
 Contribute and support
 ----------------------
 
-- Source Code: https://github.com/BenjMy/dEXP_imaging
-- Issue Tracker: https://github.com/BenjMy/dEXP_imaging/issues
+* Source Code: https://github.com/BenjMy/dEXP_imaging
+* Issue Tracker: https://github.com/BenjMy/dEXP_imaging/issues
 
 
 Citing pydEXP
@@ -35,11 +35,11 @@ Paper in preparation
    :maxdepth: 2
    :caption: pydEXP
 
-   content/started/getting-started
-   content/started/install
+..   content/started/getting-started
+..   content/started/install
 
-Gallery of examples
-===================
+.. Gallery of examples
+.. ===================
 
 .. toctree::
 ..   :maxdepth: 2
