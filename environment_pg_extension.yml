@@ -1,3 +1,4 @@
+name: pydexp
 dependencies:
 - python>=3.5
 - anaconda
