@@ -145,7 +145,7 @@ plt.colorbar(cmap)
 #                                       method_peak='find_peaks')  
 
 # or  find_peaks or peakdet or spline_roots
-dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+dfI,dfII, dfIII, _  = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                       label=label_prop,
                                       fix_peak_nb=2,
                                       method_peak='find_peaks',

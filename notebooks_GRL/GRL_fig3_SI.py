@@ -375,7 +375,7 @@ for i, file in enumerate(file):
     #              markerMax=True,qratio=str(qratio)
     #              ax=ax, Xaxis=x_axis) #, ldg=)
     cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
-    cbar.set_label('ratio voltage (V)')
+    cbar.set_label('ratio voltage \n (V)')
     ax.set_aspect("equal")
 
     if x_axis=='y':

@@ -72,7 +72,7 @@ dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
 
 #%%
 # Ridges identification at all levels: plot extremas obtained via find_peaks function (numpy) for all 3 types of extremas familly RI, RII and RIII
-dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+dfI,dfII, dfIII, _ = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                       label=label_prop,
                                       method_peak='find_peaks',
                                       fix_peak_nb=5,
