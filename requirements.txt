@@ -8,5 +8,6 @@ sphinx_bootstrap_theme
 numpydoc
 pandas
 mpl_axes_aligner
+future
 # pygimli is installed via conda
 # fatiando src files are fetched
