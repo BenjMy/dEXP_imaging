@@ -29,6 +29,7 @@ import lib.set_parameters as para
 import numpy as np
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 15
+from mpl_axes_aligner import align
 
 # icsd functions
 #from icsd3d.importers.read import load_obs, load_geom
@@ -281,7 +282,7 @@ for i, file in enumerate(file):
 
     xA_r_new = [p1_s[0]+xA_r[0]-xA_r[1], p1_s[0]-xA_r[0]+xA_r[1]] 
 
-    %% SAVE DATA AND PARAMETERS
+    # %% SAVE DATA AND PARAMETERS
     
     dict_model_data = { "XYU" : [Xs,Ys,U], 
                 "prl" : 60,
@@ -299,7 +300,7 @@ for i, file in enumerate(file):
     pickle.dump(dict_model_data, afile)
     afile.close()
     
-    %% ------------------------------- plot publi mirror
+    # %% ------------------------------- plot publi mirror
 
     ax, plt = pEXP.plot_field(Xs,Ys,U, shape,Vminmax=[0,0.35])
     ax.plot(coords_liner_s[2:5,0],coords_liner_s[2:5,1],'k')
@@ -310,12 +311,12 @@ for i, file in enumerate(file):
     plt.ylim(300,500)
     plt.savefig('publi_mirror' + file + '.png', dpi=450)
     
-    %% ------------------------------- Pad the edges of grids
+    # %% ------------------------------- Pad the edges of grids
     
-    xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
-    pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
+    # xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
+    # pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
     
-    %% ------------------------------- Plot the derivatives
+    # %% ------------------------------- Plot the derivatives
     
     xderiv = transform.derivx(Xs, Ys, U, shape,order=0)
     yderiv = transform.derivy(Xs, Ys, U, shape,order=0)
@@ -403,7 +404,8 @@ for i, file in enumerate(file):
                                           returnAmp=True,
                                           showfig=True,
                                           Xaxis=x_axis,
-                                          interp=interp,x_resolution= interp_size,
+                                          interp=interp,
+                                          x_resolution= interp_size,
                                           smooth = smooth,
                                           qorder=qorder)  
     
@@ -428,38 +430,73 @@ for i, file in enumerate(file):
 
     
     dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-                                                minDepth=minAlt_ridge, maxDepth=maxAlt_ridge,
-                                                minlength=5,rmvNaN=True,
-                                                xmin=100, xmax=700,
+                                                minDepth=minAlt_ridge, 
+                                                maxDepth=maxAlt_ridge,
+                                                minlength=7,rmvNaN=True,
+                                                xmin=250, xmax=500,
                                                 Xaxis=x_axis)
     
     df_f = dfI_f, dfII_f, dfIII_f
     
     #%% ------------------------------- plot ridges fitted over continuated section
     
-    fig = plt.figure()
-    ax = plt.gca()
+    # fig = plt.figure()
+    # ax = plt.gca()
     
-    plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis=x_axis,
-                  Vminmax=[0,0.35], p1p2=p)
-    pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
+    # plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis=x_axis,
+    #               Vminmax=[0,0.35], p1p2=p)
+    # pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
+    
+    # df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
+    
+    # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
+    #                           ridge_type=[0,1,2],ridge_nb=None)
+
+    # cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
+    # cbar.set_label('upwc voltage (V)')
+    # plt.tight_layout()
+    # pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
+    # plt.xlim([200,600])
+
+    # square([y1, y2, z1, z2])
+
+    # plt.close('all')
+    
+    
+    fig, ax1 = plt.subplots(figsize=(15,3))
+
+    plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax1, Xaxis=x_axis,
+              Vminmax=[0,0.35], p1p2=p)
+    pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=False)
     
     df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
     
-    pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
-                              ridge_type=[0,1,2],ridge_nb=None)
-
+    ax2 = pEXP.plot_ridges_sources(df_fit, ax=ax1, z_max_source=-max_elevation,
+                          ridge_type=[0,1,2],ridge_nb=None, x_min=250,x_max=500)
+    
+    labels_ax1 = ax1.get_yticks() 
+    labels_ax1= labels_ax1[labels_ax1>0]
+    
+    labels_ax2 = ax2.get_yticks() 
+    labels_ax2= labels_ax2[labels_ax2<0]
+    
+    ax1.set_yticks(labels_ax1)
+    ax2.set_yticks(labels_ax2)
+    
+    # Adjust the plotting range of two y axes
+    org1 = 0.0  # Origin of first axis
+    org2 = 0.0  # Origin of second axis
+    pos = 0.5  # Position the two origins are aligned
+    align.yaxes(ax1, org1, ax2, org2, pos)
+    
+    
     cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
     cbar.set_label('upwc voltage (V)')
-    plt.tight_layout()
-    pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
     plt.xlim([200,600])
+
     if x_axis=='y':
         square([xA_r_new[0], xA_r_new[1], z1, z2])
     else:   
         square([yA_r[0], yA_r[1], z1, z2])
         
     plt.savefig('ridges_' + str(file) + '.png', dpi=450)
-    # square([y1, y2, z1, z2])
-
-    # plt.close('all')

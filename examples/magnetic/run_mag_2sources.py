@@ -33,10 +33,10 @@ field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
 """
 import matplotlib.pyplot as plt
 import numpy as np
-import dEXP as dEXP
-from dEXP import _fit
-import plot_dEXP as pEXP
-import set_parameters as para
+import lib.dEXP as dEXP
+from lib.dEXP import _fit
+import lib.plot_dEXP as pEXP
+import lib.set_parameters as para
 import examples.magnetic.fwdmag.fwd_mag_sphere as magfwd
 
 
