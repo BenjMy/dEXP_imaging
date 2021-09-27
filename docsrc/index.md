@@ -35,34 +35,35 @@ Paper in preparation
    :maxdepth: 2
    :caption: pydEXP
 
-..   content/started/getting-started
-..   content/started/install
+   content/started/getting-started
+   content/started/install
 
-.. Gallery of examples
-.. ===================
 
-.. toctree::
-..   :maxdepth: 2
-..   :caption: Gallery of examples
-
-..   auto_examples/index
-
-.. API documentation
-.. =================
+Gallery of examples
+===================
 
 .. toctree::
-..   :maxdepth: 2
-..   :caption: API
+   :maxdepth: 2
+   :caption: Gallery of examples
 
-..   content/api_core/api
+   auto_examples/index
+
+API documentation
+=================
+
+.. toctree::
+  :maxdepth: 2
+  :caption: API
+
+  content/api_core/api
    
 
-.. Indices and tables
-.. ==================
+Indices and tables
+==================
 
-.. * :ref:`genindex`
-.. * :ref:`modindex`
-.. * :ref:`search`
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
 
 .. TODO
