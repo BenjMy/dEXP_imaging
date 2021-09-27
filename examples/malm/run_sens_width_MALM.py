@@ -1,5 +1,5 @@
 """
-Sensitivity analysis of DEXP to anomaly width on Mise-Ã -la-masse 
+Sensitivity analysis of DEXP to anomaly width on Mise-Ã -la-masse 
 -----------------------------------------------------------------
 
 This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of electrical sources positions and depth using the dEXP tranformation method.
@@ -32,9 +32,9 @@ from fatiando.vis.mpl import square
 from fatiando import gridder
 
 # my own functions
-import dEXP as dEXP
-import plot_dEXP as pEXP
-import set_parameters as para
+import lib.dEXP as dEXP
+import lib.plot_dEXP as pEXP
+import lib.set_parameters as para
 
 # exemples
 import examples.malm.loadmalm.Load_sens_MALM as MALM
@@ -70,7 +70,7 @@ for fi in filenames:
     SI = parameters[1]
     zp, qorder, nlay = parameters[2:5]
     minAlt_ridge, maxAlt_ridge = parameters[5:7]
-    
+    x_axis = 'y'
     #%%
     # ridges analysis parameters
     nlay = 25
@@ -92,7 +92,7 @@ for fi in filenames:
     
     #%% 
     # Plot the data 
-    # pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+    pEXP.plot_line(xp, yp, U,p1,p2, interp=interp,Xaxis=x_axis)
         
     #%% 
     # Pad the edges of grids (if necessary)
@@ -107,8 +107,8 @@ for fi in filenames:
                      zmin=0, zmax=max_elevation, nlayers=nlay, 
                      qorder=qorder)
     
-    # plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
-    # plt.colorbar(cmap)
+    plt, cmap = pEXP.plot_xy(mesh, label=label_prop,Xaxis=x_axis)
+    plt.colorbar(cmap, label=label_prop)
     
     
     #%%
@@ -122,9 +122,12 @@ for fi in filenames:
     dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                           label=label_prop,
                                           fix_peak_nb=2,
-                                          method_peak='find_peaks')  
+                                          method_peak='find_peaks',
+                                          Xaxis=x_axis,
+                                          showfig=True) 
     
-     
+    df = dfI, dfII, dfIII
+
     #%% 
     # Plot ridges over continuated section
         
@@ -138,24 +141,15 @@ for fi in filenames:
     
     dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
                                                 minDepth=minAlt_ridge,maxDepth=maxAlt_ridge,
-                                                minlength=3,rmvNaN=True)
+                                                minlength=10,rmvNaN=True,
+                                                Xaxis=x_axis)
     df_f = dfI_f, dfII_f, dfIII_f
     
     #%%
-    # plot ridges fitted over continuated section
-    
-    # fig = plt.figure()
-    # ax = plt.gca()
-    
-    # pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
-    # pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
-    
+    # Fit ridges (regionally constrainsted)
+
+    # df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
     df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
-    
-    # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.4,
-    #                           ridge_type=[0,1,2],ridge_nb=None)
-    # square([x1, x2, z1, z2])
-    # plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
 
     #%% 
     # save data loop
@@ -169,30 +163,30 @@ for fi in filenames:
 
 
 
-#%% 
-plt.figure()
-ax = plt.gca()
+
+#%%
 
 i = 0
-pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
-pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
+fig, ax1 = plt.subplots(figsize=(15,3))
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+plt, cmap = pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax1, Xaxis='y',
+          Vminmax=[0,10])
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
+ax2 = pEXP.plot_ridges_sources(DF_FIT[i], ax=ax1, z_max_source=-max_elevation*1.2,
+                      ridge_type=[0,1,2],ridge_nb=None)
 
-plt.figure()
-ax = plt.gca()
+
+#%% 
 
 i = 1
-pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
-pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
+fig, ax1 = plt.subplots(figsize=(15,3))
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
-
+plt, cmap = pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax1, Xaxis='y',
+          Vminmax=[0,10])
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
+ax2 = pEXP.plot_ridges_sources(DF_FIT[i], ax=ax1, z_max_source=-max_elevation*1.2,
+                      ridge_type=[0,1,2],ridge_nb=None)

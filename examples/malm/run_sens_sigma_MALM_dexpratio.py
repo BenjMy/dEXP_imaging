@@ -1,5 +1,5 @@
 """
-Sensitivity analysis of DEXP to depth on Mise-Ã -la-masse 
+Sensitivity analysis of DEXP to depth on Mise-Ã -la-masse 
 --------------------------------------------------------
 
 This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of electrical sources positions and depth using the dEXP tranformation method.
@@ -32,9 +32,9 @@ from fatiando.vis.mpl import square
 from fatiando import gridder
 
 # my own functions
-import dEXP as dEXP
-import plot_dEXP as pEXP
-import set_parameters as para
+import lib.dEXP as dEXP
+import lib.plot_dEXP as pEXP
+import lib.set_parameters as para
 
 # exemples
 import examples.malm.loadmalm.Load_sens_MALM as MALM
@@ -131,7 +131,8 @@ cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
 cbar.set_label('ratio voltage (V)')
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, -z1, -z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, -(z1+z2)/2])
+ax.set_aspect(aspect=5)
+plt.annotate(r'$\rho$=' + str(CTm[i]),[(x1 + x2)/2, -(z1+z2)/2+3])
 
 
 
@@ -146,7 +147,8 @@ cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
 cbar.set_label('ratio voltage (V)')
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, -z1, -z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, -(z1+z2)/2])
+ax.set_aspect(aspect=5)
+plt.annotate(r'$\rho$=' + str(CTm[i]),[(x1 + x2)/2, -(z1+z2)/2+3])
 
 i = 2
 
@@ -159,7 +161,8 @@ cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
 cbar.set_label('ratio voltage (V)')
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, -z1, -z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, -(z1+z2)/2])
+ax.set_aspect(aspect=5)
+plt.annotate(r'$\rho$=' + str(CTm[i]),[(x1 + x2)/2, -(z1+z2)/2+3])
 
 i = 3
 
@@ -172,7 +175,8 @@ cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
 cbar.set_label('ratio voltage (V)')
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, -z1, -z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, -(z1+z2)/2])
+ax.set_aspect(aspect=5)
+plt.annotate(r'$\rho$=' + str(CTm[i]),[(x1 + x2)/2, -(z1+z2)/2+3])
 
 # # Loop on source depth
 # fig, axs = plt.subplots(len(filenames), 1)

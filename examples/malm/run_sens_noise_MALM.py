@@ -83,7 +83,8 @@ for i, fi in enumerate(filenames):
     
     interp = True
     smooth = False 
-    
+    x_axis = 'y'
+
     #%%
     # Anomalies properties
     # HDWL : height, Depth, Width (x), Lenght (y)
@@ -122,9 +123,8 @@ for i, fi in enumerate(filenames):
                      zmin=0, zmax=max_elevation, nlayers=nlay, 
                      qorder=qorder)
     
-    # plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
-    # plt.colorbar(cmap)
-    
+    plt, cmap = pEXP.plot_xy(mesh, label=label_prop,Xaxis=x_axis)
+    plt.colorbar(cmap, label=label_prop)
     
     #%%
     # Ridges identification
@@ -139,73 +139,27 @@ for i, fi in enumerate(filenames):
                                           fix_peak_nb=fix_peak_nb,
                                           method_peak='find_peaks',
                                           smooth=smooth,
+                                          Xaxis=x_axis,
                                           showfig=True
                                           )  
-    
-     
-    #%% 
-    # Plot ridges over continuated section
-    
-    # fig = plt.figure()
-    # ax = plt.gca()
-    # pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
-    # pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
-    
+        
     #%%
     # Filter ridges (regionally constrainsted)
     
     dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
                                                 minDepth=minAlt_ridge,maxDepth=maxAlt_ridge,
                                                 minlength=7,rmvNaN=True,
-                                                xmin=100, xmax=300)
-    df_f = dfI_f, dfII_f, dfIII_f
-
-    # dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,
-    #                                             minDepth=minAlt_ridge,maxDepth=maxAlt_ridge,
-    #                                             minlength=7,rmvNaN=True)
-    # df_f = dfI_f, dfII_f, dfIII_f
-    
-    # k=['EX_xpos1', 'EX_xpos2', 'EX_xpos3', 'EX_xpos4']
-    # minx = xmin
-    # dfI.columns[1:]
-    # import numpy as np
-    # np.where(dfI[k[1]]< minx)
-    
-    #     # -----------------------------------------------------------------------#
-    #     # select a range of ridges within x limits
-    #     for key, value in kwargs.items():
-    #         if key == 'xmin':
-    #             minx = value 
-    
-    #             idfI_col_2rmv = []
-    #             for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
-    #                 id_2NaN = np.where(dfI[k[1]]< minx)
-    #                 dfI[k[1]].iloc[id_2NaN] = np.nan
-                        
-    #             dfI = dfI.drop(dfI.columns[idfI_col_2rmv], axis=1)
-                
-
-       
+                                                xmin=100, xmax=300,
+                                                Xaxis=x_axis
+                                                )
+    df_f = dfI_f, dfII_f, dfIII_f     
         
     #%%
-    # plot ridges fitted over continuated section
-    
-    # fig = plt.figure()
-    # ax = plt.gca()
-    
-    # pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
-    # pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
-    
+    # fit 
     df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
     
-    # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.4,
-    #                           ridge_type=[0,1,2],ridge_nb=None)
-    # square([x1, x2, z1, z2])
-    # plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
-
     #%% 
     # save data loop
-
     MESH.append(mesh)
     LABEL.append(label_prop)
     DF_F.append(df_f)
@@ -215,11 +169,9 @@ for i, fi in enumerate(filenames):
     
 
 #%% 
-
-
 i = 0
-plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
+# ax = plt.gca()
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False,legend=False)   
@@ -231,9 +183,10 @@ square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 plt.title('0% of noise')
 
+#%% 
+
 i = 1
-plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
@@ -245,8 +198,7 @@ plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 plt.title('10% of noise')
 
 i = 2
-plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
@@ -259,8 +211,7 @@ plt.title('10% of noise - smoothed')
 
 
 i = 3
-plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   

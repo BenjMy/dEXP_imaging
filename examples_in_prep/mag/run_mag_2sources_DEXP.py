@@ -33,10 +33,10 @@ field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
 """
 import matplotlib.pyplot as plt
 import numpy as np
-import dEXP as dEXP
-from dEXP import _fit
-import plot_dEXP as pEXP
-import set_parameters as para
+import lib.dEXP as dEXP
+from lib.dEXP import _fit
+import lib.plot_dEXP as pEXP
+import lib.set_parameters as para
 import examples.magnetic.fwdmag.fwd_mag_sphere as magfwd
 
 
@@ -141,8 +141,8 @@ pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
 df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
 
-pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
-                          ridge_type=[0,1,2],ridge_nb=None)
+# pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
+#                           ridge_type=[0,1,2],ridge_nb=None)
 
 
 #%% DEXP ratio
@@ -151,20 +151,13 @@ qratio = [1,0]
 mesh_dexp, label_dexp = dEXP.dEXP_ratio(xp, yp, zp, U, shape, 
                  zmin=0, zmax=max_elevation, nlayers=nlay, 
                  qorders=qratio)
-fig = plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
+
 
 plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
-             markerMax=True,qratio=str(qratio),
+             markerMax=True,qratio=str(qratio), Vminmax = [0,1e-1],
              p1p2=np.array([p1,p2]), ax=ax, Xaxis=x_axis) #, ldg=)
 plt.colorbar(cmap)
-
-# if x_axis=='y':
-#     # square([x1, x2, z1, z2])
-#     plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
-# else:   
-#     square([y1, y2, z1, z2])
-#     plt.annotate(dens,[(y1 + y2)/2, -(z1+z2)/2])
 
 if x_axis=='y':
     plt.scatter(coord[0,0], coord[0,2],marker=(5, 1),c='red')
@@ -176,62 +169,3 @@ else:
     # plt.annotate(str(masses),[northing, upward])
         
         
-# #%% 
-# #  ridges analysis: scaling function to determine the SI index
-# # RI and RII : zeros of the first horizontal and first vertical derivatives of the potential field
-# # RIII :zeros of the potential field itself
-
-# z0 = coord[1,2] # choose an estimate of the depth of the anomaly
-# # z0 = -100 # choose an estimate of the depth of the anomaly
-
-# ncol = 0
-# for r_type in range(len(df_f)): # loop over ridges type I, II, III
-#     if df_f[r_type].shape[1]>1:
-#         ncol = ncol + df_f[r_type].shape[1]-1
-
-
-# fig, axs = plt.subplots(1,ncol, figsize=(15, 6), facecolor='w', edgecolor='k')
-# # fig.subplots_adjust(hspace = .5, wspace=.001)
-# axs = axs.ravel()
-   
-# # for i in range(ncol):
-
-# nc = 0
-# SI_est = []
-# for r_type in range(len(df_f)): # loop over ridges type I, II, III
-#     for k in enumerate(df_f[r_type].columns[1:]): # loop over ridges of the same familly
-#         # df_f[r_type].columns[1:]    
-#         points, fit, SI_est_tmp , EXTnb = dEXP.scalFUN(df_f[r_type],EXTnb=k[1],z0=z0,
-#                                                        rmvOutliers=True)
-#         pEXP.plot_scalFUN(points, fit, z0=z0, 
-#                           label='R'+ str(r_type+1) + k[1], 
-#                           ax=axs[nc]) # scaling 
-#         SI_est.append(SI_est_tmp)
-        
-#         nc = nc + 1
-    
-# SI_mean = np.mean(np.abs(SI_est)) 
-
-# #%% 
-# #  ridges analysis
-# SI_mean = 0.1
-# mesh_dexp, label_dexp = dEXP.dEXP(xp, yp, zp, U, shape, 
-#                  zmin=0, zmax=max_elevation, nlayers=nlay, 
-#                  qorder=qorder,
-#                  SI=SI_mean)
-
-# fig = plt.figure()
-# ax = plt.gca()
-
-# plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
-#              markerMax=True,SI=SI_mean,
-#              p1p2=np.array([p1,p2]), ax=ax, Xaxis=x_axis) #, ldg=)
-# plt.colorbar(cmap)
-
-# # if x_axis=='x':
-# #     plt.scatter(easting, np.abs(upward),marker=(5, 1),c='red')
-# #     plt.annotate(str(masses),[easting, upward])
-# # else:   
-# #     plt.scatter(northing, upward,marker=(5, 1),c='red')
-# #     plt.annotate(str(masses),[northing, upward])
-    

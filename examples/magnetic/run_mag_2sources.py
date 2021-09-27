@@ -46,10 +46,11 @@ xp, yp, zp, U, shape, p1, p2, coord= magfwd.load_mag_synthetic()
 max_elevation=2*max(coord[:,2])
 scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 interp = True
+x_axis='y'
 
 #%%
 # Plot field data over a 2d line crossing the anomalies
-pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+pEXP.plot_line(xp, yp, U,p1,p2, interp=interp,Xaxis=x_axis)
 
 #%%
 # Upward continuation of the field data with discretisation in altitude controlled by the number of layers (nlay) and the maximum elevation desired (max_elevation)
@@ -57,20 +58,26 @@ mesh, label_prop = dEXP.upwc(xp, yp, zp, U, shape,
                  zmin=0, zmax=max_elevation, nlayers=nlay, 
                  qorder=qorder)
 
-plt, cmap = pEXP.plot_xy(mesh, label=label_prop)
+plt, cmap = pEXP.plot_xy(mesh, label=label_prop,Xaxis=x_axis)
 plt.colorbar(cmap)
 
 #%%
 # Ridges identification: plot all extremas obtained via find_peaks function (numpy) for a given altitude
 dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,
                                       label=label_prop,
-                                      method_peak='find_peaks')  
+                                      method_peak='find_peaks',
+                                      fix_peak_nb=5,
+                                      Xaxis=x_axis,
+                                      showfig=True)  
 
 #%%
 # Ridges identification at all levels: plot extremas obtained via find_peaks function (numpy) for all 3 types of extremas familly RI, RII and RIII
 dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                       label=label_prop,
-                                      method_peak='find_peaks')  
+                                      method_peak='find_peaks',
+                                      fix_peak_nb=5,
+                                      Xaxis=x_axis,
+                                      showfig=True)  
 
 #%%
 # filter ridges using a minimum length criterium and and filter for a specific range of altitude
@@ -81,14 +88,11 @@ df_f = dfI_f, dfII_f, dfIII_f
 
 #%%
 # plot filtered ridges fitted over continuated section
-
-fig = plt.figure()
-ax = plt.gca()
-
+fig, ax = plt.subplots(figsize=(15,3))
 pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
-
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
 df_fit = dEXP.fit_ridges(df_f) # fit ridges on filtered data
 
-pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
+pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
                           ridge_type=[0,1,2],ridge_nb=None)
+

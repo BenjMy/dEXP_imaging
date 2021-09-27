@@ -378,9 +378,9 @@ def ridges_minmax(
             )
             # p_up_f_d1z = p_up_f_d1z_smooth
 
-        if Xaxis is "dist":
+        if Xaxis == "dist":
             xaxis = distance
-        elif Xaxis is "y":
+        elif Xaxis == "y":
             xaxis = xx
         else:
             xaxis = yy
@@ -1018,7 +1018,7 @@ def fit_ridges(df, rmvOutliers=False):
                 # )  # fit function
                 
                 x_fit, y_fit = x_new, y_new
-                print(a)
+                # print(a)
                 
                 if a < 0:
                     x_min = min(df[r_type][k[1]])  
@@ -1235,6 +1235,9 @@ def upwc(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0):
 
     """
     mesh = _makemesh(x, y, shape, zmin, zmax, nlayers)
+    
+    if zmin==0: # avoid downward continuation 
+        zmin =+ 1e-3
     # This way, if z is not an array, it is now
     z = z * np.ones_like(x)
     # Remove the last z because I only want depths to the top of the layers

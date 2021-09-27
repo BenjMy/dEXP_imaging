@@ -77,19 +77,18 @@ scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=sh
 interp = True
 qorder = 0
 
+x_axis='y'
 #%% 
 # Plot the data 
-pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+pEXP.plot_line(xp, yp, U,p1,p2, interp=interp,Xaxis=x_axis)
 
 #%% 
 # Pad the edges of grids (if necessary)
 
-xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
-p1 =[min(yp),0]
-p2 =[max(yp),0]
-x_axis='y'
+# xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
+# p1 =[min(yp),0]
+# p2 =[max(yp),0]
 
-#%%
 xx, yy, distance, profile, ax, plt = pEXP.plot_line(xp, yp,U,p1,p2, interp=interp,Xaxis=x_axis)
 
 
@@ -99,19 +98,20 @@ xx, yy, distance, profile, ax, plt = pEXP.plot_line(xp, yp,U,p1,p2, interp=inter
 # p2 =[0,6000]
 
 zderiv = transform.derivz(xp, yp, U, shape,order=1)
-xx, yy, distance, dz, ax, plt = pEXP.plot_line(xp, yp, zderiv, p1,p2, interp=True, title='zderiv')
+xx, yy, distance, dz, ax, plt = pEXP.plot_line(xp, yp, zderiv, p1,p2, interp=True, title='zderiv',Xaxis=x_axis)
 
 #%% 
 
 # Plot field against its 1st vertical derivative
 
-fig, ax1 = plt.subplots(figsize=(10,2))
+fig, ax1 = plt.subplots(figsize=(10,4))
 
 color = 'tab:red'
 ax1.set_xlabel('x(m)')
 ax1.set_ylabel('Amplitude of the\n potential field (V)', color=color)
 ax1.plot(xx, profile, color=color, linewidth=2)
 ax1.tick_params(axis='y', labelcolor=color)
+ax1.set_ylim([0,.5])
 
 ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
@@ -119,12 +119,12 @@ color = 'tab:blue'
 ax2.set_ylabel('$1^{st}$ derivative\n($V.m^2$)', color=color)  # we already handled the x-label with ax1
 ax2.plot(xx, dz, color=color, linewidth=2)
 ax2.tick_params(axis='y', labelcolor=color)
-ax2.set_ylim([-0.0001,3e-4])
+# ax2.set_ylim([-0.0001,3e-4])
 ax2.yaxis.set_major_formatter(ticker.FormatStrFormatter('%1.0e'))
 ax2.set_xlim([-5000,5000])
 
 fig.tight_layout()  # otherwise the right y-label is slightly clipped
-ax1.set_aspect(aspect=1e4)
+# ax2.set_aspect(aspect=1e-2)
 
 
 #%% 

@@ -1,5 +1,5 @@
 """
-Sensitivity analysis of DEXP to depth on Mise-Ã -la-masse 
+Sensitivity analysis of DEXP to depth on Mise-Ã -la-masse 
 --------------------------------------------------------
 
 This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of electrical sources positions and depth using the dEXP tranformation method.
@@ -32,9 +32,9 @@ from fatiando.vis.mpl import square
 from fatiando import gridder
 
 # my own functions
-import dEXP as dEXP
-import plot_dEXP as pEXP
-import set_parameters as para
+import lib.dEXP as dEXP
+import lib.plot_dEXP as pEXP
+import lib.set_parameters as para
 
 # exemples
 import examples.malm.loadmalm.Load_sens_MALM as MALM
@@ -77,7 +77,8 @@ for fi in filenames:
     SI = parameters[1]
     zp, qorder, nlay = parameters[2:5]
     minAlt_ridge, maxAlt_ridge = parameters[5:7]
-    
+    x_axis = 'y'
+
     #%%
     # ridges analysis parameters
     nlay = 25
@@ -153,21 +154,8 @@ for fi in filenames:
     df_f = dfI_f, dfII_f, dfIII_f
     
     #%%
-    # plot ridges fitted over continuated section
-        
-        # fig = plt.figure()
-        # ax = plt.gca()
-        
-        # pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
-        # pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
-    
+    # fit
     df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
-    
-    # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.4,
-    #                           ridge_type=[0,1,2],ridge_nb=None)
-    # square([x1, x2, z1, z2])
-    # plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])
-
 
     #%% 
     # save data loop
@@ -184,8 +172,7 @@ for fi in filenames:
 # Plot the results
 
 i = 0
-plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
@@ -197,8 +184,7 @@ plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 
     
 i = 1
-plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
@@ -210,8 +196,7 @@ plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 
 
 i = 2
-plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
@@ -223,8 +208,7 @@ plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 
 
 i = 3
-plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
 pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
@@ -233,19 +217,3 @@ pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
-
-
-
-# # Loop on source depth
-# fig, axs = plt.subplots(len(filenames), 1)
-
-# for i in range(len(filenames)):
-    
-#     pEXP.plot_xy(MESH[i], label=LABEL[i], ax=axs[i]) #, ldg=)
-#     dfI_f,dfII_f,dfIII_f = DF_F[i]
-#     pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=axs[i],label=False)   
-#     pEXP.plot_ridges_sources(DF_FIT[i], ax=axs[i], z_max_source=-max_elevation*1.2,
-#                               ridge_type=[0,1,2],ridge_nb=None)
-#     # x1, x2, z1, z2 = XXZZ[i]
-#     # square([x1, x2, z1, z2])
-#     # plt.annotate(CTm[i],[(x1 + x2)/2, -(z1+z2)/2])

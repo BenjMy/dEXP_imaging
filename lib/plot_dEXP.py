@@ -12,6 +12,7 @@ from scipy.optimize import curve_fit
 
 # my own functions
 import lib.dEXP as dEXP
+from mpl_axes_aligner import align
 
 
 def plot_field(x, y, field, shape, **kwargs):
@@ -668,41 +669,57 @@ def plot_ridges_sources(
                 # # ax.scatter(points[i[0]][:,0], points[i[0]][:,1],marker='*')
 
 
-                ymin, ymax = ax.get_ylim()
-                # print(z_max_source)
-                if z_max_source is None:
-                    ax2.set_ylim([-ymax * 3, ymax])
-                else:
-                    ax2.set_ylim([z_max_source, ymax])
+        ymin, ymax = ax.get_ylim()
+        # print(z_max_source)
+        if z_max_source is None:
+            ax2.set_ylim([-ymax * 3, ymax])
+        else:
+            ax2.set_ylim([z_max_source, ymax])
 
-                for key, value in kwargs.items():
-                    if key == "xmin":
-                        x_min = value
-                        ax2.set_xlim([x_min, None])
-                    if key == "xmax":
-                        x_max = value
-                        ax2.set_xlim([None, x_max])
+        for key, value in kwargs.items():
+            if key == "xmin":
+                x_min = value
+                ax2.set_xlim([x_min, None])
+            if key == "xmax":
+                x_max = value
+                ax2.set_xlim([None, x_max])
 
-                color = "tab:red"
-                ax2.set_ylabel(
-                    "depth\n(m)", color=color, loc="bottom"
-                )  # we already handled the x-label with ax1
-                ax2.set_xlabel("y (m)")  # we already handled the x-label with ax1
-                # ax2.xaxis.set_label_coords(0,-3000)
-                ax2.tick_params(axis="y", labelcolor=color)
-                # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
-                plt.grid()
-                # plt.legend()
-                # the text bounding box
-                # plt.ylabel("")
+        color = "tab:red"
+        ax2.set_ylabel(
+            "depth\n(m)", color=color, loc="bottom"
+        )  # we already handled the x-label with ax1
+        ax2.set_xlabel("y (m)")  # we already handled the x-label with ax1
+        # ax2.xaxis.set_label_coords(0,-3000)
+        ax2.tick_params(axis="y", labelcolor=color)
+        # plt.title(r'$\frac{\partial log(f)}{\partial log(z)}$', size=20)
+        plt.grid()
+        # plt.legend()
+        # the text bounding box
+        # plt.ylabel("")
 
-                # plt.axis('square')
+        # plt.axis('square')
 
-                # bbox = {'fc': '0.8', 'pad': 0}
-                # ax.text(-0.15, 0.3, 'depth', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
-                # ax.text(-0.15, 0.8, 'altitude', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
+        # bbox = {'fc': '0.8', 'pad': 0}
+        # ax.text(-0.15, 0.3, 'depth', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
+        # ax.text(-0.15, 0.8, 'altitude', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
 
-                ax2.spines["right"].set_position(("axes", 0.8))
+        ax2.spines["right"].set_position(("axes", 0.8))
+
+        labels_ax1 = ax.get_yticks() 
+        labels_ax1= labels_ax1[labels_ax1>0]
+        
+        labels_ax2 = ax2.get_yticks() 
+        labels_ax2= labels_ax2[labels_ax2<0]
+        
+        ax.set_yticks(labels_ax1)
+        ax2.set_yticks(labels_ax2)
+        
+        # Adjust the plotting range of two y axes
+        org1 = 0.0  # Origin of first axis
+        org2 = 0.0  # Origin of second axis
+        pos = 0.5  # Position the two origins are aligned
+        align.yaxes(ax, org1, ax2, org2, pos)
+
 
     return ax2
 
