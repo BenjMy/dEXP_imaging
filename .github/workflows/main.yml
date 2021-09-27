@@ -56,8 +56,8 @@ jobs:
       # rather than in docsrc
       - name: Build the doc
         run: |
-          mkdir docsrc
-          cd docsrc
+          #mkdir docsrc
+          #cd docsrc
           python3 -m sphinx -b html . ../docs
           cd ..
       
