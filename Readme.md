@@ -11,4 +11,4 @@ Many application examples can be found in the online documentation.
 
 ### Cite
 
-One article steeming from this work is in preparation for GRL. All data and codes to reproduce results are located in the folder notebook_GRL
+One article stemming from this work is in preparation for GRL. All data and codes to reproduce results are located in the folder notebook_GRL
