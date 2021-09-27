@@ -65,9 +65,9 @@ from .. import gridder
 Basemap = None
 
 # Tell users that this module will be removed in v0.6
-warnings.warn("This module will be removed in v0.6. We recommend the use of " +
-              "matplotlib.pyplot module directly. Some of the fatiando " +
-              "specific functions will remain.")
+warnings.warn("This module will be removed in v0.6. We recommend the use of \
+              matplotlib.pyplot module directly. Some of the fatiando \
+              specific functions will remain.")
 
 
 def draw_polygon(area, axes, style='-', marker='o', color='k', width=2,
