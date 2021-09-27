@@ -1,4 +1,4 @@
 License
 =======
 
-The project is licensed under the ??
+Copyright 2021 B. Mary

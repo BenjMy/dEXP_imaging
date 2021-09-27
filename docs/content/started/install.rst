@@ -17,14 +17,14 @@ Dependencies
 
 pydEXP requires the following dependencies for running:
 
-- numpy
-- scipy
-- matplotlib
-- pandas
-- mpl_axes_aligner
+* numpy
+* scipy
+* matplotlib
+* pandas
+* mpl_axes_aligner
 
 In order to make upward continuation and derivate the field, pyDEXP uses:
-- `fatiando <https://legacy.fatiando.org/>`_
+* `fatiando <https://legacy.fatiando.org/>`_
 
 
 Optionnal Third party packages
@@ -32,8 +32,8 @@ Optionnal Third party packages
 
 In order to forward model the geolectrical data, pyDEXP uses:
 
-- Pygimli
-- Resipy
+* Pygimli
+* Resipy
 
 .. Testing the install
 .. -------------------

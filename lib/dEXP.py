@@ -350,7 +350,7 @@ def ridges_minmax(
 
         if showfig == True:
             if i == iplot:
-                plt.figure()
+                ax = plt.figure()
                 plt.subplot(3, 1, 1)
                 plt.plot(xaxis, p_up_f, label="u")
                 for ind in range(len(MinMax_peaks)):
@@ -359,6 +359,8 @@ def ridges_minmax(
                     )
                     # plt.scatter([MinMax_peaks[ind]],0,color='g')
                 plt.legend()
+        else:
+            ax = None
 
     for i, depth in enumerate(depths - z[0]):  # Loop over RII extremas
         upw_u_l = upw_u[i, :]  # analysing extrema layers by layers from top to bottom
@@ -500,9 +502,9 @@ def ridges_minmax(
     # R_fit = _build_ridge(RI_minmax,RII_minmax,RIII_minmax)
 
     if peakp_out == False:
-        return dfI, dfII, dfIII
+        return dfI, dfII, dfIII, ax
     else:
-        return dfI, dfII, dfIII, dfIp, dfIIp, dfIIIp  # , R, R_fit
+        return dfI, dfII, dfIII, dfIp, dfIIp, dfIIIp, ax # , R, R_fit
 
 
 def _peaks_analysis(

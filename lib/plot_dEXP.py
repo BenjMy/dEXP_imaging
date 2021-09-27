@@ -671,6 +671,7 @@ def plot_ridges_sources(
 
         ymin, ymax = ax.get_ylim()
         # print(z_max_source)
+
         if z_max_source is None:
             ax2.set_ylim([-ymax * 3, ymax])
         else:
@@ -683,6 +684,7 @@ def plot_ridges_sources(
             if key == "xmax":
                 x_max = value
                 ax2.set_xlim([None, x_max])
+
 
         color = "tab:red"
         ax2.set_ylabel(
@@ -703,7 +705,8 @@ def plot_ridges_sources(
         # ax.text(-0.15, 0.3, 'depth', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
         # ax.text(-0.15, 0.8, 'altitude', transform=ax.transAxes, fontsize=14, rotation=90, bbox= bbox)
 
-        ax2.spines["right"].set_position(("axes", 0.8))
+        ax2.spines["right"].set_position(("axes", 0.6))
+        ax2.spines['right'].set_color('red')
 
         labels_ax1 = ax.get_yticks() 
         labels_ax1= labels_ax1[labels_ax1>0]
@@ -713,7 +716,8 @@ def plot_ridges_sources(
         
         ax.set_yticks(labels_ax1)
         ax2.set_yticks(labels_ax2)
-        
+        ax2.spines["right"].set_visible(False)
+
         # Adjust the plotting range of two y axes
         org1 = 0.0  # Origin of first axis
         org2 = 0.0  # Origin of second axis

@@ -5,10 +5,8 @@ pyDEXP is a open-source python package aiming at processing potential field data
 
 **References**
 
-Uieda, L., V. C. Oliveira Jr, and V. C. F. Barbosa (2013), Modeling the Earth with Fatiando a Terra, Proceedings of the 12th Python in Science Conference, pp. 91 - 98.
-
-Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential
-field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
+- Uieda, L., V. C. Oliveira Jr, and V. C. F. Barbosa (2013), Modeling the Earth with Fatiando a Terra, Proceedings of the 12th Python in Science Conference, pp. 91 - 98.
+- Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
 
 Quick use
 ---------
@@ -44,27 +42,27 @@ Gallery of examples
 ===================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Gallery of examples
+..   :maxdepth: 2
+..   :caption: Gallery of examples
 
-   auto_examples/index
+..   auto_examples/index
 
-API documentation
-=================
+.. API documentation
+.. =================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: API
+..   :maxdepth: 2
+..   :caption: API
 
-   content/api_core/api
+..   content/api_core/api
    
 
-Indices and tables
-==================
+.. Indices and tables
+.. ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
 
 
 .. TODO

@@ -47,6 +47,9 @@ path2files = ['./data/phNO/',
               './data/ph_low_top_12.5m/'
               ]
 
+mirror = True
+# file = ['Ano']
+
 # path2files = ['E:/Padova/Redaction/Articles/10_InversionUsingGravityPotMethod/data/phNO/',
 #               'E:/Padova/Redaction/Articles/10_InversionUsingGravityPotMethod/data/ph_low_top_2m/'
 #               'E:/Padova/Redaction/Articles/10_InversionUsingGravityPotMethod/data/ph_low_top_12.5m/'
@@ -114,22 +117,31 @@ for i, file in enumerate(file):
     U_mirror_int = np.copy(Uini)
     U_mirror_int[np.where(bool_above == True)[0]]= U_a_int[np.where(bool_above == True)[0]]
 
-    # plt.figure()
-    # plt.scatter(xp, yp, c=U_mirror_int, cmap='viridis',vmax=0.25)
-    # plt.colorbar()
-    # plt.axis('square')
-    # plt.show()
+    plt.figure()
+    plt.scatter(xp, yp, c=U_mirror_int, cmap='viridis',vmax=0.25)
+    plt.colorbar()
+    plt.axis('square')
+    plt.show()
 
     
     #%% choose raw or mirrored field
 
+    
     U = np.copy(Uini)
-    # U = np.copy(U_mirror_int)
-    # U = dEXP.smooth2d(xp, yp, U, sigma=2)
+    
+    if mirror == True:
+        print('mirroring field')
+        U = np.copy(U_mirror_int)
+        # U = dEXP.smooth2d(xp, yp, U, sigma=2)
     # plt.savefig('smooth2d' + str(file) + '.png', dpi=450)
 
     # plt.close('all')
-
+    # plt.figure()
+    # plt.scatter(xp, yp, c=U, cmap='viridis',vmax=0.25)
+    # plt.colorbar()
+    # plt.axis('square')
+    # plt.show()
+    
     #%%
     MainPath= './data/'
     # os.chdir(MainPath)
@@ -198,12 +210,10 @@ for i, file in enumerate(file):
     plt.ylim(300,500)
 
     if i==1:
-        plt.savefig('fig2b.eps', dpi=450)
         plt.savefig('fig2b.pdf', dpi=450)
         plt.savefig('fig2b.svg', dpi=450)
         plt.savefig('fig2b.png', dpi=450)
     else:
-        plt.savefig('fig2a.eps', dpi=450)
         plt.savefig('fig2a.pdf', dpi=450)
         plt.savefig('fig2a.svg', dpi=450)
         plt.savefig('fig2a.png', dpi=450)
@@ -218,17 +228,18 @@ for i, file in enumerate(file):
     
     #%% Solution 1
     # extrapolate False and fill with 0 before derivative - mask them later on 
-    # U_int_scipy = gridder.interp_at(Xs,Ys,Uini, xint_scipy, yint_scipy, algorithm='nearest', extrapolate=False)
-    # InterpData = np.array([xint_scipy, yint_scipy, U_int_scipy]).T
-    # where_are_NaNs = np.isnan(InterpData)
-    # InterpData[where_are_NaNs] = 0.0074
-    # xint_scipy, yint_scipy, U_int_scipy = InterpData.T
+    U_int_scipy = gridder.interp_at(Xs,Ys,U, xint_scipy, yint_scipy, algorithm='nearest', extrapolate=False)
+    InterpData = np.array([xint_scipy, yint_scipy, U_int_scipy]).T
+    where_are_NaNs = np.isnan(InterpData)
+    InterpData[where_are_NaNs] = 0.0074
+    xint_scipy, yint_scipy, U_int_scipy = InterpData.T
     
     #%% Solution 2
-    Extrapolate = True
-    U_int_scipy = gridder.interp_at(Xs,Ys, U, xint_scipy, yint_scipy, algorithm='nearest', extrapolate=True)
+    # Extrapolate = True
+    # U_int_scipy = gridder.interp_at(Xs,Ys, U, xint_scipy, yint_scipy, algorithm='nearest', extrapolate=True)
     
     
+    #%%
     Xs, Ys = xint_scipy,yint_scipy
     U = U_int_scipy
 
@@ -243,7 +254,6 @@ for i, file in enumerate(file):
     p1_s = np.array([p1[0] -min(xp_r)+offset,p2[0] -min(xp_r)+offset])
     p2_s = np.array([p1[1] -min(yp_r),p2[1] -min(yp_r) ])
     
-
     #%%
     
     ax, plt = pEXP.plot_field(Xs,Ys,U, shape,
@@ -278,7 +288,7 @@ for i, file in enumerate(file):
                                                 limx=[100,650],
                                                 limy=[100,650],
                                                 showfig=True)
-    plt.savefig('profile' + str(file) + '.png', dpi=450)
+    # plt.savefig('profile' + str(file) + '.png', dpi=450)
 
     xA_r_new = [p1_s[0]+xA_r[0]-xA_r[1], p1_s[0]-xA_r[0]+xA_r[1]] 
 
@@ -292,24 +302,23 @@ for i, file in enumerate(file):
                 "p12": [p1_s,p2_s]}
     
     if i==0:
-        file2save = 'NoAno_fig5_data'
+        file2save = './data/NoAno_synth_landflill_data'
     else: 
-        file2save = 'Ano_fig5_data'
+        file2save = './data/Ano_synth_landflill_data'
 
     afile = open(file2save + '.pkl', 'wb')
     pickle.dump(dict_model_data, afile)
     afile.close()
     
+
     # %% ------------------------------- plot publi mirror
 
     ax, plt = pEXP.plot_field(Xs,Ys,U, shape,Vminmax=[0,0.35])
     ax.plot(coords_liner_s[2:5,0],coords_liner_s[2:5,1],'k')
     plt.axis('square')
-    # plt.xlim(min(Xs),max(Ys))
-    # plt.ylim(min(Xs),max(Ys))
     plt.xlim(300,500)
     plt.ylim(300,500)
-    plt.savefig('publi_mirror' + file + '.png', dpi=450)
+    # plt.savefig('publi_mirror' + file + '.png', dpi=450)
     
     # %% ------------------------------- Pad the edges of grids
     
@@ -326,17 +335,17 @@ for i, file in enumerate(file):
     pEXP.plot_line(Xs, Ys, xderiv ,p1_s,p2_s,title='xderiv',x_resolution= interp_size,
                     savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
 
-    plt.savefig('xderiv' + str(file) + '.png', dpi=450)
+    # plt.savefig('xderiv' + str(file) + '.png', dpi=450)
 
     pEXP.plot_line(Xs, Ys, yderiv ,p1_s,p2_s,title='yderiv',x_resolution= interp_size,
                     savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
 
-    plt.savefig('yderiv' + str(file) + '.png', dpi=450)
+    # plt.savefig('yderiv' + str(file) + '.png', dpi=450)
 
     pEXP.plot_line(Xs, Ys, zderiv ,p1_s,p2_s,title='zderiv',x_resolution= interp_size,
                     savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
     
-    plt.savefig('zderiv' + str(file) + '.png', dpi=450)
+    # plt.savefig('zderiv' + str(file) + '.png', dpi=450)
 
     #%% ------- upward continuation of the field data
     p = [p1_s,p2_s]
@@ -350,7 +359,7 @@ for i, file in enumerate(file):
     cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
     cbar.set_label('upwc voltage (V)')
     plt.tight_layout()
-    plt.savefig('upwc voltage' + str(file) + '.png', dpi=450)
+    # plt.savefig('upwc voltage' + str(file) + '.png', dpi=450)
     
     #%% DEXP ratio
     # x_axis = 'x'
@@ -358,8 +367,7 @@ for i, file in enumerate(file):
     mesh_dexp, label_dexp = dEXP.dEXP_ratio(Xs, Ys, zp, U, shape, 
                       zmin=0, zmax=max_elevation, nlayers=nlay, 
                       qorders=qratio)
-    fig = plt.figure()
-    ax = plt.gca()
+    fig, ax = plt.subplots(figsize=(15,3))
     plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
                   markerMax=True,qratio=str(qratio),Vminmax=[0,0.075],
                   p1p2=np.array([p1_s,p2_s]), ax=ax, Xaxis=x_axis) #, ldg=)
@@ -368,13 +376,24 @@ for i, file in enumerate(file):
     #              ax=ax, Xaxis=x_axis) #, ldg=)
     cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
     cbar.set_label('ratio voltage (V)')
-    
+    ax.set_aspect("equal")
+
     if x_axis=='y':
         square([xA_r_new[0], xA_r_new[1], -z1, -z2])
     else:   
         square([yA_r[0], yA_r[1], -z1, -z2])
     plt.xlim([200,600])
-    plt.savefig('ratios_' + str(file) + '.png', dpi=450)
+    
+    if i==0:
+        plt.savefig('fig3c_SI.pdf', dpi=450)
+        plt.savefig('fig3c_SI.svg', dpi=450)
+        plt.savefig('fig3c_SI.png', dpi=450)
+    else:
+        plt.savefig('fig3d_SI.pdf', dpi=450)
+        plt.savefig('fig3d_SI.svg', dpi=450)
+        plt.savefig('fig3d_SI.png', dpi=450)
+        
+    # plt.savefig('ratios_' + str(file) + '.png', dpi=450)
     
 
 
@@ -386,7 +405,7 @@ for i, file in enumerate(file):
                                           smooth=smooth,
                                           fix_peak_nb=2,
                                           method_peak='find_peaks',
-                                          showfig=True,
+                                          showfig=False,
                                           Xaxis=x_axis)  
     #%%
     # or  find_peaks or peakdet or spline_roots
@@ -415,16 +434,16 @@ for i, file in enumerate(file):
 
     #%% ------------------------------- plot ridges over continuated section
         
-    fig = plt.figure()
-    ax = plt.gca()
-    plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis=x_axis,
-                Vminmax=[0,0.35], p1p2=p)
-    cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
-    cbar.set_label('upwc voltage (V)')
-    plt.tight_layout()
-    pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
-    plt.xlim([200,600])
-    plt.savefig('ridges_raw_' + str(file) + '.png', dpi=450)
+    # fig = plt.figure()
+    # ax = plt.gca()
+    # plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis=x_axis,
+    #             Vminmax=[0,0.35], p1p2=p)
+    # cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
+    # cbar.set_label('upwc voltage (V)')
+    # plt.tight_layout()
+    # pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
+    # plt.xlim([200,600])
+    # plt.savefig('ridges_raw_' + str(file) + '.png', dpi=450)
 
     #%% ------------------------------- filter ridges regionally constrainsted)
 
@@ -440,29 +459,6 @@ for i, file in enumerate(file):
     
     #%% ------------------------------- plot ridges fitted over continuated section
     
-    # fig = plt.figure()
-    # ax = plt.gca()
-    
-    # plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax, Xaxis=x_axis,
-    #               Vminmax=[0,0.35], p1p2=p)
-    # pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
-    
-    # df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
-    
-    # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
-    #                           ridge_type=[0,1,2],ridge_nb=None)
-
-    # cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
-    # cbar.set_label('upwc voltage (V)')
-    # plt.tight_layout()
-    # pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
-    # plt.xlim([200,600])
-
-    # square([y1, y2, z1, z2])
-
-    # plt.close('all')
-    
-    
     fig, ax1 = plt.subplots(figsize=(15,3))
 
     plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax1, Xaxis=x_axis,
@@ -472,31 +468,24 @@ for i, file in enumerate(file):
     df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
     
     ax2 = pEXP.plot_ridges_sources(df_fit, ax=ax1, z_max_source=-max_elevation,
-                          ridge_type=[0,1,2],ridge_nb=None, x_min=250,x_max=500)
-    
-    labels_ax1 = ax1.get_yticks() 
-    labels_ax1= labels_ax1[labels_ax1>0]
-    
-    labels_ax2 = ax2.get_yticks() 
-    labels_ax2= labels_ax2[labels_ax2<0]
-    
-    ax1.set_yticks(labels_ax1)
-    ax2.set_yticks(labels_ax2)
-    
-    # Adjust the plotting range of two y axes
-    org1 = 0.0  # Origin of first axis
-    org2 = 0.0  # Origin of second axis
-    pos = 0.5  # Position the two origins are aligned
-    align.yaxes(ax1, org1, ax2, org2, pos)
-    
+                          ridge_type=[0,1,2],ridge_nb=None, xmin=250,xmax=500)
     
     cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
     cbar.set_label('upwc voltage (V)')
-    plt.xlim([200,600])
 
-    if x_axis=='y':
-        square([xA_r_new[0], xA_r_new[1], z1, z2])
-    else:   
-        square([yA_r[0], yA_r[1], z1, z2])
+    if i==0:
+        if x_axis=='y':
+            square([xA_r_new[0], xA_r_new[1], z1, z2])
+        else:   
+            square([yA_r[0], yA_r[1], z1, z2])
         
-    plt.savefig('ridges_' + str(file) + '.png', dpi=450)
+        fig.savefig('fig3a_SI.pdf', dpi=450)
+        fig.savefig('fig3a_SI.svg', dpi=450)
+        fig.savefig('fig3a_SI.png', dpi=450)
+        
+    else:
+        
+        fig.savefig('fig3b_SI.pdf', dpi=450)
+        fig.savefig('fig3b_SI.svg', dpi=450)
+        fig.savefig('fig3b_SI.png', dpi=450)
+        

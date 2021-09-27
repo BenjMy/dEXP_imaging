@@ -298,8 +298,8 @@ for i, file in enumerate(file):
     
     #%% ------------------------------- Pad the edges of grids
     
-    xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
-    pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
+    # xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
+    # pEXP.plot_line(xp, yp,U,p1,p2, interp=interp)
     
     #%% ------------------------------- Plot the derivatives
     

@@ -29,7 +29,15 @@ data_dir= './data/'
 
 # data are saved from test_synth.py
 savename = "field_model"
-file = open(data_dir+'fig5_data.pkl','rb')
+
+file2load='fig5_data'
+# NoAno_synth_landflill_data
+# Ano_synth_landflill_data
+# fig5_data
+# NoAno_fig5_data
+# Ano_fig5_data
+
+file = open(data_dir+file2load+'.pkl','rb')
 u = pickle._Unpickler(file)
 u.encoding = 'latin1'
 data = u.load()

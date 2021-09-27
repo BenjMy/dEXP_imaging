@@ -57,7 +57,7 @@ plt.rcParams['font.size'] = 15
 #%% 
 # load model previously generated using Fatiando a terra package
 os.getcwd()
-data_struct = grav.load_grav_fatiando(name='loadgrav/za3000_zb3500_l500_ofs0_dens1200.pkl')
+data_struct = grav.load_grav_fatiando(name='../examples/gravimetry/loadgrav/za3000_zb3500_l500_ofs0_dens1200.pkl')
 
 xp,yp,zp,U = data_struct['xyzg']
 shape = data_struct['shape']
@@ -74,44 +74,45 @@ max_elevation=z2*1.2
 scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)
 interp = True
 qorder = 0
+x_axis='y'
 
 #%% 
 # Plot the data 
-pEXP.plot_line(xp, yp, U,p1,p2, interp=interp)
+pEXP.plot_line(xp, yp, U,p1,p2, interp=interp,Xaxis=x_axis)
 
 #%% 
 # Pad the edges of grids (if necessary)
 
-xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
+# xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5
 # p1 =[min(yp),0]
 # p2 =[max(yp),0]
 # p1 =[0,-6000]
-p2 =[0,6000]
-x_axis='y'
+# p2 =[0,6000]
 
 #%% Take the z-derivative
 
 from matplotlib.ticker import FormatStrFormatter
 plt.rcParams['font.size'] = 15
 # Tweak the figure style
-plt.rcParams.update({
-    'ytick.labelsize': 'small',
-    'xtick.labelsize': 'small',
-    'axes.labelsize': 'small',
-    'axes.titlesize': 'medium',
-    'grid.color': '0.75',
-    'grid.linestyle': ':',
-})
+# plt.rcParams.update({
+#     'ytick.labelsize': 'small',
+#     'xtick.labelsize': 'small',
+#     'axes.labelsize': 'small',
+#     'axes.titlesize': 'medium',
+#     'grid.color': '0.75',
+#     'grid.linestyle': ':',
+# })
 
 
 zderiv = transform.derivz(xp, yp, U, shape,order=1)
-xx, yy, distance, dz, ax, plt = pEXP.plot_line(xp, yp, zderiv, p1,p2, interp=True, title='zderiv')
-xx, yy, distance, profile, ax, plt = pEXP.plot_line(xp, yp, U,p1,p2, interp=True)
+xx, yy, distance, dz, ax, plt = pEXP.plot_line(xp, yp, zderiv, p1,p2, interp=True, title='zderiv',
+                                               Xaxis=x_axis)
+xx, yy, distance, profile, ax, plt = pEXP.plot_line(xp, yp, U,p1,p2, interp=True, Xaxis=x_axis)
 
 
 # Plot field against its 1st vertical derivative
 
-fig, ax1 = plt.subplots(figsize=(10,2))
+fig, ax1 = plt.subplots(figsize=(8,3))
 
 color = 'tab:red'
 ax1.set_xlabel('x(m)')
@@ -128,12 +129,13 @@ ax2.tick_params(axis='y', labelcolor=color)
 ax2.set_ylim([-0.0001,3e-4])
 ax2.yaxis.set_major_formatter(FormatStrFormatter('%1.0e'))
 ax2.set_xlim([-5000,5000])
-
+# fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.grid()
 #fig.tight_layout()  # otherwise the right y-label is slightly clipped
-#ax1.set_aspect(aspect=1e4)
-#plt.savefig('fig1a_SI.png', dpi=400, bbox_inches = "tight")
-#plt.savefig('fig1a_SI.svg', dpi=400, bbox_inches = "tight")
-#plt.savefig('fig1a_SI.pdf', bbox_inches = "tight")
+ax1.set_aspect(aspect=1e4)
+plt.savefig('fig1a_SI.png', dpi=400, bbox_inches = "tight")
+plt.savefig('fig1a_SI.svg', dpi=400, bbox_inches = "tight")
+plt.savefig('fig1a_SI.pdf', bbox_inches = "tight")
 
 
 #%%
@@ -187,27 +189,37 @@ df_f = dfI_f, dfII_f, dfIII_f
 #%% 
 # Plot ridges fitted over continuated section
 
-fig = plt.figure()
-ax = plt.gca()
+fig, ax = plt.subplots(figsize=(15,3))
 
-pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
+
+plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
 df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
 
+plt.colorbar(cmap, label='upwc voltage\n($V.m^2$)' )
+
+
 # pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,
 #                           ridge_type=[0,1,2],ridge_nb=None)
-pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-6000,
+ax2 = pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-6000,
+                               x_min=-5000,x_max=5000,
                           ridge_type=[0,1,2],ridge_nb=None)
+ax.set_xlabel('x (m)')
+# ax.set_xlim([-5000, 5000])
 square([x1, x2, -z1, -z2])
 plt.annotate(dens,[(x1 + x2)/2, -(z1+z2)/2])
+plt.savefig('fig1b_SI.png', dpi=400, bbox_inches = "tight")
+plt.savefig('fig1b_SI.svg', dpi=400, bbox_inches = "tight")
+plt.savefig('fig1b_SI.pdf', bbox_inches = "tight")
+
 
 #%% 
 #  ridges analysis
 
-z0 = -2000
-points, fit, SI, EXTnb = dEXP.scalFUN(dfI_f,EXTnb=[1],z0=z0)
-pEXP.plot_scalFUN(points, fit, z0=z0)
+# z0 = -2000
+# points, fit, SI, EXTnb = dEXP.scalFUN(dfI_f,EXTnb=[1],z0=z0)
+# pEXP.plot_scalFUN(points, fit, z0=z0)
 
 
 # z0 = -2000

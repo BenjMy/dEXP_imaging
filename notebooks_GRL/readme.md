@@ -1,13 +1,21 @@
-# Article title
+# Advanced potential field analysis applied to Mise-à-la-Masse surveys
 
 ## Overview
 
 python codes and data to reproduce:
-- fig3 main manuscript
-- fig 1 to 3 from Supplementary Informations
 
-data are located in ./data/ folder.
-some of the data are preprocessed and pickle formatted
+Main manuscript:
+* fig3.py > fig3
+
+Supplementary figures:
+
+*  GRL_figs_SI_run_grav.py > fig 1 SI
+*  exemple/MALM/clearB.py > fig 2 SI
+*  GRL_fig3_SI.py > fig 3 SI
+
+Data are located in the subroot folder at ./data/.
+Some of the data are preprocessed and pickle formatted. 
+
 
 ## Citation
 
