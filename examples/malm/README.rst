@@ -5,10 +5,10 @@ The theory of the dEXP theory is applied here for the first time (to our knowled
 
 We show here: 
 
-- **preprocessing** of MALM for dEXP;
-- a sensitivity analysis to **anomaly depth** (3d) of the dEXP theory apply to Mise-à-la-Masse data;
-- effect of **noise level**;
-- **in prep**: a case study where we used a Mise-à-la-Masse survey to identify a leakage in a landfill;
-- **in prep**: effect of borehole data and downward continuation.
+* **preprocessing** of MALM for dEXP;
+* a sensitivity analysis to **anomaly depth** (3d) of the dEXP theory apply to Mise-à-la-Masse data;
+* effect of **noise level**;
+* **in prep**: a case study where we used a Mise-à-la-Masse survey to identify a leakage in a landfill;
+* **in prep**: effect of borehole data and downward continuation.
 
     
