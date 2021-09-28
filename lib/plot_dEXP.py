@@ -110,15 +110,17 @@ def label2unit(label):
 
     '''
     
-    if label == 'upwc_q0':
+    if 'upwc_q0' in label:
         unit = 'upwc voltage \n (V)'
-    if label == 'upwc_q1':
+    elif 'upwc_q1' in label:
         unit = 'upwc $\frac{\partial V}{\partial z}$ \n ($V.m^{-1}$)'
-    if label == 'upwc_q2':
+    elif 'upwc_q2' in label:
         unit = 'upwc $\frac{\partial^{2} V}{\partial z^{2}}$ \n ($V.m^{-2}$)'
+    elif 'dexp_q[' in label:
+        unit = 'ratio voltage \n(V)'
     else:
         print(label + str( 'doesnt match any label unit'))
-        unit = []
+        unit = ''
                 
     return unit
     
