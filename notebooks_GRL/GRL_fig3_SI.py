@@ -374,14 +374,15 @@ for i, file in enumerate(file):
     # plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
     #              markerMax=True,qratio=str(qratio)
     #              ax=ax, Xaxis=x_axis) #, ldg=)
-    cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
-    cbar.set_label('ratio voltage \n (V)')
+    # cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
+    # cbar.set_label('ratio voltage \n (V)')
     ax.set_aspect("equal")
-
-    if x_axis=='y':
-        square([xA_r_new[0], xA_r_new[1], -z1, -z2])
-    else:   
-        square([yA_r[0], yA_r[1], -z1, -z2])
+    if i==1:
+        if x_axis=='y':
+            square([xA_r_new[0], xA_r_new[1], -z1, -z2])
+        else:   
+            square([yA_r[0], yA_r[1], -z1, -z2])
+            
     plt.xlim([200,600])
     
     if i==1:

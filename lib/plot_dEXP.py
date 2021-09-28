@@ -109,7 +109,7 @@ def label2unit(label):
     unit : str
 
     '''
-    
+    shrinkv = 1
     if 'upwc_q0' in label:
         unit = 'upwc voltage \n (V)'
     elif 'upwc_q1' in label:
@@ -118,11 +118,12 @@ def label2unit(label):
         unit = 'upwc $\frac{\partial^{2} V}{\partial z^{2}}$ \n ($V.m^{-2}$)'
     elif 'dexp_q[' in label:
         unit = 'ratio voltage \n(V)'
+        shrinkv = 0.25
     else:
         print(label + str( 'doesnt match any label unit'))
         unit = ''
                 
-    return unit
+    return unit, shrinkv
     
 def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
     """
@@ -236,8 +237,8 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
     
     if clabel==True: # set order of derivative of the upward continuated section 
     # for instance upward-continued third-order vertical derivative is upwc_q3
-        unit = label2unit(label)
-        cbar = plt.colorbar(cmap) #,shrink=0.25, pad=0.04)
+        unit, shrinkv = label2unit(label)
+        cbar = plt.colorbar(cmap,shrink=shrinkv)# pad=0.04)
         cbar.set_label(unit)
     # ax.set_aspect('equal')
     # plt.show()
