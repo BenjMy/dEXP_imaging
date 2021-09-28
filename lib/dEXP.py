@@ -1255,6 +1255,10 @@ def upwc(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0):
 
         # qorder vertical derivate of the continued field
         upw_f_dqhi = transform.derivz(x, y, upw_fhi, shape, order=qorder)
+        
+        # print(np.mean(upw_fhi))
+        # print(np.mean(upw_f_dqhi))
+        
 
         upw_f.extend(upw_fhi)
         upw_f_dq.extend(upw_f_dqhi)

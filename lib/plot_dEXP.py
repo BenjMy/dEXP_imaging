@@ -95,6 +95,33 @@ def plot_z(mesh):
     return
 
 
+
+def label2unit(label):
+    '''
+    Convert label name to unit
+    
+    Parameters
+    ----------
+    label : str
+
+    Returns
+    -------
+    unit : str
+
+    '''
+    
+    if label == 'upwc_q0':
+        unit = 'upwc voltage \n (V)'
+    if label == 'upwc_q1':
+        unit = 'upwc $\frac{\partial V}{\partial z}$ \n ($V.m^{-1}$)'
+    if label == 'upwc_q2':
+        unit = 'upwc $\frac{\partial^{2} V}{\partial z^{2}}$ \n ($V.m^{-2}$)'
+    else:
+        print(label + str( 'doesnt match any label unit'))
+        unit = []
+                
+    return unit
+    
 def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
     """
     Get vertical xy section of the mesh at max/2 and plot it
@@ -124,6 +151,7 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
     q_ratio = None
     Vminmax = None
     aspect_equal = False
+    clabel=True
     for key, value in kwargs.items():
         if key == "Xaxis":
             Xaxis = value
@@ -141,7 +169,10 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
             vmax = Vminmax[1]
         if key == "aspect_equal":
             aspect_equal = True
-
+        if key == "clabel":
+            clabel = value
+            
+            
     if label not in mesh.props:
         raise ValueError("mesh doesn't have a '%s' property." % (label))
 
@@ -174,7 +205,7 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
         if len(p_xaxis) > 1:
             print("len must be <2")
 
-        if Xaxis is "x":
+        if Xaxis == "x":
             # p_xaxis= p1p2[0][0]
             # print("paxis=" + str(p_xaxis))
             id_p_xaxis = (np.abs(x - p_xaxis)).argmin()
@@ -199,6 +230,13 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
         )
         ax.set_xlim(x.min(), x.max())
         ax.set_xlabel("x (m)")
+        
+    
+    if clabel==True: # set order of derivative of the upward continuated section 
+    # for instance upward-continued third-order vertical derivative is upwc_q3
+        unit = label2unit(label)
+        cbar = plt.colorbar(cmap) #,shrink=0.25, pad=0.04)
+        cbar.set_label(unit)
     # ax.set_aspect('equal')
     # plt.show()
 
@@ -224,7 +262,7 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
 
     if markerMax == True:
         if p1p2 is not None:
-            if Xaxis is "x":
+            if Xaxis == "x":
                 x_axis = x
                 id_p_xaxis = (np.abs(x_axis - p_xaxis)).argmin()
                 ind = np.unravel_index(
@@ -240,9 +278,9 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
                     image[:, :, id_p_xaxis].shape,
                 )
             z_exp = z[ind[0]]
-            if Xaxis is "x":
+            if Xaxis == "x":
                 x_axis_exp = y[ind[1]]
-            elif Xaxis is "y":
+            elif Xaxis == "y":
                 x_axis_exp = x[ind[1]]
 
             # x_axis_exp = x_axis[ind[1]]

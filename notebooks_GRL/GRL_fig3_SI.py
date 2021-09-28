@@ -459,7 +459,7 @@ for i, file in enumerate(file):
     fig, ax1 = plt.subplots(figsize=(15,3))
 
     plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax1, Xaxis=x_axis,
-              Vminmax=[0,0.35], p1p2=p)
+              Vminmax=[0,0.35], p1p2=p, clabel=True)
     pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=False)
     
     df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
@@ -467,8 +467,10 @@ for i, file in enumerate(file):
     ax2 = pEXP.plot_ridges_sources(df_fit, ax=ax1, z_max_source=-max_elevation,
                           ridge_type=[0,1,2],ridge_nb=None, xmin=250,xmax=500)
     
-    cbar = plt.colorbar(cmap) #,shrink=0.25, pad=0.04)
-    cbar.set_label('upwc voltage (V)')
+    # cbar = plt.colorbar(cmap) #,shrink=0.25, pad=0.04)
+    
+    #cbar.set_label(mesh.props[label_prop])
+    # cbar.set_label('upwc voltage (V)')
     ax1.set_xlabel('y (m)')
     if i==1:
         if x_axis=='y':
