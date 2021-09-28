@@ -15,7 +15,8 @@ def load_MALM_sens3d(filename=None):
     #data = u.load()
 
     infile = open(filename,'rb')
-    data = pickle.load(infile,encoding='latin1')
+    #data = pickle.load(infile,encoding='latin1')
+    data = pickle.load(infile)
     infile.close()
 
 
