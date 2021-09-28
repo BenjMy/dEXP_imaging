@@ -66,10 +66,26 @@ def load_grav_fatiando(name='za_1000zb_1500dens_1200'):
     # # zp=0  # initial depth (conditionned upward or downward)
     
     #reload object from file
-    file = open(name, 'rb')
-    u = pickle._Unpickler(file)
-    u.encoding = 'latin1'
-    data = u.load()
+    
+    # data = []
+    # with (open(name, "rb")) as openfile:
+    #     while True:
+    #         try:
+    #             data.append(pickle.load(openfile))
+    #         except EOFError:
+    #             break
+    # data = []
+    # with open(name, 'a') as f:
+    #         pickle.dump(data, f)
+        
+    infile = open(name,'rb')
+    data = pickle.load(infile,encoding='latin1')
+    infile.close()
+
+    # file = open(name, 'rb')
+    # u = pickle._Unpickler(file)
+    # # u.encoding = 'utf8'# 'latin1'
+    # data = u.load()
 
     return data
 

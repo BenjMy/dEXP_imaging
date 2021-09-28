@@ -377,13 +377,14 @@ for i, file in enumerate(file):
     # cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
     # cbar.set_label('ratio voltage \n (V)')
     ax.set_aspect("equal")
+    ax.set_xlabel('y (m)')
     if i==1:
         if x_axis=='y':
             square([xA_r_new[0], xA_r_new[1], -z1, -z2])
         else:   
             square([yA_r[0], yA_r[1], -z1, -z2])
             
-    plt.xlim([200,600])
+    plt.xlim([250,500])
     
     if i==1:
         plt.savefig('fig3c_SI.pdf', dpi=450)
