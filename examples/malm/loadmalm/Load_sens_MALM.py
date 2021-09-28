@@ -9,10 +9,15 @@ import pickle
 
 def load_MALM_sens3d(filename=None):
 
-    file = open(filename, 'rb')
-    u = pickle._Unpickler(file)
-    u.encoding = 'latin1'
-    data = u.load()
+    #file = open(filename, 'rb')
+    #u = pickle._Unpickler(file)
+    #u.encoding = 'latin1'
+    #data = u.load()
+
+    infile = open(filename,'rb')
+    data = pickle.load(infile,encoding='latin1')
+    infile.close()
+
 
     # SimName='M' + 'SoilR' + str(data['SoilR']) + 'AnoR' + str(data['AnoR']) + 'Z' + str(data['HWD'][0]) + 'W' + str(data['HWD'][1]) +  'D' + str(data['HWD'][2])
     SimName = None
