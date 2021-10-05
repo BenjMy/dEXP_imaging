@@ -10,7 +10,7 @@ Main manuscript:
 Supplementary figures:
 
 *  GRL_figs_SI_run_grav.py > fig 1 SI
-*  exemple/MALM/clearB.py > fig 2 SI
+*  clearB.py > fig 2 SI
 *  GRL_fig3_SI.py > fig 3 SI
 
 Data are located in the subroot folder at ./data/.
