@@ -84,7 +84,7 @@ autodoc_default_flags = ['members', 'inherited-members']
 
 sphinx_gallery_conf = {
     # path to your examples scripts
-    'examples_dirs': ['../examples'],
+    'examples_dirs': ['../examples', '../notebooks_GRL'],
     # path where to save gallery generated examples
     'gallery_dirs': 'auto_examples',
     'filename_pattern': '\.py',

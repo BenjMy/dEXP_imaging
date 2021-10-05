@@ -133,13 +133,7 @@ p1f_r , p2f_r = p
 coord_xyz_r, coord_xyz_int_r = out_r[0:2]
 Uload_r = out_r[2]
 uf = Uload_r[1] # U_raw, Ucor, U_int, Ucor_int
-# xf_rtmp, yf_rtmp, zf_rtmp = coord_xyz
 
-# plt.figure()
-# plt.scatter(xf_rtmp, yf_rtmp, c=uf, cmap='viridis',vmax=0.05)
-# plt.colorbar()
-# plt.axis('square')
-# plt.show()
   
 
 #%% Mirror field against p1p2
@@ -167,7 +161,6 @@ uf_mirror = np.hstack([Umirrorf,U_af])
 
 
 #%% choose raw or mirrored field
-
 Uf = np.copy(uf)
 
 Uf  = np.copy(uf_mirror)
@@ -216,14 +209,7 @@ plt.axis('square')
 plt.show()
 
 
-    
 
-# %%
-# prl = 10
-# # shape = shape  (max(xp)-min(xp))/
-# shape = (30,30)
-# xint_scipy, yint_scipy = gridder.regular((min(Xfs)-prl, max(Xfs)+prl, 
-#                           min(Yfs)-prl, max(Yfs)+prl),shape=shape)
 #%% Solution 1
 # extrapolate False and fill with 0 before derivative - mask them later on 
 U_int_scipyf = gridder.interp_at(Xfs,Yfs,Uf, xint_scipy, yint_scipy, algorithm='cubic', extrapolate=False)
@@ -232,13 +218,6 @@ where_are_NaNs = np.isnan(InterpData)
 InterpData[where_are_NaNs] = 0.0074
 xint_scipy, yint_scipy, U_int_scipyf = InterpData.T
 
-
-
-#%% Solution 2
-
-# U_int_scipyf = gridder.interp_at(Xfs,Yfs, Uf, xint_scipy, yint_scipy, algorithm='cubic', extrapolate=True)
-# len(U_int_scipyf)
-# len(Uf)
 
 #%% Smoothing 2d
 
@@ -313,11 +292,6 @@ afile = open('fig6_data_m' + '.pkl', 'wb')
 pickle.dump(dict_real_data, afile)
 afile.close()
 
-interp_size
-interp
-smooth
-x_axis
-nlay
 
 #%% ------------------------------- Pad the edges of grids
 
@@ -334,17 +308,17 @@ zderiv = transform.derivz(XFs, YFs, UF, shape,order=0)
 pEXP.plot_line(XFs, YFs, xderiv ,p1_s,p2_s,title='xderiv',x_resolution= interp_size,
             savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
 
-plt.savefig('xderiv' + str(file) + '.png', dpi=450)
+#plt.savefig('xderiv' + str(file) + '.png', dpi=450)
 
 pEXP.plot_line(XFs, YFs, yderiv ,p1_s,p2_s,title='yderiv',x_resolution= interp_size,
             savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
 
-plt.savefig('yderiv' + str(file) + '.png', dpi=450)
+#plt.savefig('yderiv' + str(file) + '.png', dpi=450)
 
 pEXP.plot_line(XFs, YFs, zderiv ,p1_s,p2_s,title='zderiv',x_resolution= interp_size,
             savefig=False, interp=interp, smooth=smooth,  Xaxis=x_axis)
 
-plt.savefig('zderiv' + str(file) + '.png', dpi=450)
+#plt.savefig('zderiv' + str(file) + '.png', dpi=450)
 
 #%% ------- upward continuation of the field data
 p = [p1_s,p2_s]
@@ -372,9 +346,6 @@ ax = plt.gca()
 plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
           markerMax=True,qratio=str(qratio),Vminmax=[0,0.075],
           p1p2=np.array([p1_s,p2_s]), ax=ax, Xaxis=x_axis) #, ldg=)
-# plt, cmap = pEXP.plot_xy(mesh_dexp, label=label_dexp,
-#              markerMax=True,qratio=str(qratio)
-#              ax=ax, Xaxis=x_axis) #, ldg=)
 cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
 cbar.set_label('ratio\nvoltage (V)')
 
@@ -383,10 +354,10 @@ cbar.set_label('ratio\nvoltage (V)')
 # else:   
 # square([yA_r[0], yA_r[1], -z1, -z2])
 plt.xlim([200,600])
-plt.savefig('fig3b.png', dpi=450)
-plt.savefig('fig3b.pdf', dpi=450)
-plt.savefig('fig3b.svg', dpi=450)
-plt.savefig('fig3b.eps', dpi=450)
+#plt.savefig('fig3b.png', dpi=450)
+#plt.savefig('fig3b.pdf', dpi=450)
+#plt.savefig('fig3b.svg', dpi=450)
+#plt.savefig('fig3b.eps', dpi=450)
 # plt.legend('')
 
 
@@ -400,14 +371,6 @@ dEXP.ridges_minmax_plot(XFs, YFs, mesh, p1_s, p2_s,
                                   method_peak='find_peaks',
                                   showfig=True,
                                   Xaxis=x_axis)  
-#%%
-# or  find_peaks or peakdet or spline_roots
-# dfI,dfII, dfIII = dEXP.ridges_minmax(Xs, Ys, mesh, p1_s, p2_s,interp=interp,x_resolution= interp_size,
-#                                       label=label_prop,fix_peak_nb=2,
-#                                       smooth=smooth, # true = low pass, otherwise specify the filter to apply
-#                                       method_peak='find_peaks',
-#                                       showfig=True,
-#                                       Xaxis=x_axis) 
 
 D = dEXP.ridges_minmax(XFs, YFs, mesh, p1_s, p2_s,
                                   label=label_prop,
@@ -437,10 +400,10 @@ pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
 plt.xlim([200,600])
 ax.set_xlabel('y (m)')
 ax.set_ylabel('elevation\n(m)')
-plt.savefig('fig3a.png', dpi=450)
-plt.savefig('fig3a.pdf', dpi=450)
-plt.savefig('fig3a.svg', dpi=450)
-plt.savefig('fig3a.eps', dpi=450)
+#plt.savefig('fig3a.png', dpi=450)
+#plt.savefig('fig3a.pdf', dpi=450)
+#plt.savefig('fig3a.svg', dpi=450)
+#plt.savefig('fig3a.eps', dpi=450)
 # plt.savefig('ridges_raw_field.png', dpi=450)
 
 #%% ------------------------------- filter ridges regionally constrainsted)
@@ -465,52 +428,7 @@ pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)
 
 df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
 
-pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,
-                      ridge_type=[0,1,2],ridge_nb=None)
 
 cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
 cbar.set_label('upwc voltage (V)')
 plt.tight_layout()
-pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)
-plt.xlim([200,600])
-
-
-plt.savefig('ridgesfield.png', dpi=450)
-# square([y1, y2, z1, z2])
-#%%
-
-fig, ax1 = plt.subplots(figsize=(15,3))
-
-plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax1, Xaxis=x_axis,
-          Vminmax=[0,0.0125], p1p2=p)
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
-
-df_fit = dEXP.fit_ridges(df_f, rmvOutliers=False) # fit ridges on filtered data
-
-ax2 = pEXP.plot_ridges_sources(df_fit, ax=ax1, z_max_source=-max_elevation,
-                      ridge_type=[0,1,2],ridge_nb=None)
-
-labels_ax = ax.get_yticks() 
-labels_ax= labels_ax[labels_ax>0]
-
-labels_ax2 = ax2.get_yticks() 
-labels_ax2= labels_ax2[labels_ax2<0]
-
-ax.set_yticks(labels_ax)
-ax2.set_yticks(labels_ax2)
-
-# Adjust the plotting range of two y axes
-org1 = 0.0  # Origin of first axis
-org2 = 0.0  # Origin of second axis
-pos = 0.2  # Position the two origins are aligned
-align.yaxes(ax1, org1, ax2, org2, pos)
-
-
-cbar = plt.colorbar(cmap,shrink=0.25, pad=0.04)
-cbar.set_label('upwc voltage (V)')
-plt.tight_layout()
-pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax1)
-plt.xlim([200,600])
-
-
-plt.savefig('ridgesfield.png', dpi=450)
