@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/266739726.svg)](https://zenodo.org/badge/latestdoi/266739726)
+
 # pydEXP
 
 pyDEXP is a open-source python package aiming at processing potential field data using the dEXP theory formulated by Fedi et al., 2012. The package largely benefits from the imaging methods module of the Fatiando a terra open-source python library.
