@@ -22,4 +22,4 @@ https://dexp-imaging.readthedocs.io/en/latest/
 
 ### Cite
 
-One article stemming from this work is in preparation for GRL. All data and codes to reproduce results are located in the folder notebook_GRL
+One article stemming from this work is in preparation for [JGR](https://agupubs.onlinelibrary.wiley.com/journal/21699356?utm_source=google&utm_medium=paidsearch&utm_campaign=R3MR425&utm_content=EarthSpaceEnvirSci&gclid=EAIaIQobChMI7rHW38Oj-QIVxITVCh1ygABKEAAYASAAEgLZYPD_BwE). All data and codes to reproduce results are located in the folder notebook_JGR
