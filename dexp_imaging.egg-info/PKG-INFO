@@ -1,0 +1,57 @@
+Metadata-Version: 2.1
+Name: dexp-imaging
+Version: 0.1.0.dev0
+Summary: Potential field inversion of MALM data
+Author: Benjamin Mary
+Author-email: benjamin.mary@unipd.it
+License: MIT
+Description-Content-Type: text/markdown
+
+[![DOI](https://zenodo.org/badge/266739726.svg)](https://zenodo.org/badge/latestdoi/266739726)
+
+# pydEXP
+
+pyDEXP is a open-source python package aiming at processing potential field data using the dEXP theory formulated by Fedi et al., 2012. The package largely benefits from the imaging methods module of the Fatiando a terra open-source python library.
+
+**References**
+
+* Uieda, L., V. C. Oliveira Jr, and V. C. F. Barbosa (2013), Modeling the Earth with Fatiando a Terra, Proceedings of the 12th Python in Science Conference, pp. 91 - 98.
+* Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1
+
+### Documentation
+
+Many application examples can be found in the online documentation.
+https://dexp-imaging.readthedocs.io/en/latest/
+
+
+## Install
+
+
+Create a new environment:
+```shell
+conda env create -f environment.yml
+```
+
+Activate this environment:
+```shell
+conda activate pydexp
+```
+
+Install pydexp from setup.cfg:
+```shell
+pip install -e .
+```
+
+Update pydexp:
+```shell
+conda env update --file environment.yml --prune
+```
+
+
+### Dependencies
+* pygimli (for the ERT and MALM forward modelling)
+* fatiando 0.5 (for derivation of the potential field and upward continuation)
+
+### Cite
+
+One article stemming from this work is in preparation for [JGR](https://agupubs.onlinelibrary.wiley.com/journal/21699356?utm_source=google&utm_medium=paidsearch&utm_campaign=R3MR425&utm_content=EarthSpaceEnvirSci&gclid=EAIaIQobChMI7rHW38Oj-QIVxITVCh1ygABKEAAYASAAEgLZYPD_BwE). All data and codes to reproduce results are located in the folder notebook_JGR

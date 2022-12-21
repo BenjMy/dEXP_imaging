@@ -91,7 +91,8 @@ def ridges_minmax_plot(
 
     """
     if showfig == True:
-        plt.figure()
+        ax = plt.figure()
+
 
     method_peak = "find_peaks"
     x_resolution = len(x)
@@ -192,6 +193,8 @@ def ridges_minmax_plot(
                 )
                 # plt.scatter(MinMax_peaks[ind],0,color= 'r')
             plt.legend()
+            
+    return ax
 
 
 def ridges_minmax(

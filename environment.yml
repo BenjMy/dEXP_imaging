@@ -1,0 +1,24 @@
+name: pydexp
+channels:
+  - conda-forge
+  - defaults
+  - gimli
+dependencies:
+- python==3.7
+#- pgcore >= 1.2.4
+- pip
+#- spyder
+#- pyvista=0.24
+- pip:
+  - numpy
+  - scipy
+  - matplotlib
+  - jupyter
+  - sphinx
+  - sphinx-gallery
+  - sphinx_bootstrap_theme
+  - numpydoc
+  - pandas
+  - mpl_axes_aligner
+
+

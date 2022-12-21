@@ -54,10 +54,17 @@ DF_FIT = []
 XXZZ = []
 CTm = []
 
-filenames = ['MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0',
-              'MSoilR10AnoR1Z-13.75W15H2.5L5S0Noise0',
-              'MSoilR100AnoR1Z-13.75W15H2.5L5S0Noise0',
-              'MSoilR1000AnoR1Z-13.75W15H2.5L5S0Noise0']
+# filenames = ['MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0',
+#               'MSoilR10AnoR1Z-13.75W15H2.5L5S0Noise0',
+#               'MSoilR100AnoR1Z-13.75W15H2.5L5S0Noise0',
+#               'MSoilR1000AnoR1Z-13.75W15H2.5L5S0Noise0']
+
+
+filenames = ['MSoilR100AnoR1Z-13.75W5H2.5L5S0Noise1',
+             # 'MSoilR100AnoR1Z-13.75W5H2.5L5S0Noise10', # 10% of noise
+             # 'MSoilR100AnoR1Z-13.75W5H2.5L5S0Noise20', # 20% of noise
+             # 'MSoilR100AnoR1Z-13.75W5H2.5L5S0Noise10'] # use derivative order 1
+             ]
 
 # filenames = ['MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0',
 #               'MSoilR10AnoR1Z-13.75W15H2.5L5S0Noise0']
@@ -71,6 +78,8 @@ for fi in filenames:
     xp,yp,U = gridder.interp(x_raw,y_raw,U_raw,shape)
     
     
+    print(U[-1])
+    
     parameters = para.set_par(shape=shape,max_elevation=abs(maxdepth))
     interp = True
     scaled = parameters[0]
@@ -82,10 +91,11 @@ for fi in filenames:
     #%%
     # ridges analysis parameters
     nlay = 25
-    max_elevation = 30
-    minAlt_ridge = max_elevation*0.05
-    maxAlt_ridge = max_elevation*0.65
-    
+    max_elevation = 37.5
+    # minAlt_ridge = max_elevation*0.05
+    # maxAlt_ridge = max_elevation*0.65
+    minAlt_ridge = 0
+    maxAlt_ridge = max_elevation
     interp = True
     smooth = False 
     
@@ -128,7 +138,7 @@ for fi in filenames:
     #                                       method_peak='find_peaks')  
     
     # or  find_peaks or peakdet or spline_roots
-    dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+    dfI,dfII, dfIII, ax  = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                           label=label_prop,
                                           fix_peak_nb=5,
                                           method_peak='find_peaks',
@@ -173,47 +183,53 @@ for fi in filenames:
 
 i = 0
 fig, ax = plt.subplots(figsize=(15,3))
-pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
+pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax, markerMax=False)
 dfI_f,dfII_f,dfIII_f = DF_F[i]
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
 pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
+                          ridge_type=[0,1,2],ridge_nb=None, auto=False)
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+ax.set_xlabel('x (m)')
+plt.savefig('fig_SI_noise1.svg', dpi=450)
 
     
-i = 1
-fig, ax = plt.subplots(figsize=(15,3))
-pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
-dfI_f,dfII_f,dfIII_f = DF_F[i]
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
-pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
-x1, x2, z1, z2 = XXZZ[i]
-square([x1, x2, z1, z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+# i = 1
+# fig, ax = plt.subplots(figsize=(15,3))
+# pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax, markerMax=False)
+# dfI_f,dfII_f,dfIII_f = DF_F[i]
+# pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
+# pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
+#                           ridge_type=[0,1,2],ridge_nb=None, auto=False)
+# x1, x2, z1, z2 = XXZZ[i]
+# square([x1, x2, z1, z2])
+# plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+# ax.set_xlabel('x (m)')
+# plt.savefig('fig_SI_noise10.svg', dpi=450)
 
 
-i = 2
-fig, ax = plt.subplots(figsize=(15,3))
-pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
-dfI_f,dfII_f,dfIII_f = DF_F[i]
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
-pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
-x1, x2, z1, z2 = XXZZ[i]
-square([x1, x2, z1, z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+# i = 2
+# fig, ax = plt.subplots(figsize=(15,3))
+# pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax, markerMax=False)
+# dfI_f,dfII_f,dfIII_f = DF_F[i]
+# pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
+# pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
+#                           ridge_type=[0,1,2],ridge_nb=None, auto=False)
+# x1, x2, z1, z2 = XXZZ[i]
+# square([x1, x2, z1, z2])
+# plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+# ax.set_xlabel('x (m)')
+# plt.savefig('fig_SI_noise20.svg', dpi=450)
 
-
-i = 3
-fig, ax = plt.subplots(figsize=(15,3))
-pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax) #, ldg=)
-dfI_f,dfII_f,dfIII_f = DF_F[i]
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
-pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
-                          ridge_type=[0,1,2],ridge_nb=None)
-x1, x2, z1, z2 = XXZZ[i]
-square([x1, x2, z1, z2])
-plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+# # i = 3
+# fig, ax = plt.subplots(figsize=(15,3))
+# pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax, markerMax=False)
+# dfI_f,dfII_f,dfIII_f = DF_F[i]
+# pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=False)   
+# pEXP.plot_ridges_sources(DF_FIT[i], ax=ax, z_max_source=-max_elevation*1.2,
+#                           ridge_type=[0,1,2],ridge_nb=None, auto=False)
+# x1, x2, z1, z2 = XXZZ[i]
+# square([x1, x2, z1, z2])
+# plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
+# ax.set_xlabel('x (m)')

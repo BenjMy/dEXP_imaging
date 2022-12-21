@@ -14,6 +14,41 @@ pyDEXP is a open-source python package aiming at processing potential field data
 Many application examples can be found in the online documentation.
 https://dexp-imaging.readthedocs.io/en/latest/
 
+cond
+## Install
+
+
+Create a new environment:
+```shell
+conda env create -f environment.yml
+```
+
+Activate this environment:
+```shell
+conda activate pydexp
+```
+
+Install pydexp from setup.py:
+```shell
+python setup.py develop
+```
+
+
+Install pygimli from setup.py:
+```shell
+git clone https://github.com/gimli-org/gimli
+cd gimli
+conda develop .
+```
+
+
+
+
+
+Update pydexp:
+```shell
+conda env update --file environment.yml --prune
+```
 
 
 ### Dependencies

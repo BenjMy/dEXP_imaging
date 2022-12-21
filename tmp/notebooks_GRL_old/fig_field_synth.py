@@ -202,18 +202,18 @@ fig, ax1 = plt.subplots(figsize=(15,3))
 
 plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax1, Xaxis=x_axis,
               Vminmax=[0,0.35], p1p2=p)
-pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True,legend=False)
 
 df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
 
 ax2 = pEXP.plot_ridges_sources(df_fit, ax=ax1, z_max_source=-max_elevation*2,
                           ridge_type=[0,1,2],ridge_nb=None)
 
-cbar = plt.colorbar(cmap,shrink=0.7)
-cbar.set_label('upwc voltage ($V.m^2$)')
+#cbar = plt.colorbar(cmap,shrink=0.7)
+#cbar.set_label('upwc voltage ($V.m^2$)')
 plt.tight_layout()
 #pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax1)
-plt.xlim([200,600])
+plt.xlim([250,500])
 ax1.set_ylim([0,30])
 ax2.set_ylim([-30,0])
 
@@ -244,3 +244,53 @@ else:
 
 
 plt.savefig('ridges_' + savename + '.png', dpi=450)
+
+#%%
+
+fig, ax1 = plt.subplots(figsize=(15,3))
+
+plt, cmap = pEXP.plot_xy(mesh, label=label_prop, ax=ax1, Xaxis=x_axis,
+              Vminmax=[0,0.35], p1p2=p)
+pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
+
+df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
+
+ax2 = pEXP.plot_ridges_sources(df_fit, ax=ax1,# z_max_source=-max_elevation*2,
+                          ridge_type=[0,1,2],ridge_nb=None,
+                          z_max_source=-40)
+
+#cbar = plt.colorbar(cmap,shrink=0.7)
+#cbar.set_label('upwc voltage ($V.m^2$)')
+plt.tight_layout()
+#pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax1)
+plt.xlim([250,500])
+ax1.set_ylim([0,30])
+ax2.set_ylim([-40,0])
+
+labels_ax1 = ax1.get_yticks() 
+labels_ax1= labels_ax1[labels_ax1>0]
+
+labels_ax2 = ax2.get_yticks() 
+labels_ax2= labels_ax2[labels_ax2<0]
+
+ax1.set_yticks(labels_ax1)
+ax2.set_yticks(labels_ax2)
+
+# Adjust the plotting range of two y axes
+org1 = 0.0  # Origin of first axis
+org2 = 0.0  # Origin of second axis
+pos = 0.5  # Position the two origins are aligned
+align.yaxes(ax1, org1, ax2, org2, pos)
+
+
+
+#ax2.spines['right'].set_position(('axes', 400))
+
+if x_axis=='y':
+    square([xA_r_new[0], xA_r_new[1], z1, z2])
+else:   
+    square([yA_r[0], yA_r[1], z1, z2])
+
+ax.set_xlim([250,500])
+plt.savefig('ridges_' + savename + '.png', dpi=450)
+

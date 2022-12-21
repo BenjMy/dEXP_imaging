@@ -21,8 +21,11 @@ import lib.plot_dEXP as pEXP
 import lib.utils_dEXP as uEXP
 
 # import exemples.fwd_mag_sphere as magfwd
-import notebooks_GRL.load_MALM_model as MALMmod
-import notebooks_GRL.load_MALM_real as MALMreal
+
+import notebooks_JGR.loadmalm.load_MALM_model as MALMmod
+import notebooks_JGR.loadmalm.load_MALM_real as MALMreal
+# import notebooks_GRL.load_MALM_model as MALMmod
+# import notebooks_GRL.load_MALM_real as MALMreal
 
 import lib.set_parameters as para
 
@@ -55,10 +58,21 @@ mirror = True
 #               'E:/Padova/Redaction/Articles/10_InversionUsingGravityPotMethod/data/ph_low_top_12.5m/'
 #               ]
 
-for i, file in enumerate(file):
+path2files =  ['./data/landfill_synthdata2invert/dexp/Ano1ph/',
+               './data/landfill_synthdata2invert/dexp/Ano1ph_reviewer2/',
+               './data/landfill_synthdata2invert/dexp/Ano0ph/',
+               './data/landfill_synthdata2invert/dexp/Ano0ph_reviewer2/',
+               ]
+
+
+for i, path in enumerate(path2files):
     
-    print(i,file)
-    path =  path2files[i] 
+    print(i,path2files)
+    # path =  path2files[i] 
+    
+    file = path.split('/')[-2]
+
+
     dataset = MALMmod.load_MALM_Landfill_model(path=path, 
                                         filename=file,
                                         shape = (300,300),

@@ -54,10 +54,19 @@ XXZZ = []
 CTm = []
 
 
-filenames = ['MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0',
-             'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.01', # 10% of noise
-             'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.01', # use smooth fct
-             'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.01'] # use derivative order 1
+# filenames = ['MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0',
+#              'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.01', # 10% of noise
+#              'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.02', # 20% of noise
+#              'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.02', # use smooth fct
+#              'MSoilR1000.0AnoR1Z-13.75W5H2.5L5Noise0.02'] # use derivative order 1
+
+
+
+
+filenames = ['MSoilR10AnoR10Z-13.75W5H2.5L5S0Noise0',
+             'MSoilR100AnoR1Z-13.75W5H2.5L5S0Noise10', # 10% of noise
+             'MSoilR100AnoR1Z-13.75W5H2.5L5S0Noise20', # 20% of noise
+             'MSoilR100AnoR10Z-13.75W5H2.5L5S0Noise0'] # use derivative order 1
 
 for i, fi in enumerate(filenames):
     x_raw, y_raw, z_raw, U_raw, maxdepth, shape_raw, p1, p2, SimName, ano_prop = MALM.load_MALM_sens3d(filename='./loadmalm/' +
@@ -88,9 +97,9 @@ for i, fi in enumerate(filenames):
     #%%
     # Anomalies properties
     # HDWL : height, Depth, Width (x), Lenght (y)
-    x1, x2, z1, z2 = [max(x_raw)/2-ano_prop['HWDL'][1]/2,max(x_raw)/2 + ano_prop['HWDL'][1]/2,
-                    ano_prop['HWDL'][2]+ ano_prop['HWDL'][0]/2,
-                    ano_prop['HWDL'][2]- ano_prop['HWDL'][0]/2]
+    x1, x2, z1, z2 = [max(x_raw)/2-ano_prop['HWD'][1]/2,max(x_raw)/2 + ano_prop['HWD'][1]/2,
+                    ano_prop['HWD'][2]+ ano_prop['HWD'][0]/2,
+                    ano_prop['HWD'][2]- ano_prop['HWD'][0]/2]
     xxzz = [x1, x2, z1, z2]
     CT = ano_prop['SoilR']/ano_prop['AnoR']
     
@@ -134,7 +143,7 @@ for i, fi in enumerate(filenames):
     #                                       method_peak='find_peaks')  
     
     # or  find_peaks or peakdet or spline_roots
-    dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+    dfI,dfII, dfIII, ax = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                           label=label_prop,
                                           fix_peak_nb=fix_peak_nb,
                                           method_peak='find_peaks',
@@ -196,6 +205,7 @@ x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 plt.title('10% of noise')
+plt.savefig('10_noise_q0.png', dpi=450)
 
 i = 2
 fig, ax = plt.subplots(figsize=(15,3))
@@ -208,6 +218,7 @@ x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 plt.title('10% of noise - smoothed')
+plt.savefig('10_noise_q0_smooth.png', dpi=450)
 
 
 i = 3
@@ -222,6 +233,8 @@ square([x1, x2, z1, z2])
 plt.annotate(CTm[i],[(x1 + x2)/2, (z1+z2)/2])
 plt.title('10% of noise - q-order=1')
 
+plt.tight_layout(pad=0.2, h_pad=-8.2)
+plt.savefig('10_noise_q1.png', dpi=450)
 
 # # Loop on source depth
 # fig, axs = plt.subplots(1,len(filenames))

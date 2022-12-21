@@ -21,8 +21,8 @@ import lib.plot_dEXP as pEXP
 import lib.utils_dEXP as uEXP
 
 # import exemples.fwd_mag_sphere as magfwd
-import notebooks_GRL.load_MALM_model as MALMmod
-import notebooks_GRL.load_MALM_real as MALMreal
+import loadmalm.load_MALM_model as MALMmod
+import loadmalm.load_MALM_real as MALMreal
 
 import lib.set_parameters as para
 

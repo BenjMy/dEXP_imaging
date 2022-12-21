@@ -125,7 +125,7 @@ def label2unit(label):
                 
     return unit, shrinkv
     
-def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
+def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=True, **kwargs):
     """
     Get vertical xy section of the mesh at max/2 and plot it
 
@@ -317,8 +317,11 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=False, **kwargs):
     # plt.suptitle(strname + '_xy_' + str(ZZ), fontsize=15)
     # plt.savefig(pathFig +strname + '_xy_' + str(ZZ) + '.png')
     # ax.set_aspect(5)
+    if markerMax:
+        return plt, cmap, z_exp, x_axis_exp
+    else:
+        return plt, cmap
 
-    return plt, cmap
 
 
 def slice_mesh(x, y, mesh, label, p1, p2, ax=None, interp=True, **kwargs):
@@ -641,13 +644,14 @@ def plot_ridges_harmonic(
     else:
         ax.get_legend().remove()
 
-    ax.set_ylabel("Elevation (m)", loc="top")
+    ax.set_ylabel("Elevation (m)")
 
     return ax
 
 
 def plot_ridges_sources(
-    df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_source=None, **kwargs
+    df_fit, ax=None, ridge_type=None, ridge_nb=None, z_max_source=None, auto=False,
+    **kwargs
 ):
     """
     Plot ridges in the source domain and observe intersection point
@@ -695,11 +699,13 @@ def plot_ridges_sources(
                 name_col = df_fit[r_type[1]].columns[r_nb[1]][0]
                 # print(name_col)
                 # print(r_type[1])
-                ax2.plot(
-                    df_fit[r_type[1]][name_col]["x"],
-                    df_fit[r_type[1]][name_col]["y"],
-                    "k--",
-                )
+                                
+                if auto:
+                    ax2.plot(
+                        df_fit[r_type[1]][name_col]["x"],
+                        df_fit[r_type[1]][name_col]["y"],
+                        "k--",
+                    )
 
                 # print(df_fit[1]['R1 Vert.EX_xpos1']['x'])
                 # # plt.plot(df_fit[r_type[1]][r_nb[1]])
@@ -729,7 +735,7 @@ def plot_ridges_sources(
 
         color = "tab:red"
         ax2.set_ylabel(
-            "depth\n(m)", color=color, loc="bottom"
+            "depth\n(m)", color=color,
         )  # we already handled the x-label with ax1
         ax2.set_xlabel("y (m)")  # we already handled the x-label with ax1
         # ax2.xaxis.set_label_coords(0,-3000)

@@ -209,8 +209,8 @@ for i, ui in enumerate(U):
     ax_list[0].set_visible(True)
 
     ax_list[0].set_ylabel('voltage u  \n (V)')
-    ax_list[1].set_ylabel('voltage\n ($V.m^{-2}$)')
-    ax_list[2].set_ylabel('voltage  \n ($V.m^{-2}$)')
+    ax_list[1].set_ylabel('voltage\n ($V.m^{-1}$)')
+    ax_list[2].set_ylabel('voltage  \n ($V.m^{-1}$)')
     
     #ax = plt.gca()
     ax_list[0].xaxis.set_ticklabels([])
@@ -218,9 +218,9 @@ for i, ui in enumerate(U):
     fig 
     
     if i==0:
-       savename= 'fig2a_SI'
+       savename= 'fig2a_SI_subm2'
     else:
-       savename= 'fig2b_SI'
+       savename= 'fig2b_SI_subm2'
 
     fig.savefig(savename+'.png', dpi=400, bbox_inches = "tight")
     fig.savefig(savename+'.svg', dpi=400, bbox_inches = "tight")
@@ -298,8 +298,8 @@ fig, ax1 = plt.subplots(figsize=(15,3))
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt, cmap = pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax1, Xaxis='y',
-          Vminmax=[0,10])
-plt.colorbar(cmap, label='upwc voltage\n($V.m^2$)' )
+          Vminmax=[0,10],markerMax=False)
+# plt.colorbar(cmap, label='upwc voltage\n($V$)' )
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
 
 df_fit = dEXP.fit_ridges(df_f, rmvOutliers=False) # fit ridges on filtered data
@@ -308,9 +308,9 @@ ax2 = pEXP.plot_ridges_sources(DF_FIT[i], ax=ax1, z_max_source=-max_elevation*1.
                       ridge_type=[0,1,2],ridge_nb=None,
                       xmin=100, xmax=250)
 ax1.set_xlabel('x (m)')
-fig.savefig('fig2c_SI.png', dpi=400, bbox_inches = "tight")
-fig.savefig('fig2c_SI.svg', dpi=400, bbox_inches = "tight")
-fig.savefig('fig2c_SI.pdf', dpi=400, bbox_inches = "tight")
+fig.savefig('fig2c_SI_subm2.png', dpi=400, bbox_inches = "tight")
+fig.savefig('fig2c_SI_subm2.svg', dpi=400, bbox_inches = "tight")
+# fig.savefig('fig2c_SI_subm2.pdf', dpi=400, bbox_inches = "tight")
 
 #%% 
 i = 1
@@ -319,8 +319,8 @@ fig, ax1 = plt.subplots(figsize=(15,3))
 x1, x2, z1, z2 = XXZZ[i]
 square([x1, x2, z1, z2])
 plt, cmap = pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax1, Xaxis='y',
-          Vminmax=[0,10])
-plt.colorbar(cmap, label='upwc voltage\n($V.m^2$)' )
+          Vminmax=[0,10],markerMax=False)
+# plt.colorbar(cmap, label='upwc voltage\n($V$)' )
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
 
 df_fit = dEXP.fit_ridges(df_f, rmvOutliers=True) # fit ridges on filtered data
@@ -329,6 +329,6 @@ ax2 = pEXP.plot_ridges_sources(DF_FIT[i], ax=ax1, z_max_source=-max_elevation*1.
                       ridge_type=[0,1,2],ridge_nb=None,
                                             xmin=100, xmax=250)
 ax1.set_xlabel('x (m)')
-fig.savefig('fig2d_SI.png', dpi=400, bbox_inches = "tight")
-fig.savefig('fig2d_SI.svg', dpi=400, bbox_inches = "tight")
-fig.savefig('fig2d_SI.pdf', dpi=400, bbox_inches = "tight")
+fig.savefig('fig2d_SI_subm2.png', dpi=400, bbox_inches = "tight")
+fig.savefig('fig2d_SI_subm2.svg', dpi=400, bbox_inches = "tight")
+# fig.savefig('fig2d_SI.pdf', dpi=400, bbox_inches = "tight")
