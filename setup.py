@@ -16,7 +16,7 @@ if __name__ == '__main__':
         author='Benjamin Mary',
         author_email='benjamin.mary@unipd.it',
         license='MIT',
-        packages=find_packages("lib","fatiando"),
+        packages=find_packages("lib","dEXP"),
         #package_dir={'': 'lib'},
         install_requires=['csaps','future']
         #     'dicttoxml',
