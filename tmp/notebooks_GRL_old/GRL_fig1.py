@@ -16,7 +16,7 @@ from fatiando import gridder, mesher, utils
 import lib.utils_dEXP as uEXP
 import lib.plot_dEXP as pEXP
 
-import notebooks_GRL.load_MALM_model as MALM
+import notebooks_JGR.loadmalm as MALM
 
 
 # MainPath= 'E:/Padova/Software/SourceInversion/Potential_field_imaging/dEXP_imaging/examples_in_prep/'
@@ -206,7 +206,7 @@ X_raw, Y_raw, U_raw = np.genfromtxt(filename, delimiter='', unpack=True)
 #E:\Padova\Redaction\Articles\1b_InversionUsingGravityPotMethod\notebooks\data\phNO
 
 # path2files = 'data/ph_low_top_2m/'
-path2files = '/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/notebooks_GRL/data/phNO/'
+path2files = '/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/notebooks_JGR/data/phNO/'
 filename= 'NoAno'
 # # path2files = 'E:/Padova/Experiments/GC_2019_Landfill_Porto_MALM/Test/ph_low/'
 #filename= 'Ano'
@@ -248,6 +248,7 @@ ax.plot(l0[:,0],l0[:,1],l0[:,2],'g--')
 ax.plot([p1[0],p2[0]],[p1[1],p2[1]],color='m')
 
 
+#%%
 fig, ax = plt.subplots()
 sc=ax.scatter(coordErx[RemLineNb], coordEry[RemLineNb],
               color='red', 
@@ -267,10 +268,11 @@ ax.plot(l0[:,0],l0[:,1],'g--')
 ax.plot([p1[0]+349.71,p2[0]+349.71],[p1[1],p2[1]-200],color='m',
               label='symetry plan')
 #ax.axis('equal')
-ax.set_xlim([200,420])
+# ax.set_xlim([200,420])
 leg = ax.legend(loc='upper left', frameon=False);
-plt.savefig('fig2.png',
-         dpi=450)
+# plt.savefig('fig2.png',
+#          dpi=450)
+plt.show()
 np.savetxt('elecs_ref.txt',np.array([coordErx,coordEry]).T)
 
 #%%

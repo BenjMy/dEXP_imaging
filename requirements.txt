@@ -9,5 +9,6 @@ numpydoc
 pandas
 mpl_axes_aligner
 future
-# pygimli is installed via conda
+# pygimli is installed via conda conda install -c gimli -c conda-forge pygimli=1.1.0
+# spyder is installed via conda conda install spyder=4.1.4
 # fatiando src files are fetched

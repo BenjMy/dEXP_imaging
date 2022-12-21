@@ -1,0 +1,49 @@
+﻿pygimli.solver
+==============
+
+.. currentmodule:: pygimli.solver
+
+.. automodule:: pygimli.solver
+
+Overview
+--------
+
+
+
+
+
+
+
+
+.. rubric:: Classes
+
+.. autosummary::
+
+
+  WorkSpace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Classes
+-------
+
+
+.. rubric:: WorkSpace
+.. autoclass:: WorkSpace
+  :members:
+  :undoc-members:
+  :special-members: __init__
+  :inherited-members:
+

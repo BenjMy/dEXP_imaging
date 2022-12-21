@@ -362,6 +362,8 @@ def ridges_minmax(
                     )
                     # plt.scatter([MinMax_peaks[ind]],0,color='g')
                 plt.legend()
+                ax_list = plt.gca()
+                ax_list.xaxis.set_ticklabels([])
         else:
             ax = None
 
@@ -429,6 +431,9 @@ def ridges_minmax(
                     )
                     # plt.scatter([MinMax_peaks[ind]],0,color='g')
                 plt.legend()
+                ax_list = plt.gca()
+                ax_list.xaxis.set_ticklabels([])
+
 
     for i, depth in enumerate(depths - z[0]):  # Loop for RII extremas
         upw_u_l = upw_u[i, :]  # analysing extrema layers by layers from top to bottom
@@ -498,6 +503,7 @@ def ridges_minmax(
                     )
                     # plt.scatter([MinMax_peaks[ind]],0,color='g')
                 plt.legend()
+                plt.tight_layout()
 
     # R = [np.array(RI_minmax), np.array(RII_minmax), np.array(RIII_minmax)]
     dfI, dfII, dfIII = _ridges_2_df(RI_minmax, RII_minmax, RIII_minmax)
@@ -722,42 +728,6 @@ def filter_ridges(
 
     """
 
-    # -----------------------------------------------------------------------#
-    # Remove outliers
-    # for key, value in kwargs.items():
-    #     if key == 'rmvOutliers':
-    #         rmvOutliers = value
-    #         if rmvOutliers==True:
-
-    #             for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
-
-    #             _ , filtered_entries, quartileSet = _removeOutliers(dfII_sort[k[1]])
-
-    # -----------------------------------------------------------------------#
-    # _Split_Outliers
-    # for key, value in kwargs.items():
-    #     if key == 'Split_Outliers':
-    #         Split_Outliers = value
-    #         if Split_Outliers==True:
-
-    #             RII_split = []
-    #             for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
-    #                 dfII_sort = dfII.sort_values(by=k[1])
-    #                 jumps = _jumpAnalysis(dfII_sort[k[1]])
-
-    #                 if len(jumps)==0:
-    #                     RII_split.append(np.array(dfII_sort[k[1]]))
-
-    #                 for j in range(len(jumps)):
-    #                     if j==0:
-    #                         RII_split.append(np.array(dfII_sort[k[1]].iloc[0:jumps[j]]))
-    #                         RII_split.append(np.array(dfII_sort[k[1]].iloc[jumps[j]:-1]))
-
-    #                     elif j>0:
-    #                         RII_split.append(np.array(dfII_sort[k[1]].iloc[jumps[j-1]:jumps[j]]))
-    #                         RII_split.append(np.array(dfII_sort[k[1]].iloc[jumps[j]:-1]))
-
-    #                 RII_split.append(np.hstack([[depth],[]]))
 
     height1f, height2f, height3f = [None, None, None]
     for key, value in kwargs.items():
@@ -820,40 +790,6 @@ def filter_ridges(
                 dfIIIf[k[1]].iloc[id_2NaN] = np.nan
                 if height3f is not None:
                     height3f[k[1]].iloc[id_2NaN] = np.nan
-
-            # idfI_col_2rmv = []
-            # for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
-            #     if dfI[k[1]].any()< minx:
-            #     id_2NaN = np.where(dfI[k[1]]< minx)
-            #     dfI[k[1]].iloc[id_2NaN] = np.nan
-            # dfI = dfI.drop(dfI.columns[idfI_col_2rmv], axis=1)
-
-            # idfII_col_2rmv = []
-            # for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
-            #     if dfII[k[1]].any()< minx:
-            #         idfII_col_2rmv.append(k[0]+1)
-
-            # dfII = dfII.drop(dfII.columns[idfII_col_2rmv], axis=1)
-
-            # idfIII_col_2rmv = []
-            # for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
-            #     if dfIII[k[1]].any()< minx:
-            #         idfIII_col_2rmv.append(k[0]+1)
-
-            # dfIII = dfIII.drop(dfIII.columns[idfIII_col_2rmv], axis=1)
-
-        # if key == 'xmax':
-        #     maxx = value
-
-        #     for k in enumerate(dfI.columns[1:]): # loop over ridges of the same familly
-        #         if dfI[k[1]].any()> maxx:
-        #             dfI = dfI.drop(dfI.columns[k[0]+1], axis=1)
-        #     for k in enumerate(dfII.columns[1:]): # loop over ridges of the same familly
-        #         if dfII[k[1]].any()> maxx:
-        #             dfII = dfII.drop(dfII.columns[k[0]+1], axis=1)
-        #     for k in enumerate(dfIII.columns[1:]): # loop over ridges of the same familly
-        #         if dfIII[k[1]].any()> maxx:
-        #             dfIII = dfIII.drop(dfIII.columns[k[0]+1], axis=1)
 
     # -----------------------------------------------------------------------#
     # remove lines NaN (produce when a peak defined only for some elevation levels)
@@ -1338,7 +1274,7 @@ def dEXP(x, y, z, data, shape, zmin, zmax, nlayers, qorder=0, SI=1):
     return mesh_dexp, label_prop
 
 
-def dEXP_ratio(x, y, z, data, shape, zmin, zmax, nlayers, qorders=[1, 0]):
+def dEXP_ratio(x, y, z, data, shape, zmin, zmax, nlayers, qorders=[1, 0], returnField=False):
     """
     DEXP ratio model (NOT YET validated)
     Abbas, M. A., and Fedi, M. (2014). Automatic DEXP
@@ -1389,14 +1325,26 @@ def dEXP_ratio(x, y, z, data, shape, zmin, zmax, nlayers, qorders=[1, 0]):
         # qorder vertical derivate of the continued field
         upw_f_dq_0 = transform.derivz(x, y, upw_f, shape, order=qorders[0])
         upw_f_dq_1 = transform.derivz(x, y, upw_f, shape, order=qorders[1])
+        
+        # upw_f_dq_0 = transform.derivy(x, y, upw_f, shape, order=qorders[0])
+        # upw_f_dq_1 = transform.derivy(x, y, upw_f, shape, order=qorders[1])
+        
+        
         ratio = upw_f_dq_0 / upw_f_dq_1
         # the continued field weigted (=DEXP)
         upw_f_dq_w = weight * ratio
+        # upw_f_dq_w =  ratio
         csd.extend(upw_f_dq_w)
 
     label_prop = "dexp_q" + str(qorders)
     mesh_dexp.addprop(label_prop, np.array(csd))
-    return mesh_dexp, label_prop
+    
+    if returnField:
+        return mesh_dexp, label_prop, upw_f_dq_0, upw_f_dq_1, weight, upw_f_dq_w
+    else:
+        return mesh_dexp, label_prop
+
+
 
 
 # def auto_dEXP():
@@ -1906,7 +1854,7 @@ def butter_lowpass_filter(p_up, cutoff, nyq, order):
     return y
 
 
-def smooth2d(x, y, U, sigma=10):
+def smooth2d(x, y, U, sigma=10,plot=False):
 
     plt.figure()
     plt.subplot(1, 2, 1)
@@ -1920,10 +1868,12 @@ def smooth2d(x, y, U, sigma=10):
 
     U_f = np.copy(U)
     U_f = U2d_f.reshape(U.shape)
-    plt.subplot(1, 2, 2)
-    plt.scatter(x, y, c=U_f, cmap="viridis", vmax=max(U), vmin=min(U))
-    plt.colorbar()
-    plt.axis("square")
+    
+    if plot:
+        plt.subplot(1, 2, 2)
+        plt.scatter(x, y, c=U_f, cmap="viridis", vmax=max(U), vmin=min(U))
+        plt.colorbar()
+        plt.axis("square")
     plt.show()
 
     return U_f

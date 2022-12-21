@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software design &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Software design</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/gimli/doc/design.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="software-design">
+<span id="sec-design"></span><h1>Software design<a class="headerlink" href="#software-design" title="Permalink to this headline"></a></h1>
+<p>In applied geophysics, a lot of research efforts are directed towards the
+integration of different physical models and combined inversion approaches to
+estimate multi-physical subsurface parameters. Such approaches often require
+coupling of different software packages and file-based data exchange. The idea
+of pyGIMLi is to present a very flexible framework for geophysical modelling and
+inversion, which allows standard and customized modelling and inversion
+workflows to be realized in a reproducible manner.
+levels.</p>
+<p>The software is written in Python on top of a C++ core library, which allows a
+combination of flexible scripting and numerical efficiency. pyGIMLi uses
+selected external dependencies for quality constrained mesh generation in 2D
+(<a class="reference internal" href="glossary.html#term-Triangle"><span class="xref std std-term">Triangle</span></a>) and 3D (<a class="reference internal" href="glossary.html#term-Tetgen"><span class="xref std std-term">Tetgen</span></a>) and visualization in 2D
+(<a class="reference internal" href="glossary.html#term-Matplotlib"><span class="xref std std-term">Matplotlib</span></a>) and 3D (<a class="reference internal" href="glossary.html#term-Paraview"><span class="xref std std-term">Paraview</span></a>) for example. For solving linear
+systems we use the open-source collection <a class="reference internal" href="glossary.html#term-SuiteSparse"><span class="xref std std-term">SuiteSparse</span></a>
+<a href="#id1"><span class="problematic" id="id2">:cite:`ChenDavHag+2009`</span></a>, which contains multi-frontal direct and iterative
+solvers as well as reordering algorithms.</p>
+<figure class="align-center" id="fig-gimliblock">
+<img alt="../../_images/pg_design.png" class="wrap-fig" src="../../_images/pg_design.png" />
+</figure>
+<p>pyGIMLi is organized in three different abstraction levels:</p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Application</span> <span class="pre">level</span></span></dt>
+<dd><p>In the application level, ready-to-use method managers and frameworks are
+provided. Method managers (<code class="xref py py-mod docutils literal notranslate"><span class="pre">pygimli.manager</span></code>) hold all relevant
+functionality related to a geophysical method. A method manager can be
+initialized with a data set and used to analyze and visualize this data set,
+create a corresponding mesh, and carry out an inversion. Various method
+managers are available in <a class="reference internal" href="pygimliapi/_generated/pygimli.physics.html#module-pygimli.physics" title="pygimli.physics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygimli.physics</span></code></a>. Frameworks
+(<a class="reference internal" href="pygimliapi/_generated/pygimli.frameworks.html#module-pygimli.frameworks" title="pygimli.frameworks"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygimli.frameworks</span></code></a>) are generalized abstractions of standard and
+advanced inversions tasks such as time-lapse or joint inversion for
+example. Since frameworks communicate through a unified interface, they are
+method independent.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Modelling</span> <span class="pre">level</span></span></dt>
+<dd><p>In the modelling level, users can set up customized forward operators that
+map discretized parameter distributions to a data vector. Once defined, it
+is straightforward to set up a corresponding inversion workflow or combine
+the forward operator with existing ones.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Equation</span> <span class="pre">level</span></span></dt>
+<dd><p>The underlying equation level allows to directly access the finite element
+(<code class="xref py py-func docutils literal notranslate"><span class="pre">pygimli.solver.solveFiniteElements()</span></code>) and finite volume
+(<code class="xref py py-func docutils literal notranslate"><span class="pre">pygimli.solver.solveFiniteVolume()</span></code>) solvers to solve various
+partial differential equations on unstructured meshes, i.e. to approach
+various physical problems with possibly complex 2D and 3D geometries.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

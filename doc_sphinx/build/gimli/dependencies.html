@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prerequisites &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pydEXP
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Prerequisites</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/gimli/dependencies.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="prerequisites">
+<span id="sec-install-pre"></span><h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline"></a></h1>
+<p>To build pyGIMLi from source, the following tools are required:</p>
+<ul>
+<li><p>subversion, git, mercurial, wget, tar</p></li>
+<li><p>cmake &gt;= 2.8.10</p></li>
+<li><p>gcc &gt;= 4.4</p></li>
+<li><p>&gt;=Python-3.5 | &gt;=Python-2.7</p></li>
+<li><p>numpy-dev</p></li>
+<li><p>&gt;=matplotlib-3.0</p></li>
+<li><p>&gt;=clang++-3.6.0 (3.7.0, 3.8.0)</p></li>
+<li><p>libclang-3.7-dev</p></li>
+<li><p>&gt;=llvm-3.6.0 (3.7.0, 3.8.0)</p></li>
+<li><p>libz-dev</p></li>
+<li><p>python-setuptools</p>
+<blockquote>
+<div><p>tested on:</p>
+<ul class="simple">
+<li><p>gentoo x86_64: gcc-4.4.5, gcc-4.5.3, gcc-4.5.4, gcc-4.9.2 gcc-5.3.0</p></li>
+<li><p>Debian 3.2.46-1 x86_64: gcc-4.7.2</p></li>
+<li><p>Ubuntu 16.04 LTS with gcc-5.4.0</p></li>
+<li><p>Arch Linux gcc-5.2.0</p></li>
+<li><p>CentOS</p></li>
+<li><p>MinGW32: gcc-4.6.2/4, gcc-4.7.2, gcc-5.2.0</p></li>
+<li><p>MinGW64: gcc-4.5.4, gcc-5.2.0, gcc-6.3.0, gcc-7.1.0</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<section id="optional-prerequisites">
+<h2>Optional Prerequisites<a class="headerlink" href="#optional-prerequisites" title="Permalink to this headline"></a></h2>
+<p>These tools can be installed system-wide with your native package manager (i.e.
+apt-get). If not found, the provided build scripts will automatically download
+and compile the necessary components.</p>
+<ul class="simple">
+<li><p>libboost &gt;=1.46 (python) (1.46, 1.48, 1.49, 1.51, 1.52, 1.53, 1.57)</p></li>
+<li><p>blas and lapack for suitesparse (system or auto via cmake)</p></li>
+<li><p>SuiteSparse (<a class="reference external" href="http://faculty.cse.tamu.edu/davis/suitesparse.html">http://faculty.cse.tamu.edu/davis/suitesparse.html</a>)</p></li>
+<li><p>cppunit</p></li>
+<li><p>procps</p></li>
+<li><p>triangle (<a class="reference external" href="http://www.cs.cmu.edu/~quake/triangle.html">http://www.cs.cmu.edu/~quake/triangle.html</a>)</p></li>
+</ul>
+</section>
+<section id="prerequisites-automatically-installed-by-the-installer">
+<h2>Prerequisites automatically installed by the installer<a class="headerlink" href="#prerequisites-automatically-installed-by-the-installer" title="Permalink to this headline"></a></h2>
+<p>These tools are required to create the Python bindings and are likely to be
+outdated in your distribution and should therefore not be installed
+system-wide. The build scripts will install them automatically.</p>
+<ul class="simple">
+<li><p>castxml</p></li>
+<li><p>pygccxml</p></li>
+<li><p>pyplusplus</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

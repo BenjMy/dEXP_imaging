@@ -2,16 +2,21 @@
 Preprocessing of MALM for dEXP
 ------------------------------
 
-This code shows how to remove the influence of the return electrode B and correct as much as it is possible the field before dEXP analysis.
-Calculations used :mod:`utils_dEXP`, while plotting use the :mod:`plot_dEXP` module.
+.. important::
+    This code shows how to remove the influence of the return electrode B and correct as much as it is possible the field before dEXP analysis.
+    Calculations uses :mod:`utils_dEXP`, while plotting uses the :mod:`plot_dEXP` module.
 
-Application on a anomaly of electrical resistivity.
-The model data was created using geometric objects from :mod:`pygimli.meshtools`. The forward simulation of the data was done using :mod:`pygimli.ERTsimulate` module.
+    Application on a anomaly of electrical resistivity (1000 :math:`Omega.m^{-1}` of contrast).
+    The model data was created using geometric objects from :mod:`pygimli.meshtools`. The forward simulation of the data was done using :mod:`pygimli.ERTsimulate` module.
 
 
-.. note::
-
+.. seealso::
     This is part of a larger project aiming at inverting current sources density (see more at: https://icsd-dev.readthedocs.io/en/latest/)
+
+
+.. tip::
+    See getting-started in order to use pyDEXP and reproduce the results. Forward simulation data are available on the Github.
+
 
 
 **References**
@@ -37,6 +42,7 @@ import loadmalm.Load_sens_MALM as MALM
 #%%
 # Import MALM data total field U_{T} = U{a} - U{b}
 # The total voltage is the superposition of the injection +I on electrode A (masse) and injection -I on the return (and remote) electrode B
+
 # filenames = ['MSoilR1000.0AnoR1Z-13.75W15H2.5L5S0Noise0', # Ratio = 1000
 #               'MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0']
 
@@ -117,17 +123,17 @@ for fi in filenames:
     plt.figure()
     plt.subplot(2,1,1)
     plt.scatter(xx, puT, c='b', marker='*', s=1, label='U_{T}')
-    
+
     xx, yy, distance, puA = gridder.profile(xp,yp, uA, p1, p2, 1000)
     plt.scatter(xx, puA, c='k', marker='.', s=1, label='U_{A}')
-    
+
     xx, yy, distance, puT_field_cor = gridder.profile(xp,yp, uT_field_cor, p1, p2, 1000)
     plt.scatter(xx, puT_field_cor,  c='r', marker='^', s=5, label='U_{cor} = U_{T} - U_{B}')
     plt.grid()
     plt.legend()
     plt.xlabel('x (m)')
     plt.ylabel('u (V)')
-    
+
     plt.subplot(2,1,2)
     diff1 = puT - puA
     diff2 = puA - puT_field_cor
@@ -136,6 +142,7 @@ for fi in filenames:
     plt.xlabel('x (m)')
     plt.ylabel('u (V)')
     plt.legend()
+    plt.tight_layout()
 
 #%%
 # Run dEXP over clear and raw field data
@@ -291,6 +298,11 @@ for i, ui in enumerate(U):
 
 
 #%% 
+# differences between ridges identified using the raw MALM and
+# the preprocessed (having removed the current return electrode influence) MALM.
+# Even though the effect on the graphs above seems minimal, so is not for the ridges.
+# The black square defines the anomaly position and extension.
+
 i = 0
 
 dfI_f,dfII_f,dfIII_f = DF_F[i]

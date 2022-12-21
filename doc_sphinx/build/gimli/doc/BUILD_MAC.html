@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building on MAC OS &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Building on MAC OS</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/gimli/doc/BUILD_MAC.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="building-on-mac-os">
+<span id="sec-install-mac"></span><h1>Building on MAC OS<a class="headerlink" href="#building-on-mac-os" title="Permalink to this headline"></a></h1>
+<p>These installation instructions were proposed by Claudio Jordi (ETH Zurich) in a
+<a class="reference external" href="https://github.com/gimli-org/gimli/issues/46#issuecomment-357735129">GitHub issue</a>. Since
+we do not have access to Macs, this has not been tested thorougly. Please
+comment in the issue and let us know if it works.
+know it works in the corresponding GitHub issue.
+For installation instructions for MacOS, please refer to:</p>
+<p>In most cases, the following will suffice to compile pyGIMLi in the current
+directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#========================================</span>
+<span class="c1"># First install:</span>
+<span class="c1"># - Xcode (AppStore)</span>
+<span class="c1"># - XQuartz (https://www.xquartz.org)</span>
+<span class="c1"># - homebrew (https://brew.sh)</span>
+<span class="c1">#========================================</span>
+
+<span class="c1"># Install python3</span>
+
+brew install python3
+
+brew install boost --with-python3
+
+brew install boost-python --with-python3
+
+<span class="c1"># install some prerequisites that are not yet installed (might be more than what is here…)</span>
+
+brew install mercurial
+brew install wget
+
+<span class="c1"># install matplotlib, … using pip3 (for python3)</span>
+
+pip3 install scipy
+pip3 install numpy
+pip3 install matplotlib
+
+<span class="c1"># follow installation instructions from pygimli.org</span>
+
+mkdir -p ~/src
+<span class="nb">cd</span> src
+mkdir -p gimli
+<span class="nb">cd</span> gimli
+git clone https://github.com/gimli-org/gimli.git
+mkdir -p build
+
+<span class="nb">cd</span> build
+
+<span class="c1"># The version (here 3.6.4_2) needs to be set to the installed python3 version</span>
+
+cmake ../gimli -DPYTHON_EXECUTABLE<span class="o">=</span>/usr/local/bin/python3 -DPYTHON_INCLUDE_DIR<span class="o">=</span>/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/include/python3.6m -DPYTHON_LIBRARY<span class="o">=</span>/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/lib/libpython3.6.dylib -DPY_NUMPY<span class="o">=</span>/usr/local/lib/python3.6/site-packages/numpy
+
+<span class="c1"># This was needed for the compilation of some c++ stuff</span>
+<span class="nb">export</span> <span class="nv">CPLUS_INCLUDE_PATH</span><span class="o">=</span>/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/Headers
+
+make -j <span class="m">8</span>
+
+make pygimli
+
+curl -Ls install.pygimli.org <span class="p">|</span> bash
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Conda packages for Mac OS will follow soon.</p>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

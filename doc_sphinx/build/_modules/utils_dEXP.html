@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils_dEXP &mdash; pydEXP v0.1 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> pydEXP<img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/authors.html">Authors</a></li>
+</ul>
+<p><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      <li>utils_dEXP</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for utils_dEXP</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Miscellaneous utility functions.</span>
+
+<span class="sd">@author: Benjamin</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">inf</span>
+<span class="kn">from</span> <span class="nn">fatiando</span> <span class="kn">import</span> <span class="n">gridder</span><span class="p">,</span> <span class="n">mesher</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="kn">import</span> <span class="n">PdfPages</span>
+
+<span class="c1">#%% Functions SPECIFIC FOR MISE-A-LA-MASSE data preparation to dEXP transformation</span>
+
+
+<div class="viewcode-block" id="cor_field_B"><a class="viewcode-back" href="../content/api_core/api.html#utils_dEXP.cor_field_B">[docs]</a><span class="k">def</span> <span class="nf">cor_field_B</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the potential field (electric) produced by a current injection in B (return electrode) for a</span>
+<span class="sd">    given homogeneous electrical resistivity rho.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    * x, y : 1D-arrays</span>
+<span class="sd">        The x and y coordinates of the grid points</span>
+<span class="sd">    * z : float or 1D-array</span>
+<span class="sd">        The z coordinate of the grid points</span>
+<span class="sd">    * u : 1D-array</span>
+<span class="sd">        The potential field at the grid points</span>
+<span class="sd">    * Bu : 1D-array</span>
+<span class="sd">        The position of the return electrode B</span>
+<span class="sd">    * rho : int</span>
+<span class="sd">        The estimated electrical resistivity of the medium</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    u_cor : 1D-arrays</span>
+<span class="sd">        The corrected from the B return electrode influence potential field at the grid points</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># injected current (A)</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">I</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">B</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="p">)</span>  <span class="c1"># distance between B and potential electrodes</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">dist</span>
+    <span class="n">u_B</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="n">den</span>
+
+    <span class="c1"># print(u_B)</span>
+    <span class="n">u_B</span><span class="p">[</span><span class="n">u_B</span> <span class="o">==</span> <span class="n">inf</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">u_cor</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">u_B</span>  <span class="c1"># correct total measured potential from influence of B</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;vmin&quot;</span><span class="p">:</span>
+            <span class="n">vmin</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;vmax&quot;</span><span class="p">:</span>
+            <span class="n">vmax</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="n">plt_2</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;plt_2&quot;</span><span class="p">:</span>
+            <span class="n">plt_2</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="c1"># print(plt_2)</span>
+
+    <span class="c1"># norm = plt.Normalize(vmax=vmax, vmin=vmin)</span>
+    <span class="c1"># v = np.linspace(vmin, vmax, 15, endpoint=True)</span>
+
+    <span class="n">vmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+    <span class="n">vmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>  <span class="c1"># figsize=(20,10)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">dist</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Distance from B (m)&quot;</span><span class="p">)</span>
+    <span class="c1"># plt.tight_layout()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
+
+    <span class="n">vmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">u_B</span><span class="p">)</span>
+    <span class="n">vmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">u_B</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">u_B</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;$u_</span><span class="si">{B}</span><span class="s2">$ (V)&quot;</span><span class="p">)</span>
+    <span class="c1"># plt.scatter(B[0],B[1], marker=&#39;v&#39;, color=&#39;red&#39;)</span>
+    <span class="c1"># plt.tight_layout()</span>
+    <span class="k">if</span> <span class="n">plt_2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">plt_2</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">plt_2</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="s2">&quot;*-&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
+
+    <span class="c1"># vmin = min(u)</span>
+    <span class="c1"># vmax = max(u)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">u</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;$u = U_</span><span class="si">{T}</span><span class="s2"> $(V)&quot;</span><span class="p">)</span>
+    <span class="c1"># plt.scatter(B[0],B[1], marker=&#39;v&#39;, color=&#39;red&#39;)</span>
+    <span class="c1"># plt.tight_layout()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">u_cor</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;$u = U_</span><span class="si">{T}</span><span class="s2"> - u_</span><span class="si">{B}</span><span class="s2">$ (V)&quot;</span><span class="p">)</span>
+    <span class="c1"># plt.scatter(B[0],B[1], marker=&#39;v&#39;, color=&#39;red&#39;)</span>
+    <span class="c1"># plt.tight_layout()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">u</span> <span class="o">-</span> <span class="n">u_cor</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;$u = U_</span><span class="si">{T}</span><span class="s2"> - u_</span><span class="si">{u_cor}</span><span class="s2">$ (V)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">u_cor</span></div>
+
+
+<span class="c1">#%% Geometrical correction/filtering</span>
+
+
+<span class="k">def</span> <span class="nf">_point_against_line</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+    <span class="c1"># https://stackoverflow.com/questions/45766534/finding-cross-product-to-find-points-above-below-a-line-in-matplotlib</span>
+
+    <span class="n">isabove</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">-</span> <span class="n">p1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span>
+
+    <span class="c1"># p1 = np.array([1,1])</span>
+    <span class="c1"># p2 = np.array([4,3])</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># p = np.random.rand(10,2)*5</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="c1"># print(p)</span>
+
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">p</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">isabove</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;bwr&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># ax.set_xlim(0,6)</span>
+    <span class="c1"># ax.set_ylim(0,6)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span>
+
+
+<span class="k">def</span> <span class="nf">mirror</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">mirror</span><span class="o">=</span><span class="s2">&quot;above&quot;</span><span class="p">):</span>
+
+    <span class="c1"># put zero over/under a certain line</span>
+    <span class="n">_point_against_line</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+
+    <span class="c1"># replicate values to mirror</span>
+
+    <span class="c1"># put zero to</span>
+    <span class="c1"># data_sym = np.zeros()</span>
+
+    <span class="c1"># for row in range(data.shape[0]):</span>
+    <span class="c1">#     for col in range(data.shape[1]):</span>
+    <span class="c1">#         data_sym = data()</span>
+
+    <span class="k">return</span>
+
+
+<span class="k">def</span> <span class="nf">perp_p1p2</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+    <span class="n">midX</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">midY</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">midX</span><span class="p">,</span> <span class="n">midY</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+    <span class="c1"># midX=(p1[0]+offset+p2[0]+offset)/2</span>
+    <span class="c1"># midY=(p1[1]+offset+p2[1]+offset)/2</span>
+
+    <span class="c1"># plt.scatter(midX,midY,c=&#39;green&#39;)</span>
+
+    <span class="n">new_p2</span> <span class="o">=</span> <span class="p">[</span><span class="n">midX</span> <span class="o">-</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">midY</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">new_p1</span> <span class="o">=</span> <span class="p">[</span><span class="n">midX</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">midY</span> <span class="o">-</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+    <span class="c1"># new_p2 = [midX-p2[1]+p1[1]/2, midY + p2[0]-p1[0]/2]</span>
+    <span class="c1"># new_p1 = [midX+p2[1]-p1[1]/2, midY - p2[0]+p1[0]/2]</span>
+
+    <span class="n">p12x</span> <span class="o">=</span> <span class="p">[</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">p12y</span> <span class="o">=</span> <span class="p">[</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">p12x_new</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">p12y_new</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p12x</span><span class="p">,</span> <span class="n">p12y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p12x_new</span><span class="p">,</span> <span class="n">p12y_new</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">new_p1</span><span class="p">,</span> <span class="n">new_p2</span>
+
+
+<div class="viewcode-block" id="load_surfer"><a class="viewcode-back" href="../content/api_core/api.html#utils_dEXP.load_surfer">[docs]</a><span class="k">def</span> <span class="nf">load_surfer</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read data from a Surfer ASCII grid file.</span>
+
+<span class="sd">    Surfer is a contouring, griding and surface mapping software</span>
+<span class="sd">    from GoldenSoftware. The names and logos for Surfer and Golden</span>
+<span class="sd">    Software are registered trademarks of Golden Software, Inc.</span>
+
+<span class="sd">    http://www.goldensoftware.com/products/surfer</span>
+
+<span class="sd">    Parameters:</span>
+
+<span class="sd">    * fname : str</span>
+<span class="sd">        Name of the Surfer grid file</span>
+<span class="sd">    * dtype : numpy dtype object or string</span>
+<span class="sd">        The type of variable used for the data. Default is numpy.float64. Use</span>
+<span class="sd">        numpy.float32 if the data are large and precision is not an issue.</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    * data : dict</span>
+<span class="sd">        The data in a dictionary with some metadata:</span>
+
+<span class="sd">        * ``&#39;file&#39;`` : string</span>
+<span class="sd">            The name of the original data file</span>
+<span class="sd">        * ``&#39;shape&#39;`` : tuple</span>
+<span class="sd">            (nx, ny), the number of grid points in x (North) and y (East)</span>
+<span class="sd">        * ``&#39;area&#39;`` : tuple</span>
+<span class="sd">            (x1, x2, y1, y2), the spacial limits of the grid.</span>
+<span class="sd">        * ``&#39;x&#39;`` : 1d-array</span>
+<span class="sd">            Value of the North-South coordinate of each grid point.</span>
+<span class="sd">        * ``&#39;y&#39;`` : 1d-array</span>
+<span class="sd">            Value of the East-West coordinate of each grid point.</span>
+<span class="sd">        * ``&#39;data&#39;`` : 1d-array</span>
+<span class="sd">            Values of the field in each grid point. Field can be for example</span>
+<span class="sd">            topography, gravity anomaly, etc. If any field values are &gt;=</span>
+<span class="sd">            1.70141e+38 (Surfers way of marking NaN values), the array will be</span>
+<span class="sd">            masked at those values (i.e., ``&#39;data&#39;`` will be a numpy masked</span>
+<span class="sd">            array).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Surfer ASCII grid structure</span>
+    <span class="c1"># DSAA            Surfer ASCII GRD ID</span>
+    <span class="c1"># nCols nRows     number of columns and rows</span>
+    <span class="c1"># xMin xMax       X min max</span>
+    <span class="c1"># yMin yMax       Y min max</span>
+    <span class="c1"># zMin zMax       Z min max</span>
+    <span class="c1"># z11 z21 z31 ... List of Z values</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+        <span class="c1"># DSAA is a Surfer ASCII GRD ID (discard it for now)</span>
+        <span class="n">input_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="c1"># Read the number of columns (ny) and rows (nx)</span>
+        <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">input_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+        <span class="c1"># Our x points North, so the first thing we read is y, not x.</span>
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">input_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">input_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+        <span class="n">dmin</span><span class="p">,</span> <span class="n">dmax</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">input_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span>
+            <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">input_file</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span>
+        <span class="p">)</span>
+        <span class="n">nans</span> <span class="o">=</span> <span class="n">field</span> <span class="o">&gt;=</span> <span class="mf">1.70141e38</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">nans</span><span class="p">):</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_where</span><span class="p">(</span><span class="n">nans</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+        <span class="n">err_msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> of data (</span><span class="si">{}</span><span class="s2">) doesn&#39;t match one from file (</span><span class="si">{}</span><span class="s2">).&quot;</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">dmin</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="n">err_msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Min&quot;</span><span class="p">,</span> <span class="n">dmin</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">dmax</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="n">err_msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Max&quot;</span><span class="p">,</span> <span class="n">dmax</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">gridder</span><span class="o">.</span><span class="n">regular</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">fname</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="n">area</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">field</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<span class="k">def</span> <span class="nf">multipage</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">figs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">PdfPages</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">figs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">figs</span> <span class="o">=</span> <span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_fignums</span><span class="p">()]</span>
+    <span class="k">for</span> <span class="n">fig</span> <span class="ow">in</span> <span class="n">figs</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">)</span>
+    <span class="n">pp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

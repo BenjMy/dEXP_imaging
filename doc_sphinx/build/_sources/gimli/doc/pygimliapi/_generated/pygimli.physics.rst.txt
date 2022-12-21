@@ -1,0 +1,29 @@
+﻿pygimli.physics
+===============
+
+.. currentmodule:: pygimli.physics
+
+.. automodule:: pygimli.physics
+
+Overview
+--------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

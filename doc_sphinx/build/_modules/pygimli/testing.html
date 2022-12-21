@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pygimli.testing &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>pygimli.testing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pygimli.testing</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Testing utilities</span>
+
+<span class="sd">In Python you can call `pygimli.test()` to run all docstring</span>
+<span class="sd">examples.</span>
+
+<span class="sd">Writing tests for pygimli</span>
+<span class="sd">-------------------------</span>
+
+<span class="sd">Please check: https://docs.pytest.org/en/latest/</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">realpath</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">pygimli</span> <span class="k">as</span> <span class="nn">pg</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<div class="viewcode-block" id="test"><a class="viewcode-back" href="../../gimli/doc/pygimliapi/_generated/pygimli.testing.html#pygimli.test">[docs]</a><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">onlydoctests</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">coverage</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+         <span class="n">htmlreport</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">abort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run docstring examples and additional tests.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pygimli as pg</span>
+<span class="sd">    &gt;&gt;&gt; # You can test everything with pg.test() or test a single function:</span>
+<span class="sd">    &gt;&gt;&gt; pg.test(&quot;pg.utils.boxprint&quot;, verbose=False)</span>
+<span class="sd">    &gt;&gt;&gt; # The target argument can also be the function directly</span>
+<span class="sd">    &gt;&gt;&gt; from pygimli.utils import boxprint</span>
+<span class="sd">    &gt;&gt;&gt; pg.test(boxprint, verbose=False)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target : function or string, optional</span>
+<span class="sd">        Function or method to test. By default everything is tested.</span>
+<span class="sd">    show : boolean, optional</span>
+<span class="sd">        Show matplotlib windows during test run. They will be closed</span>
+<span class="sd">        automatically.</span>
+<span class="sd">    onlydoctests : boolean, optional</span>
+<span class="sd">        Run test files in ../tests as well.</span>
+<span class="sd">    coverage : boolean, optional</span>
+<span class="sd">        Create a coverage report. Requires the pytest-cov plugin.</span>
+<span class="sd">    htmlreport : str, optional</span>
+<span class="sd">        Filename for HTML report such as www.pygimli.org/build_tests.html.</span>
+<span class="sd">        Requires pytest-html plugin.</span>
+<span class="sd">    abort : boolean, optional</span>
+<span class="sd">        Return correct exit code, e.g. abort documentation build when a test</span>
+<span class="sd">        fails.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Remove figure warnings</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.max_open_warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+                            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Matplotlib is currently using agg, which is a&#39;</span>
+                                    <span class="s1">&#39; non-GUI backend, so cannot show the figure.&#39;</span><span class="p">)</span>
+
+    <span class="n">printopt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">get_printoptions</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">boxprint</span><span class="p">(</span><span class="s2">&quot;Testing pygimli </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pg</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="n">sym</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+
+    <span class="c1"># Numpy compatibility (array string representation has changed)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1.14&quot;</span><span class="p">:</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Some doctests will fail due to old numpy version.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Consider upgrading to numpy &gt;= 1.15&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">target</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># If target is a string, such as &quot;pg.solver.solve&quot;</span>
+            <span class="c1"># the code below will overwrite target with the corresponding</span>
+            <span class="c1"># imported function, so that doctest works.</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;pg.&quot;</span><span class="p">,</span> <span class="s2">&quot;pygimli.&quot;</span><span class="p">)</span>
+            <span class="kn">import</span> <span class="nn">importlib</span>
+            <span class="n">mod_name</span><span class="p">,</span> <span class="n">func_name</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">func_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show</span><span class="p">:</span> <span class="c1"># Keep figure openend if single function is tested</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
+
+        <span class="kn">import</span> <span class="nn">doctest</span>
+        <span class="n">doctest</span><span class="o">.</span><span class="n">run_docstring_examples</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">globals</span><span class="p">(),</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                                       <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">,</span>
+                                       <span class="n">name</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">pytest</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;pytest is required to run test suite. &quot;</span>
+                          <span class="s2">&quot;Try &#39;sudo pip install pytest&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">old_backend</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">show</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s2">&quot;Agg&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">realpath</span><span class="p">(</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span>
+
+    <span class="n">excluded</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;gui&quot;</span><span class="p">,</span> <span class="s2">&quot;physics/traveltime/example.py&quot;</span><span class="p">,</span> <span class="s2">&quot;physics/em/fdemexample.py&quot;</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">onlydoctests</span><span class="p">:</span>
+        <span class="n">excluded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;testing&quot;</span><span class="p">)</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">([</span>
+        <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;-rsxX&quot;</span><span class="p">,</span> <span class="s2">&quot;--color&quot;</span><span class="p">,</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="s2">&quot;--doctest-modules&quot;</span><span class="p">,</span> <span class="s2">&quot;--durations&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="n">cwd</span>
+    <span class="p">])</span>
+    <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">excluded</span><span class="p">:</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--ignore&quot;</span><span class="p">,</span> <span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">directory</span><span class="p">)])</span>
+
+    <span class="k">if</span> <span class="n">coverage</span><span class="p">:</span>
+        <span class="n">pc</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">optImport</span><span class="p">(</span><span class="s2">&quot;pytest_cov&quot;</span><span class="p">,</span> <span class="s2">&quot;create a code coverage report&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pc</span><span class="p">:</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--cov&quot;</span><span class="p">,</span> <span class="s2">&quot;pygimli&quot;</span><span class="p">])</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--cov-report&quot;</span><span class="p">,</span> <span class="s2">&quot;term&quot;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">htmlreport</span><span class="p">:</span>
+        <span class="n">ph</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">optImport</span><span class="p">(</span><span class="s2">&quot;pytest_html&quot;</span><span class="p">,</span> <span class="s2">&quot;create a html report&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ph</span><span class="p">:</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--html&quot;</span><span class="p">,</span> <span class="n">htmlreport</span><span class="p">])</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+    <span class="n">exitcode</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">abort</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exiting with exitcode&quot;</span><span class="p">,</span> <span class="n">exitcode</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">exitcode</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="n">old_backend</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="o">**</span><span class="n">printopt</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building on Windows &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Building on Windows</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/gimli/doc/BUILD_WIN.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="building-on-windows">
+<span id="sec-install-win"></span><h1>Building on Windows<a class="headerlink" href="#building-on-windows" title="Permalink to this headline"></a></h1>
+<p>You need a Python installation with the modules numpy and matplotlib. There are
+minimalistic installers and pre-packaged distributions. We recommend <a class="reference external" href="http://www.continuum.io/">Anaconda</a> 64bit but <a class="reference external" href="http://winpython.github.io/#releases">WinPython</a> will to the job too.</p>
+<p>You also need a Linux-like command shell along with a gcc compiler.
+Although there might be different solutions (Cygwin, Git Bash, MinGW/MSYS),
+we only support the MSYS2 (Minimal System 2) hosted at <a class="reference external" href="http://www.msys2.org">http://www.msys2.org</a>.
+As computers and modern Windows (&gt;=7) are 64bit we only test this.
+Avoid installing into strange Windows folders, e.g., c:ProgramDatamys64 is fine.</p>
+<p>After installing MSYS, start the console once so it builds your personal home
+directory where you find a .bashrc file, e.g. in</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">c</span><span class="p">:</span>\<span class="n">ProgramData</span>\<span class="n">mys64</span>\<span class="n">home</span>\<span class="n">YOUR_USERNAME</span>
+</pre></div>
+</div>
+<p>Edit .bashrc so that the Anaconda or WinPython installation path is added to your default
+PATH.</p>
+<p>e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">ANACONDA</span><span class="o">=</span>/c/ProgramData/Anaconda3
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$ANACONDA</span>
+</pre></div>
+</div>
+<p>This is necessary since gimli needs to know valid python installation and
+version. Ideally the following one-liner will suffice to compile pyGIMLi in the
+current directory.</p>
+<p><strong>Note: The script will automatically take care of requirements and updates of MSYS2.
+And also needs to modify/patch some of the llvm system files.</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -Ls install.pygimli.org <span class="p">|</span> bash
+</pre></div>
+</div>
+<p>This script accepts a few more options. For help see</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -Ls install.pygimli.org <span class="p">|</span> bash -s <span class="nb">help</span>
+</pre></div>
+</div>
+<p>If everything runs fine, including some tests, the script will tell you some
+additional PATH and PYTHONPATH settings for your .bashrc to use pygimli inside
+the console or any IDE like Spyder (coming along with WinPython).</p>
+<p>If something goes wrong, please take a look on the error message.</p>
+<p>You can alse try the following instructions for manual installation.</p>
+<section id="manual-installation">
+<h2>Manual installation<a class="headerlink" href="#manual-installation" title="Permalink to this headline"></a></h2>
+<p>Make sure to have an updated msys2 environment. Run at least:</p>
+<p>to update your local package databases. See <a class="reference external" href="https://www.msys2.org/">https://www.msys2.org/</a>
+for further instructions.</p>
+<p>To get a complete working toolchain you need some packages installed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pacman -S make tar git subversion mercurial unzip wget patch
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-gcc-fortran
+pacman -S mingw-w64-x86_64-openblas mingw-w64-x86_64-suitesparse
+pacman -S mingw-w64-x86_64-doxygen mingw-w64-x86_64-cppunit
+pacman -S mingw-w64-x86_64-llvm mingw-w64-x86_64-clang
+</pre></div>
+</div>
+<p>The rest of the installation is like the linux way with some small differences.</p>
+<p>Prepare the directory structure as described above:</p>
+<p>The build is performed via cmake. While calling cmake <em>MSYS</em> users should tell
+using the Unix makefile generator to find the correct gcc versions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../gimli -G <span class="s1">&#39;Unix Makefiles&#39;</span>
+</pre></div>
+</div>
+<p>If cmake complains about missing python stuff, make sure the Python interpreter
+is in your execution path.</p>
+<p><strong>Problems with cmake configuration</strong></p>
+<p>If cmake can’t install pygccxml or pyplusplus then you can provide those packages using pip from the anaconda distribution.
+First make sure the needed scripts are in your path.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$ANACONDA</span>/Scripts
+</pre></div>
+</div>
+<p>Then you can install those both packages in your user space</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install pygccxml --user
+pip install pyplusplus --user
+</pre></div>
+</div>
+<p>If cmake complains about misssig numpy, python can’t probably import numpy, which you can test:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s1">&#39;import numpy&#39;</span>
+</pre></div>
+</div>
+<p>Probably anaconda additional needs another path setting, don’t ask me why</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$ANACONDA</span>/Library/bin
+</pre></div>
+</div>
+<p>Now python should be able to find numpy and cmake will work as supposed and you can continue the build process.</p>
+<p>To build the library, just run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make -j2
+</pre></div>
+</div>
+<p>You might add the option -jN to use a number of N CPUs in parallel.
+To build pygimli, run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make pygimli <span class="nv">J</span><span class="o">=</span><span class="m">2</span>
+</pre></div>
+</div>
+<p>You might add J=N to use a number of N CPUs in parallel.
+Building pygimli takes some time and you can grab a coffee (or two).
+If it finishes without errors you just need to set the environment:
+(note that pygimli is still built in-place, in pygimli/core)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$PYTHONPATH</span>:<span class="nv">$HOME</span>/src/gimli/gimli/python
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$HOME</span>/src/gimli/build/lib
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$HOME</span>/src/gimli/build/bin
+</pre></div>
+</div>
+<p>Compiled binaries will be written to <cite>build/bin</cite>.</p>
+<p>You can test the pygimli build with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s1">&#39;import pygimli as pg; print(pg.version())&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

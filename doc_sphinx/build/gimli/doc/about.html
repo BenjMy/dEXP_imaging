@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About pyGIMLi &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>About pyGIMLi</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/gimli/doc/about.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="about-pygimli">
+<span id="sec-gimli"></span><h1>About pyGIMLi<a class="headerlink" href="#about-pygimli" title="Permalink to this headline"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h2>
+<p>pyGIMLi is an open-source library for
+<a class="reference internal" href="#sec-about-gimli-modelling"><span class="std std-ref">modelling</span></a> and
+<a class="reference internal" href="#sec-about-gimli-inversion"><span class="std std-ref">inversion</span></a> and in geophysics. The
+object-oriented library provides management for structured and unstructured
+meshes in 2D and 3D, finite-element and finite-volume solvers, various
+geophysical forward operators, as well as Gauss-Newton based frameworks for
+constrained, joint and fully-coupled inversions with flexible regularization.</p>
+<p>What is pyGIMLi suited for?</p>
+<ul class="simple">
+<li><p>analyze, visualize and invert geophysical data in a reproducible manner</p></li>
+<li><p>forward modelling of (geo)physical problems on complex 2D and 3D geometries</p></li>
+<li><p>inversion with flexible controls on a-priori information and regularization</p></li>
+<li><p>combination of different methods in constrained, joint and fully-coupled inversions</p></li>
+<li><p>teaching applied geophysics (e.g. in combination with <a class="reference external" href="http://jupyter-notebook.readthedocs.io/en/latest/notebook.html#notebook-documents">Jupyter notebooks</a>)</p></li>
+</ul>
+<p>What is pyGIMLi <strong>NOT</strong> suited for?</p>
+<ul class="simple">
+<li><p>for people that expect a ready-made GUI for interpreting their data</p></li>
+</ul>
+</section>
+<section id="authors">
+<span id="sec-authors"></span><h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline"></a></h2>
+<a class="reference external image-reference" href="https://github.com/gimli-org/gimli/graphs/contributors"><img alt="https://img.shields.io/github/contributors/gimli-org/gimli.svg" src="https://img.shields.io/github/contributors/gimli-org/gimli.svg" /></a>
+<p>We gratefully acknowledge all contributors to the pyGIMLi open-source project and look forward to <a class="reference external" href="https://pygimli.org/contrib.html">your contribution</a>!</p>
+<ul>
+<li><p><a class="reference external" href="https://orcid.org/0000-0002-8231-9861">Carsten Rücker</a></p>
+<p><em>Berlin University of Technology, Department of Applied Geophysics, Berlin, Germany</em></p>
+<p><a class="reference external" href="mailto:carsten&#37;&#52;&#48;pygimli&#46;org">carsten<span>&#64;</span>pygimli<span>&#46;</span>org</a></p>
+</li>
+<li><p><a class="reference external" href="https://orcid.org/0000-0001-5409-0273">Thomas Günther</a></p>
+<p><em>Leibniz Institute for Applied Geophysics, Hannover, Germany</em></p>
+<p><a class="reference external" href="mailto:thomas&#37;&#52;&#48;pygimli&#46;org">thomas<span>&#64;</span>pygimli<span>&#46;</span>org</a></p>
+</li>
+<li><p><a class="reference external" href="https://orcid.org/0000-0001-7407-9741">Florian Wagner</a></p>
+<p><em>RWTH Aachen University, Institute for Applied Geophysics and Geothermal Energy, Aachen, Germany</em></p>
+<p><a class="reference external" href="mailto:florian&#37;&#52;&#48;pygimli&#46;org">florian<span>&#64;</span>pygimli<span>&#46;</span>org</a></p>
+</li>
+<li><p>Friedrich Dinsel</p>
+<p><em>Berlin University of Technology, Department of Applied Geophysics, Berlin, Germany</em></p>
+<p><a class="reference external" href="mailto:friedrich&#37;&#52;&#48;pygimli&#46;org">friedrich<span>&#64;</span>pygimli<span>&#46;</span>org</a></p>
+</li>
+<li><p><a class="reference external" href="https://orcid.org/0000-0003-0510-1938">Maximilian Weigand</a></p>
+<p><em>University of Bonn, Department of Geophysics, Bonn, Germany</em></p>
+</li>
+<li><p><a class="reference external" href="https://www.andreabalza.com">Andrea Balza</a></p>
+<p><em>RWTH Aachen University, Institute for Applied Geophysics and Geothermal Energy, Aachen, Germany</em></p>
+</li>
+</ul>
+</section>
+<section id="inversion">
+<span id="sec-about-gimli-inversion"></span><h2>Inversion<a class="headerlink" href="#inversion" title="Permalink to this headline"></a></h2>
+<p>One main task of pyGIMli is to carry out inversion, i.e. error-weighted
+minimization, for given forward routines and data. Various types of
+regularization on meshes (1D, 2D, 3D) with regular or irregular arrangement are
+available. There is flexible control of all inversion parameters. The default
+inversion framework is based on the generalized Gauss-Newton method.</p>
+<p>Please see <span class="xref std std-ref">tut:inversion</span> for examples and more
+details.</p>
+</section>
+<section id="modelling">
+<span id="sec-about-gimli-modelling"></span><h2>Modelling<a class="headerlink" href="#modelling" title="Permalink to this headline"></a></h2>
+<p>pyGIMLi comes with various geophysical forward operators, which can directly be
+used for a given problem. In addition, abstract finite-element and finite-volume
+interfaces are available to solve custom PDEs on a given mesh. See
+<a class="reference internal" href="pygimliapi/_generated/pygimli.physics.html#module-pygimli.physics" title="pygimli.physics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygimli.physics</span></code></a> for a collection of forward operators and
+<a class="reference internal" href="pygimliapi/_generated/pygimli.solver.html#module-pygimli.solver" title="pygimli.solver"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygimli.solver</span></code></a> for the solver interface.</p>
+<p>The modelling capabilities of pyGIMLi include:</p>
+<ul class="simple">
+<li><p>1D, 2D, 3D discretizations</p></li>
+<li><p>linear and quadratic shape functions (automatic shape function generator for possible higher order)</p></li>
+<li><p>Triangle, Quads, Tetrahedron, Prism and Hexahedron, mixed meshes</p></li>
+<li><p>solver for elliptic problems (Helmholtz-type PDE)</p></li>
+</ul>
+<p>Please see <span class="xref std std-ref">tut:modelling</span> for examples and more details.</p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline"></a></h2>
+<p>pyGIMLi is distributed under the terms of the <strong>Apache 2.0</strong> license. Details on
+the license agreement can be found <a class="reference external" href="https://www.pygimli.org/license.html">here</a>.</p>
+</section>
+<section id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline"></a></h2>
+<p>We use or link some third-party software (beside the usual tool stack: cmake, gcc, boost, python, numpy, scipy, matplotlib) and are grateful for all the work made by the authors of these awesome open-source tools:</p>
+<ul class="simple">
+<li><p>libkdtree++: Maybe abandoned, mirror: <a class="reference external" href="https://github.com/nvmd/libkdtree">https://github.com/nvmd/libkdtree</a></p></li>
+<li><p>meshio: <a class="reference external" href="https://github.com/nschloe/meshio">https://github.com/nschloe/meshio</a></p></li>
+<li><p>pyplusplus: <a class="reference external" href="https://pypi.org/project/pyplusplus/">https://pypi.org/project/pyplusplus/</a></p></li>
+<li><p>pyvista: <a class="reference external" href="https://docs.pyvista.org/">https://docs.pyvista.org/</a></p></li>
+<li><p>suitesparse, umfpack: <a class="reference external" href="https://people.engr.tamu.edu/davis/suitesparse.html">https://people.engr.tamu.edu/davis/suitesparse.html</a></p></li>
+<li><p>Tetgen: <a class="reference external" href="http://wias-berlin.de/software/index.jsp?id=TetGen&amp;lang=1">http://wias-berlin.de/software/index.jsp?id=TetGen&amp;lang=1</a></p></li>
+<li><p>Triangle: <a class="reference external" href="https://www.cs.cmu.edu/~quake/triangle.html">https://www.cs.cmu.edu/~quake/triangle.html</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -25,8 +25,13 @@ def plot_field(x, y, field, shape, **kwargs):
             maxs = value[1]
 
     # Make maps of all fields calculated
-    fig = plt.figure()
-    ax = plt.gca()
+    if 'ax' in kwargs:
+        ax = kwargs['ax']
+    else:
+        fig = plt.figure()
+        ax = plt.gca()
+        
+        
     plt.rcParams["font.size"] = 10
     X, Y = x.reshape(shape), y.reshape(shape)
 
@@ -113,11 +118,12 @@ def label2unit(label):
     if 'upwc_q0' in label:
         unit = 'upwc voltage \n (V)'
     elif 'upwc_q1' in label:
-        unit = 'upwc $\frac{\partial V}{\partial z}$ \n ($V.m^{-1}$)'
+        unit = r' upwc $\frac{\partial V}{\partial z}$' + '\n'  + r'($V.m^{-1}$)'
     elif 'upwc_q2' in label:
-        unit = 'upwc $\frac{\partial^{2} V}{\partial z^{2}}$ \n ($V.m^{-2}$)'
+        unit = r'upwc $\frac{\partial^{2} V}{\partial z^{2}}$ \n ($V.m^{-2}$)'
     elif 'dexp_q[' in label:
-        unit = 'ratio voltage \n(V)'
+        # unit = 'ratio voltage \n(V)'
+        unit = r'$R_{10}$ (V)'
         shrinkv = 0.25
     else:
         print(label + str( 'doesnt match any label unit'))
@@ -134,13 +140,13 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=True, **kwargs):
     * mesh
         Fatiando mesh type
     * scaled
-        Txt here
+        ratio for plot visualisation
     * label
-        Txt here
+        legend label
     * ax
-        Txt here
+        plot axis
     * markerMax
-        Txt here
+        show marker max
     """
 
     x = mesh.get_xs()
@@ -155,6 +161,7 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=True, **kwargs):
     Vminmax = None
     aspect_equal = False
     clabel=True
+    
     for key, value in kwargs.items():
         if key == "Xaxis":
             Xaxis = value
@@ -175,7 +182,9 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=True, **kwargs):
         if key == "clabel":
             clabel = value
             
-            
+        
+
+        
     if label not in mesh.props:
         raise ValueError("mesh doesn't have a '%s' property." % (label))
 
@@ -209,21 +218,31 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=True, **kwargs):
             print("len must be <2")
 
         if Xaxis == "x":
+            
+            regional_cut = np.arange(0,len(y))
+            if "regional_cut" in kwargs:
+                regional_cut = kwargs['regional_cut']
+                
             # p_xaxis= p1p2[0][0]
             # print("paxis=" + str(p_xaxis))
             id_p_xaxis = (np.abs(x - p_xaxis)).argmin()
             ax.set_title(
                 "slice at x={} m".format(int(y[id_p_xaxis])), fontsize=10, loc="left"
             )
-            cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :], vmin=mins, vmax=maxs)
+            cmap = ax.pcolormesh(y[regional_cut], z, image[:, id_p_xaxis, regional_cut[:-1]], vmin=mins, vmax=maxs)
             # cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis])
             # ax.set_xlim(y.min(), y.max())
             ax.set_xlabel("y (m)")
         else:
             # p_xaxis= p1p2[0][1]
+            regional_cut = np.arange(0,len(x))
+            if "regional_cut" in kwargs:
+                regional_cut = kwargs['regional_cut']
+                
+                
             id_p_xaxis = (np.abs(y - p_xaxis)).argmin()
             ax.set_title("slice at y={} m".format(int(x[id_p_xaxis])), fontsize=10)
-            cmap = ax.pcolormesh(x, z, image[:, :, id_p_xaxis], vmin=mins, vmax=maxs)
+            cmap = ax.pcolormesh(x[regional_cut], z, image[:, regional_cut[:-1], id_p_xaxis], vmin=mins, vmax=maxs)
             # cmap = ax.pcolormesh(y, z, image[:, id_p_xaxis, :])
             # ax.set_xlim(x.min(), x.max())
             ax.set_xlabel("x (m)")
@@ -238,7 +257,10 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=True, **kwargs):
     if clabel==True: # set order of derivative of the upward continuated section 
     # for instance upward-continued third-order vertical derivative is upwc_q3
         unit, shrinkv = label2unit(label)
-        cbar = plt.colorbar(cmap,shrink=shrinkv)# pad=0.04)
+        # print(unit)
+        if 'aspect_equal' == False:
+            shrinkv = 1
+        cbar = plt.colorbar(cmap,shrink=shrinkv,ax=ax)# pad=0.04)
         cbar.set_label(unit)
     # ax.set_aspect('equal')
     # plt.show()
@@ -269,22 +291,22 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=True, **kwargs):
                 x_axis = x
                 id_p_xaxis = (np.abs(x_axis - p_xaxis)).argmin()
                 ind = np.unravel_index(
-                    np.argmax(image[:, id_p_xaxis, :], axis=None),
-                    image[:, id_p_xaxis, :].shape,
+                    np.argmax(image[:, id_p_xaxis, regional_cut[:-1]], axis=None),
+                    image[:, id_p_xaxis, regional_cut[:-1]].shape,
                 )
             else:
                 # search for the max
                 x_axis = y
                 id_p_xaxis = (np.abs(x_axis - p_xaxis)).argmin()
                 ind = np.unravel_index(
-                    np.argmax(image[:, :, id_p_xaxis], axis=None),
-                    image[:, :, id_p_xaxis].shape,
+                    np.argmax(image[:, regional_cut[:-1], id_p_xaxis], axis=None),
+                    image[:, regional_cut[:-1], id_p_xaxis].shape,
                 )
             z_exp = z[ind[0]]
             if Xaxis == "x":
-                x_axis_exp = y[ind[1]]
+                x_axis_exp = y[regional_cut[:-1]][ind[1]]
             elif Xaxis == "y":
-                x_axis_exp = x[ind[1]]
+                x_axis_exp = x[regional_cut[:-1]][ind[1]]
 
             # x_axis_exp = x_axis[ind[1]]
             print("Markermax_z=" + str(z_exp))
@@ -295,8 +317,7 @@ def plot_xy(mesh, scaled=0, label=None, ax=None, markerMax=True, **kwargs):
             ax.legend(["SI=" + str(np.round(SI, 1))])
         if q_ratio is not None:
             ax.legend(
-                ["q-ratio=" + str(q_ratio)]
-            )  # bbox_to_anchor=(1.05, 0.05), loc='lower left')
+                ["q-ratio=" + str(q_ratio)],loc='lower left', fontsize=6)
 
     # ax = plt.subplot(1, 2, 2)
     # ax.set_title('Model slice at x={} m'.format(x[len(x)//2]))
@@ -345,6 +366,10 @@ def slice_mesh(x, y, mesh, label, p1, p2, ax=None, interp=True, **kwargs):
         fig = plt.subplots()
         ax = plt.gca()
 
+
+
+            
+        
     Xaxis = []
     for key, value in kwargs.items():
         if key == "Xaxis":
@@ -373,7 +398,7 @@ def slice_mesh(x, y, mesh, label, p1, p2, ax=None, interp=True, **kwargs):
             xx, yy, distance, u_layer_p1p2, u_layer_p1p2_smooth = profile_noInter(
                 x, y, u_layer, p1, p2, x_resolution
             )
-
+      
         zz = depth * np.ones(len(u_layer_p1p2))
         Z.append(zz)
         X.append(xx)
@@ -386,7 +411,15 @@ def slice_mesh(x, y, mesh, label, p1, p2, ax=None, interp=True, **kwargs):
     else:
         xaxis = X
 
-    cmap = ax.pcolormesh(np.array(xaxis), np.array(Z), np.array(IMG))
+    scale = np.abs([np.array(IMG).min(), np.array(IMG).max()]).max()
+    mins = -scale
+    maxs = scale
+    if 'Vminmax' in kwargs:
+        mins = kwargs['Vminmax'][0]
+        maxs = kwargs['Vminmax'][1]
+            
+    cmap = ax.pcolormesh(np.array(xaxis), np.array(Z), np.array(IMG),
+                         vmin=mins, vmax=maxs)
 
     # if 'upwc' in label:
     #     plt.gca().invert_yaxis()

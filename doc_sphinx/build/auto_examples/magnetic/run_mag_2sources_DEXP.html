@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Magnetic field data analysis using pyDEXP: a 2-sources case &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse" href="../malm/run_sens_depth_MALM_dexpratio.html" />
+    <link rel="prev" title="Example of gravimetric potential field data analysis using pyDEXP" href="../gravimetry/run_grav.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html#magnetic-potential-field-data">Magnetic potential field data</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Magnetic field data analysis using pyDEXP: a 2-sources case</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Introduction</a> &raquo;</li>
+      <li>Magnetic field data analysis using pyDEXP: a 2-sources case</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/auto_examples/magnetic/run_mag_2sources_DEXP.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-magnetic-run-mag-2sources-dexp-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="magnetic-field-data-analysis-using-pydexp-a-2-sources-case">
+<span id="sphx-glr-auto-examples-magnetic-run-mag-2sources-dexp-py"></span><h1>Magnetic field data analysis using pyDEXP: a 2-sources case<a class="headerlink" href="#magnetic-field-data-analysis-using-pydexp-a-2-sources-case" title="Permalink to this headline"></a></h1>
+<p>This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of magnetic sources positions and depth using the dEXP tranformation method.
+dEXP method implementation from Fedi et al. 2012.
+Calculations used <a class="reference internal" href="../../content/api_core/api.html#module-dEXP" title="dEXP"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dEXP</span></code></a>, while plotting use the <a class="reference internal" href="../../content/api_core/api.html#module-plot_dEXP" title="plot_dEXP"><code class="xref py py-mod docutils literal notranslate"><span class="pre">plot_dEXP</span></code></a> module.</p>
+<p>The model data was created using geometric objects from <code class="xref py py-mod docutils literal notranslate"><span class="pre">fatiando.mesher</span></code>. The forward simulation of the data was done using <code class="xref py py-mod docutils literal notranslate"><span class="pre">fatiando.gravmag</span></code> module.</p>
+<dl class="simple">
+<dt>Sources locations:</dt><dd><ul class="simple">
+<li><p>S_{A} = [10e3,10e3,2e3] # xyz coordinates</p></li>
+<li><p>S_{B} = [25e3,10e3,1e3]</p></li>
+</ul>
+</dd>
+<dt>Sources properties:</dt><dd><ul class="simple">
+<li><p>radius = 1.5e3</p></li>
+<li><p>inc = 50</p></li>
+<li><p>dec = -30</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is part of a larger project aiming at inverting current sources density (see more at: <a class="reference external" href="https://icsd-dev.readthedocs.io/en/latest/">https://icsd-dev.readthedocs.io/en/latest/</a>)</p>
+</div>
+<p><strong>References</strong></p>
+<p>Uieda, L., V. C. Oliveira Jr, and V. C. F. Barbosa (2013), Modeling the Earth with Fatiando a Terra, Proceedings of the 12th Python in Science Conference, pp. 91 - 98.</p>
+<p>Uieda, L. (2018). Verde: Processing and gridding spatial data using Green’s functions. Journal of Open Source Software, 3(29), 957. doi:10.21105/joss.00957</p>
+<p>Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential
+field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">lib.dEXP</span> <span class="k">as</span> <span class="nn">dEXP</span>
+<span class="kn">from</span> <span class="nn">lib.dEXP</span> <span class="kn">import</span> <span class="n">_fit</span>
+<span class="kn">import</span> <span class="nn">lib.plot_dEXP</span> <span class="k">as</span> <span class="nn">pEXP</span>
+<span class="kn">import</span> <span class="nn">lib.set_parameters</span> <span class="k">as</span> <span class="nn">para</span>
+<span class="kn">import</span> <span class="nn">examples.magnetic.fwdmag.fwd_mag_sphere</span> <span class="k">as</span> <span class="nn">magfwd</span>
+</pre></div>
+</div>
+<p>Create a model using geometric objects from fatiando.mesher</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">zp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span> <span class="n">magfwd</span><span class="o">.</span><span class="n">load_mag_synthetic</span><span class="p">()</span>
+<span class="n">max_elevation</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">coord</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">scaled</span><span class="p">,</span> <span class="n">SI</span><span class="p">,</span> <span class="n">zp</span><span class="p">,</span> <span class="n">qorder</span><span class="p">,</span> <span class="n">nlay</span><span class="p">,</span> <span class="n">minAlt_ridge</span><span class="p">,</span> <span class="n">maxAlt_ridge</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">set_par</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span><span class="n">max_elevation</span><span class="o">=</span><span class="n">max_elevation</span><span class="p">)</span>
+<span class="n">interp</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">x_axis</span><span class="o">=</span> <span class="s1">&#39;y&#39;</span>
+<span class="n">qorder</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_mag_2sources_DEXP_001.png" srcset="../../_images/sphx_glr_run_mag_2sources_DEXP_001.png" alt="Total field Anomaly (nt)" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/examples/magnetic/fwdmag/fwd_mag_sphere.py:60: MatplotlibDeprecationWarning: shading=&#39;flat&#39; when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading=&#39;auto&#39;, &#39;nearest&#39; or &#39;gouraud&#39;, or set rcParams[&#39;pcolor.shading&#39;].  This will become an error two minor releases later.
+  plot = ax.pcolormesh(X, Y, data.reshape(shape), cmap=&#39;RdBu_r&#39;,
+</pre></div>
+</div>
+<p>Plot field data over a 2d line crossing the anomalies</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pEXP</span><span class="o">.</span><span class="n">plot_line</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_field</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_run_mag_2sources_DEXP_002.png" srcset="../../_images/sphx_glr_run_mag_2sources_DEXP_002.png" alt="Original data" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_run_mag_2sources_DEXP_003.png" srcset="../../_images/sphx_glr_run_mag_2sources_DEXP_003.png" alt="run mag 2sources DEXP" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/lib/plot_dEXP.py:39: MatplotlibDeprecationWarning: shading=&#39;flat&#39; when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading=&#39;auto&#39;, &#39;nearest&#39; or &#39;gouraud&#39;, or set rcParams[&#39;pcolor.shading&#39;].  This will become an error two minor releases later.
+  plot = ax.pcolormesh(
+
+(&lt;AxesSubplot:xlabel=&#39;x (m)&#39;, ylabel=&#39;y (m)&#39;&gt;, &lt;module &#39;matplotlib.pyplot&#39; from &#39;/home/ben/miniconda3/lib/python3.9/site-packages/matplotlib/pyplot.py&#39;&gt;)
+</pre></div>
+</div>
+<p>Upward continuation of the field data with discretisation in altitude controlled by the number of layers (nlay) and the maximum elevation desired (max_elevation)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">label_prop</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">upwc</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">zp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span>
+                 <span class="n">zmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">max_elevation</span><span class="p">,</span> <span class="n">nlayers</span><span class="o">=</span><span class="n">nlay</span><span class="p">,</span>
+                 <span class="n">qorder</span><span class="o">=</span><span class="n">qorder</span><span class="p">)</span>
+
+<span class="c1"># plt, cmap = pEXP.plot_xy(mesh, label=label_prop)</span>
+<span class="c1"># plt.colorbar(cmap)</span>
+<span class="n">plt</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">,</span> <span class="n">p1p2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_mag_2sources_DEXP_004.png" srcset="../../_images/sphx_glr_run_mag_2sources_DEXP_004.png" alt="slice at y=10000 m" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/fatiando/gravmag/transform.py:182: UserWarning: Using &#39;height&#39; &lt;= 0 means downward continuation, which is known to be unstable.
+  warnings.warn(&quot;Using &#39;height&#39; &lt;= 0 means downward continuation, &quot; +
+need to rotate first?
+
+&lt;matplotlib.colorbar.Colorbar object at 0x7f7f28df8f70&gt;
+</pre></div>
+</div>
+<p>Ridges identification: plot all extremas obtained via find_peaks function (numpy) for a given altitude
+dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,</p>
+<blockquote>
+<div><p>label=label_prop,
+method_peak=’find_peaks’)</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dEXP</span><span class="o">.</span><span class="n">ridges_minmax_plot</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span>
+                                      <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span>
+                                      <span class="n">method_peak</span><span class="o">=</span><span class="s1">&#39;find_peaks&#39;</span><span class="p">,</span>
+                                      <span class="n">showfig</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">interp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">smooth</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_mag_2sources_DEXP_005.png" srcset="../../_images/sphx_glr_run_mag_2sources_DEXP_005.png" alt="run mag 2sources DEXP" class = "sphx-glr-single-img"/><p>Ridges identification at all levels: plot extremas obtained via find_peaks function (numpy) for all 3 types of extremas familly RI, RII and RIII
+dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,</p>
+<blockquote>
+<div><p>label=label_prop,
+method_peak=’find_peaks’)</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">D</span>  <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">ridges_minmax</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span>
+                                      <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span>
+                                      <span class="n">method_peak</span><span class="o">=</span><span class="s1">&#39;find_peaks&#39;</span><span class="p">,</span>
+                                      <span class="n">qorder</span><span class="o">=</span><span class="n">qorder</span><span class="p">,</span>
+                                      <span class="n">interp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">smooth</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">fix_peak_nb</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                      <span class="n">returnAmp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">showfig</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+<span class="n">dfI</span><span class="p">,</span> <span class="n">dfII</span><span class="p">,</span> <span class="n">dfIII</span> <span class="o">=</span>  <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">hI</span><span class="p">,</span> <span class="n">hII</span><span class="p">,</span> <span class="n">hIII</span>  <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">H</span>  <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_mag_2sources_DEXP_006.png" srcset="../../_images/sphx_glr_run_mag_2sources_DEXP_006.png" alt="run mag 2sources DEXP" class = "sphx-glr-single-img"/><p>plot filtered ridges fitted over continuated section</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span> <span class="c1">#, ldg=)</span>
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_harmonic</span><span class="p">(</span><span class="n">dfI</span><span class="p">,</span><span class="n">dfII</span><span class="p">,</span><span class="n">dfIII</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df_fit</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">fit_ridges</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">rmvOutliers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># fit ridges on filtered data</span>
+
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_sources</span><span class="p">(</span><span class="n">df_fit</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">z_max_source</span><span class="o">=-</span><span class="n">max_elevation</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>
+                          <span class="n">ridge_type</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">ridge_nb</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_mag_2sources_DEXP_007.png" srcset="../../_images/sphx_glr_run_mag_2sources_DEXP_007.png" alt="run mag 2sources DEXP" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/miniconda3/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+  warnings.warn(&#39;Covariance of the parameters could not be estimated&#39;,
+
+&lt;AxesSubplot:xlabel=&#39;y (m)&#39;, ylabel=&#39;depth\n(m)&#39;&gt;
+</pre></div>
+</div>
+<p>filter ridges using a minimum length criterium and and filter for a specific range of altitude
+dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,</p>
+<blockquote>
+<div><p>1,maxAlt_ridge,
+minlength=8,rmvNaN=True)</p>
+</div></blockquote>
+<p>df_f = dfI_f, dfII_f, dfIII_f</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">D_f</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">filter_ridges</span><span class="p">(</span><span class="n">dfI</span><span class="p">,</span><span class="n">dfII</span><span class="p">,</span><span class="n">dfIII</span><span class="p">,</span>
+                            <span class="n">minDepth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                            <span class="n">maxDepth</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                            <span class="n">minlength</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                            <span class="n">rmvNaN</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">heights</span><span class="o">=</span><span class="p">[</span><span class="n">hI</span><span class="p">,</span> <span class="n">hII</span><span class="p">,</span> <span class="n">hIII</span><span class="p">])</span>
+
+<span class="n">dfI_f</span><span class="p">,</span> <span class="n">dfII_f</span><span class="p">,</span> <span class="n">dfIII_f</span> <span class="o">=</span>  <span class="n">D_f</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">hI_f</span><span class="p">,</span> <span class="n">hII_f</span><span class="p">,</span> <span class="n">hIII_f</span> <span class="o">=</span> <span class="n">D_f</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">df_f</span> <span class="o">=</span> <span class="n">D_f</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>plot filtered ridges fitted over continuated section</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="c1"># plt, cmap = pEXP.plot_xy(mesh, label=label_prop, Xaxis=x_axis, p1p2=np.array([p1, p2]))</span>
+
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">,</span> <span class="n">p1p2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]))</span>
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_harmonic</span><span class="p">(</span><span class="n">dfI_f</span><span class="p">,</span><span class="n">dfII_f</span><span class="p">,</span><span class="n">dfIII_f</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df_fit</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">fit_ridges</span><span class="p">(</span><span class="n">df_f</span><span class="p">,</span> <span class="n">rmvOutliers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># fit ridges on filtered data</span>
+
+<span class="c1"># pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*2,</span>
+<span class="c1">#                           ridge_type=[0,1,2],ridge_nb=None)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_mag_2sources_DEXP_008.png" srcset="../../_images/sphx_glr_run_mag_2sources_DEXP_008.png" alt="slice at y=10000 m" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>need to rotate first?
+/home/ben/miniconda3/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+  warnings.warn(&#39;Covariance of the parameters could not be estimated&#39;,
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">qratio</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">mesh_dexp</span><span class="p">,</span> <span class="n">label_dexp</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">dEXP_ratio</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">zp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span>
+                 <span class="n">zmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">max_elevation</span><span class="p">,</span> <span class="n">nlayers</span><span class="o">=</span><span class="n">nlay</span><span class="p">,</span>
+                 <span class="n">qorders</span><span class="o">=</span><span class="n">qratio</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+
+<span class="n">plt</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">mesh_dexp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_dexp</span><span class="p">,</span>
+             <span class="n">markerMax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">qratio</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">qratio</span><span class="p">),</span> <span class="n">Vminmax</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">1e-1</span><span class="p">],</span>
+             <span class="n">p1p2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">]),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span> <span class="c1">#, ldg=)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">x_axis</span><span class="o">==</span><span class="s1">&#39;y&#39;</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">marker</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">marker</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+    <span class="c1"># plt.annotate(str(masses),[easting, upward])</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">marker</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">marker</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+    <span class="c1"># plt.annotate(str(masses),[northing, upward])</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_mag_2sources_DEXP_009.png" srcset="../../_images/sphx_glr_run_mag_2sources_DEXP_009.png" alt="slice at y=10000 m" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/fatiando/gravmag/transform.py:182: UserWarning: Using &#39;height&#39; &lt;= 0 means downward continuation, which is known to be unstable.
+  warnings.warn(&quot;Using &#39;height&#39; &lt;= 0 means downward continuation, &quot; +
+need to rotate first?
+Markermax_z=960.0
+Markermax_x=14500.0
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 3 minutes  17.539 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-magnetic-run-mag-2sources-dexp-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/0ace5bb218b85cd59cbb8c245ad55778/run_mag_2sources_DEXP.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_mag_2sources_DEXP.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/07b7a8830516d797184c2ccd02eee53e/run_mag_2sources_DEXP.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_mag_2sources_DEXP.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../gravimetry/run_grav.html" class="btn btn-neutral float-left" title="Example of gravimetric potential field data analysis using pyDEXP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../malm/run_sens_depth_MALM_dexpratio.html" class="btn btn-neutral float-right" title="Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

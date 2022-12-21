@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse" href="run_sens_depth_MALM_dexpratio_q12.html" />
+    <link rel="prev" title="Magnetic field data analysis using pyDEXP: a 2-sources case" href="../magnetic/run_mag_2sources_DEXP.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_sens_depth_MALM_dexpratio_q12.html">Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_sens_sigma_MALM_dexpratio.html">Sensitivity analysis of DEXP to depth on Mise-a-la-masse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_sens_MALM.html">Sensitivity analysis of DEXP to contrast of resistivity on Mise-a-la-masse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_sens_noise_MALM.html">Sensitivity analysis of DEXP to noise level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clearB.html">Preprocessing of MALM for dEXP</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Introduction</a> &raquo;</li>
+      <li>Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/auto_examples/malm/run_sens_depth_MALM_dexpratio.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-malm-run-sens-depth-malm-dexpratio-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="sensitivity-analysis-of-dexp-to-anomaly-depth-on-mise-a-la-masse">
+<span id="sphx-glr-auto-examples-malm-run-sens-depth-malm-dexpratio-py"></span><h1>Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse<a class="headerlink" href="#sensitivity-analysis-of-dexp-to-anomaly-depth-on-mise-a-la-masse" title="Permalink to this headline"></a></h1>
+<p>This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of electrical sources positions and depth using the dEXP tranformation method.
+dEXP method implementation from Fedi et al. 2012.
+Calculations used <a class="reference internal" href="../../content/api_core/api.html#module-dEXP" title="dEXP"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dEXP</span></code></a>, while plotting use the <a class="reference internal" href="../../content/api_core/api.html#module-plot_dEXP" title="plot_dEXP"><code class="xref py py-mod docutils literal notranslate"><span class="pre">plot_dEXP</span></code></a> module.</p>
+<p>Application on a anomaly of electrical resistivity.
+The model data was created using geometric objects from <a class="reference internal" href="../../gimli/doc/pygimliapi/_generated/pygimli.meshtools.html#module-pygimli.meshtools" title="pygimli.meshtools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygimli.meshtools</span></code></a>. The forward simulation of the data was done using <code class="xref py py-mod docutils literal notranslate"><span class="pre">pygimli.ERTsimulate</span></code> module.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is part of a larger project aiming at inverting current sources density (see more at: <a class="reference external" href="https://icsd-dev.readthedocs.io/en/latest/">https://icsd-dev.readthedocs.io/en/latest/</a>)</p>
+</div>
+<p><strong>References</strong></p>
+<p>Uieda, L., V. C. Oliveira Jr, and V. C. F. Barbosa (2013), Modeling the Earth with Fatiando a Terra, Proceedings of the 12th Python in Science Conference, pp. 91 - 98.</p>
+<p>Uieda, L. (2018). Verde: Processing and gridding spatial data using Green’s functions. Journal of Open Source Software, 3(29), 957. doi:10.21105/joss.00957</p>
+<p>Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential
+field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1</p>
+<p>Rucker, C., Gunther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library for modelling and inversion in geophysics, Computers and Geosciences, 109, 106-123, doi: 10.1016/j.cageo.2017.07.011</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fatiando.vis.mpl</span> <span class="kn">import</span> <span class="n">square</span>
+<span class="kn">from</span> <span class="nn">fatiando</span> <span class="kn">import</span> <span class="n">gridder</span>
+
+<span class="c1"># my own functions</span>
+<span class="kn">import</span> <span class="nn">lib.dEXP</span> <span class="k">as</span> <span class="nn">dEXP</span>
+<span class="kn">import</span> <span class="nn">lib.plot_dEXP</span> <span class="k">as</span> <span class="nn">pEXP</span>
+<span class="kn">import</span> <span class="nn">lib.set_parameters</span> <span class="k">as</span> <span class="nn">para</span>
+
+<span class="c1"># exemples</span>
+<span class="kn">import</span> <span class="nn">examples.malm.loadmalm.Load_sens_MALM</span> <span class="k">as</span> <span class="nn">MALM</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<p>MALM DATA synthetic anomaly: analysis of sensitivity</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MESH</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">LABEL</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">MESHratio</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">LABELratio</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">DF_F</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">DF_FIT</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">XXZZ</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">CTm</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MSoilR1000.0AnoR1Z-3.75L5h2.5&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;MSoilR1000.0AnoR1Z-13.75L5h2.5&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;MSoilR1000.0AnoR1Z-23.75L5h2.5&#39;</span><span class="p">]</span>
+
+
+
+<span class="c1"># import pickle</span>
+<span class="c1"># infile = open(&#39;./loadmalm/&#39; + filenames[0] + &#39;.pkl&#39;,&#39;rb&#39;)</span>
+<span class="c1"># data = pickle.load(infile)</span>
+<span class="c1"># infile.close()</span>
+
+
+<span class="c1"># import pickle</span>
+<span class="c1"># filenames = [&#39;MSoilR1000.0AnoR1Z-3.75L5h2.5&#39;]</span>
+<span class="n">x_axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span>
+<span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+    <span class="n">x_raw</span><span class="p">,</span> <span class="n">y_raw</span><span class="p">,</span> <span class="n">z_raw</span><span class="p">,</span> <span class="n">U_raw</span><span class="p">,</span> <span class="n">maxdepth</span><span class="p">,</span> <span class="n">shape_raw</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">SimName</span><span class="p">,</span> <span class="n">ano_prop</span> <span class="o">=</span> <span class="n">MALM</span><span class="o">.</span><span class="n">load_MALM_sens3d</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;./loadmalm/&#39;</span> <span class="o">+</span>
+                                                                <span class="n">fi</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span><span class="p">)</span>
+
+    <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">,</span><span class="n">U</span> <span class="o">=</span> <span class="n">gridder</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x_raw</span><span class="p">,</span><span class="n">y_raw</span><span class="p">,</span><span class="n">U_raw</span><span class="p">,</span><span class="n">shape</span><span class="p">)</span>
+
+
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">set_par</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span><span class="n">max_elevation</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">maxdepth</span><span class="p">))</span>
+    <span class="n">interp</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">scaled</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">SI</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">zp</span><span class="p">,</span> <span class="n">qorder</span><span class="p">,</span> <span class="n">nlay</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+    <span class="n">minAlt_ridge</span><span class="p">,</span> <span class="n">maxAlt_ridge</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># ridges analysis parameters</span>
+    <span class="n">nlay</span> <span class="o">=</span> <span class="mi">25</span>
+    <span class="n">max_elevation</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">minAlt_ridge</span> <span class="o">=</span> <span class="n">max_elevation</span><span class="o">*</span><span class="mf">0.05</span>
+    <span class="n">maxAlt_ridge</span> <span class="o">=</span> <span class="n">max_elevation</span><span class="o">*</span><span class="mf">0.65</span>
+
+    <span class="n">interp</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">smooth</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Anomalies properties</span>
+    <span class="c1"># HDWL : height, Depth, Width (x), Lenght (y)</span>
+
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">x_raw</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="n">ano_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">x_raw</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ano_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">ano_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span> <span class="n">ano_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">ano_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span> <span class="n">ano_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">xxzz</span> <span class="o">=</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">]</span>
+    <span class="n">CT</span> <span class="o">=</span> <span class="n">ano_prop</span><span class="p">[</span><span class="s1">&#39;SoilR&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">ano_prop</span><span class="p">[</span><span class="s1">&#39;AnoR&#39;</span><span class="p">]</span>
+
+    <span class="c1">#%%</span>
+
+    <span class="n">qratio</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">mesh_ratio</span><span class="p">,</span> <span class="n">label_ratio</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">dEXP_ratio</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">zp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span>
+                      <span class="n">zmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">max_elevation</span><span class="p">,</span> <span class="n">nlayers</span><span class="o">=</span><span class="n">nlay</span><span class="p">,</span>
+                      <span class="n">qorders</span><span class="o">=</span><span class="n">qratio</span><span class="p">)</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># save data loop</span>
+
+    <span class="n">MESHratio</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mesh_ratio</span><span class="p">)</span>
+    <span class="n">LABELratio</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label_ratio</span><span class="p">)</span>
+    <span class="n">XXZZ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xxzz</span><span class="p">)</span>
+    <span class="n">CTm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CT</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/fatiando/gravmag/transform.py:183: UserWarning: Using &#39;height&#39; &lt;= 0 means downward continuation, which is known to be unstable.
+  &quot;which is known to be unstable.&quot;)
+</pre></div>
+</div>
+<p>Plot the results</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>True depth are respectively 3.75, 13.75, 23.75</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scl</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">MESHratio</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">scaled</span><span class="o">=</span><span class="n">scl</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">LABELratio</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+              <span class="n">markerMax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">qratio</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">qratio</span><span class="p">),</span><span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">,</span><span class="n">p1p2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">]))</span>
+<span class="c1"># plt.colorbar(cmap)</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">XXZZ</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">square</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="o">-</span><span class="n">z1</span><span class="p">,</span> <span class="o">-</span><span class="n">z2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">CTm</span><span class="p">[</span><span class="n">i</span><span class="p">],[(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">z1</span><span class="o">+</span><span class="n">z2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="c1"># plt.tight_layout()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_sens_depth_MALM_dexpratio_001.png" srcset="../../_images/sphx_glr_run_sens_depth_MALM_dexpratio_001.png" alt="slice at y=175 m" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>need to rotate first?
+Markermax_z=6.0
+Markermax_x=175.0
+
+Text(175.0, 3.75, &#39;1000.0&#39;)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">MESHratio</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">scaled</span><span class="o">=</span><span class="n">scl</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">LABELratio</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+              <span class="n">markerMax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">qratio</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">qratio</span><span class="p">),</span><span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">,</span><span class="n">p1p2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">]))</span> <span class="c1">#, ldg=)</span>
+<span class="c1"># plt.colorbar(cmap)</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">XXZZ</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">square</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="o">-</span><span class="n">z1</span><span class="p">,</span> <span class="o">-</span><span class="n">z2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">CTm</span><span class="p">[</span><span class="n">i</span><span class="p">],[(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">z1</span><span class="o">+</span><span class="n">z2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="c1"># plt.tight_layout()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_sens_depth_MALM_dexpratio_002.png" srcset="../../_images/sphx_glr_run_sens_depth_MALM_dexpratio_002.png" alt="slice at y=175 m" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>need to rotate first?
+Markermax_z=13.2
+Markermax_x=175.0
+
+Text(175.0, 13.75, &#39;1000.0&#39;)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">MESHratio</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">scaled</span><span class="o">=</span><span class="n">scl</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">LABELratio</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+              <span class="n">markerMax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">qratio</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">qratio</span><span class="p">),</span><span class="n">aspect_equal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">,</span><span class="n">p1p2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">]))</span> <span class="c1">#, ldg=)</span>
+<span class="c1"># plt.colorbar(cmap)</span>
+<span class="c1"># plt.annotate(&#39;True depth is&#39;, xy, args, kwargs)()</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">XXZZ</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">square</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="o">-</span><span class="n">z1</span><span class="p">,</span> <span class="o">-</span><span class="n">z2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">CTm</span><span class="p">[</span><span class="n">i</span><span class="p">],[(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">z1</span><span class="o">+</span><span class="n">z2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="c1"># plt.title(&#39;23.75m depth anomaly&#39;)</span>
+<span class="c1"># plt.tight_layout()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_sens_depth_MALM_dexpratio_003.png" srcset="../../_images/sphx_glr_run_sens_depth_MALM_dexpratio_003.png" alt="slice at y=175 m" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>need to rotate first?
+Markermax_z=19.2
+Markermax_x=175.0
+
+Text(175.0, 23.75, &#39;1000.0&#39;)
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.065 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-malm-run-sens-depth-malm-dexpratio-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/c347e9c282fe592eec559482579e5da8/run_sens_depth_MALM_dexpratio.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_sens_depth_MALM_dexpratio.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/496c46572dfb260650e176a7eae23654/run_sens_depth_MALM_dexpratio.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_sens_depth_MALM_dexpratio.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../magnetic/run_mag_2sources_DEXP.html" class="btn btn-neutral float-left" title="Magnetic field data analysis using pyDEXP: a 2-sources case" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="run_sens_depth_MALM_dexpratio_q12.html" class="btn btn-neutral float-right" title="Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

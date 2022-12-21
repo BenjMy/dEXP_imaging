@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building from source &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Building from source</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/gimli/doc/compilation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="building-from-source">
+<span id="sec-build"></span><h1>Building from source<a class="headerlink" href="#building-from-source" title="Permalink to this headline"></a></h1>
+Choose your operating system for more information, in particular on
+alternative ways of installation or compilation from source:<br><br>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="#install_win" role="tab" data-toggle="tab">
+            <i class="fab fa-windows"></i> Windows</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#install_lin" role="tab" data-toggle="tab">
+            <i class="fab fa-linux"></i> Linux</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#install_mac" role="tab" data-toggle="tab">
+            <i class="fab fa-apple"></i> Mac OS</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#install_pre" role="tab" data-toggle="tab">
+            <i class="fas fa-info"></i> Prerequisites</a>
+    </li>
+</ul>
+<div class="tab-content"><div role="tabpanel" class="tab-pane active" id="install_win"><section id="building-on-windows">
+<span id="sec-install-win"></span><h2>Building on Windows<a class="headerlink" href="#building-on-windows" title="Permalink to this headline"></a></h2>
+<p>You need a Python installation with the modules numpy and matplotlib. There are
+minimalistic installers and pre-packaged distributions. We recommend <a class="reference external" href="http://www.continuum.io/">Anaconda</a> 64bit but <a class="reference external" href="http://winpython.github.io/#releases">WinPython</a> will to the job too.</p>
+<p>You also need a Linux-like command shell along with a gcc compiler.
+Although there might be different solutions (Cygwin, Git Bash, MinGW/MSYS),
+we only support the MSYS2 (Minimal System 2) hosted at <a class="reference external" href="http://www.msys2.org">http://www.msys2.org</a>.
+As computers and modern Windows (&gt;=7) are 64bit we only test this.
+Avoid installing into strange Windows folders, e.g., c:ProgramDatamys64 is fine.</p>
+<p>After installing MSYS, start the console once so it builds your personal home
+directory where you find a .bashrc file, e.g. in</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">c</span><span class="p">:</span>\<span class="n">ProgramData</span>\<span class="n">mys64</span>\<span class="n">home</span>\<span class="n">YOUR_USERNAME</span>
+</pre></div>
+</div>
+<p>Edit .bashrc so that the Anaconda or WinPython installation path is added to your default
+PATH.</p>
+<p>e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">ANACONDA</span><span class="o">=</span>/c/ProgramData/Anaconda3
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$ANACONDA</span>
+</pre></div>
+</div>
+<p>This is necessary since gimli needs to know valid python installation and
+version. Ideally the following one-liner will suffice to compile pyGIMLi in the
+current directory.</p>
+<p><strong>Note: The script will automatically take care of requirements and updates of MSYS2.
+And also needs to modify/patch some of the llvm system files.</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -Ls install.pygimli.org <span class="p">|</span> bash
+</pre></div>
+</div>
+<p>This script accepts a few more options. For help see</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -Ls install.pygimli.org <span class="p">|</span> bash -s <span class="nb">help</span>
+</pre></div>
+</div>
+<p>If everything runs fine, including some tests, the script will tell you some
+additional PATH and PYTHONPATH settings for your .bashrc to use pygimli inside
+the console or any IDE like Spyder (coming along with WinPython).</p>
+<p>If something goes wrong, please take a look on the error message.</p>
+<p>You can alse try the following instructions for manual installation.</p>
+<section id="manual-installation">
+<h3>Manual installation<a class="headerlink" href="#manual-installation" title="Permalink to this headline"></a></h3>
+<p>Make sure to have an updated msys2 environment. Run at least:</p>
+<p>to update your local package databases. See <a class="reference external" href="https://www.msys2.org/">https://www.msys2.org/</a>
+for further instructions.</p>
+<p>To get a complete working toolchain you need some packages installed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pacman -S make tar git subversion mercurial unzip wget patch
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-gcc-fortran
+pacman -S mingw-w64-x86_64-openblas mingw-w64-x86_64-suitesparse
+pacman -S mingw-w64-x86_64-doxygen mingw-w64-x86_64-cppunit
+pacman -S mingw-w64-x86_64-llvm mingw-w64-x86_64-clang
+</pre></div>
+</div>
+<p>The rest of the installation is like the linux way with some small differences.</p>
+<p>Prepare the directory structure as described above:</p>
+<p>The build is performed via cmake. While calling cmake <em>MSYS</em> users should tell
+using the Unix makefile generator to find the correct gcc versions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../gimli -G <span class="s1">&#39;Unix Makefiles&#39;</span>
+</pre></div>
+</div>
+<p>If cmake complains about missing python stuff, make sure the Python interpreter
+is in your execution path.</p>
+<p><strong>Problems with cmake configuration</strong></p>
+<p>If cmake can’t install pygccxml or pyplusplus then you can provide those packages using pip from the anaconda distribution.
+First make sure the needed scripts are in your path.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$ANACONDA</span>/Scripts
+</pre></div>
+</div>
+<p>Then you can install those both packages in your user space</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install pygccxml --user
+pip install pyplusplus --user
+</pre></div>
+</div>
+<p>If cmake complains about misssig numpy, python can’t probably import numpy, which you can test:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s1">&#39;import numpy&#39;</span>
+</pre></div>
+</div>
+<p>Probably anaconda additional needs another path setting, don’t ask me why</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$ANACONDA</span>/Library/bin
+</pre></div>
+</div>
+<p>Now python should be able to find numpy and cmake will work as supposed and you can continue the build process.</p>
+<p>To build the library, just run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make -j2
+</pre></div>
+</div>
+<p>You might add the option -jN to use a number of N CPUs in parallel.
+To build pygimli, run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make pygimli <span class="nv">J</span><span class="o">=</span><span class="m">2</span>
+</pre></div>
+</div>
+<p>You might add J=N to use a number of N CPUs in parallel.
+Building pygimli takes some time and you can grab a coffee (or two).
+If it finishes without errors you just need to set the environment:
+(note that pygimli is still built in-place, in pygimli/core)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$PYTHONPATH</span>:<span class="nv">$HOME</span>/src/gimli/gimli/python
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$HOME</span>/src/gimli/build/lib
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$HOME</span>/src/gimli/build/bin
+</pre></div>
+</div>
+<p>Compiled binaries will be written to <cite>build/bin</cite>.</p>
+<p>You can test the pygimli build with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s1">&#39;import pygimli as pg; print(pg.version())&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div role="tabpanel" class="tab-pane" id="install_lin">
+<div>
+<div></section>
+</section>
+<section id="building-on-linux">
+<span id="sec-install-lin"></span><h2>Building on Linux<a class="headerlink" href="#building-on-linux" title="Permalink to this headline"></a></h2>
+<section id="curl-installer">
+<h3>Curl installer<a class="headerlink" href="#curl-installer" title="Permalink to this headline"></a></h3>
+<p>If you are not using Anaconda, you can build pyGIMLi from source in the current
+directory via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -Ls install.pygimli.org <span class="p">|</span> bash
+</pre></div>
+</div>
+<p>This script accepts a few more options. For help see:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -Ls install.pygimli.org <span class="p">|</span> bash -s <span class="nb">help</span>
+</pre></div>
+</div>
+<p>If something goes wrong please take a look at the error message. In most cases
+there are missing or outdated packages. Please have a look at the prerequisites
+tab.</p>
+<p>If the installation fails you can try the following instructions for manual
+installation.</p>
+</section>
+<section id="detailed-installation-on-debian-stretch">
+<h3>Detailed Installation on Debian Stretch<a class="headerlink" href="#detailed-installation-on-debian-stretch" title="Permalink to this headline"></a></h3>
+<p>In order to build pygimli (and gimli) Python 3, install
+the required packages:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install wget subversion git cmake mercurial g++ <span class="se">\</span>
+    libboost-all-dev libblas-dev liblapack-dev libopenblas-dev <span class="se">\</span>
+    libedit-dev python3-dev <span class="se">\</span>
+    python3-numpy python3-matplotlib <span class="se">\</span>
+    python3-setuptools
+</pre></div>
+</div>
+<p>Create a directory for your installation, e.g., $HOME/src</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p ~/src
+<span class="nb">cd</span> src
+mkdir -p gimli
+<span class="nb">cd</span> gimli
+</pre></div>
+</div>
+<p>Checkout the current sources for libgimli:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/gimli-org/gimli.git
+</pre></div>
+</div>
+<p>We use <a class="reference external" href="https://cmake.org">cmake</a> for compilation. We recommend using a
+build directory parallel to the gimli (trunk) path:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p build
+</pre></div>
+</div>
+<p>The main directory structure should looks like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gimli/gimli
+gimli/build
+</pre></div>
+</div>
+<p>Change to the build path</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> build
+</pre></div>
+</div>
+<p>If you want to compile for Python 3.8, alternatively use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../gimli -DPYVERSION<span class="o">=</span><span class="m">3</span>.8
+</pre></div>
+</div>
+<p>If the output complains about missing dependencies, install these and repeat
+the the last step. To build the library just run <cite>make</cite>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make
+</pre></div>
+</div>
+<p>To speed up the build process using more CPUs, use the <cite>-j</cite> flag, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make -j <span class="m">8</span>
+</pre></div>
+</div>
+<p>The libraries will be installed in <strong>build/lib</strong> and some test applications are
+installed in build/bin. If you want to build the Python bindings, call:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make pygimli
+</pre></div>
+</div>
+<p>You might add J=8 (<cite>make pygimli J=8</cite>) for using 8 jobs in parallel to speed up
+the build (adapt this to the number of real cores of the computer). The library
+_pygimli_.so library will be copied into the source path
+<strong>../gimli/pygimli</strong> in the subdirectory core.</p>
+<p>To use the gimli installation you need to set some environment variables (this
+example assumes that the <strong>src</strong> directory resides in your home directory):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$PYTHONPATH</span>:<span class="nv">$HOME</span>/src/gimli/gimli
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LD_LIBRARY_PATH</span>:<span class="nv">$HOME</span>/src/gimli/build/lib
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$HOME</span>/src/gimli/build/bin
+</pre></div>
+</div>
+<p>If you want to use the C++ command line applications, call</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make apps
+</pre></div>
+</div>
+<p>Compiled binaries will be written to <cite>build/bin</cite>.</p>
+<p>You can do a quick test of the pygimli build and installation with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s1">&#39;import pygimli as pg; print(pg.__version__)&#39;</span>
+</pre></div>
+</div>
+<p>You can test your gimli build with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make check
+</pre></div>
+</div>
+<p>Note that the test will be very silent if you don’t have <em>cppunit</em> installed.</p>
+<p>If you install pytest with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install python-pytest python3-pytest
+</pre></div>
+</div>
+<p>then you can run the internal test suite with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s2">&quot;import pygimli; pygimli.test()&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="using-docker-to-build-in-debian-stretch-for-advanced-users-only">
+<h3>Using Docker to build in Debian stretch (for advanced users only!)<a class="headerlink" href="#using-docker-to-build-in-debian-stretch-for-advanced-users-only" title="Permalink to this headline"></a></h3>
+<p>If you want to use a Docker container to build (and possibly use) pyGIMLi, you
+can use the Dockerfile found in the <strong>scripts/</strong> subdirectory named
+<em>Dockerfile_DebianStretch</em>. Please refer to the file for further instructions.</p>
+</section>
+<section id="example-installation-on-ubuntu">
+<h3>Example Installation on Ubuntu<a class="headerlink" href="#example-installation-on-ubuntu" title="Permalink to this headline"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install libc-dev subversion git cmake mercurial
+sudo apt-get install libboost-all-dev libblas-dev liblapack-dev libedit-dev
+sudo apt-get install python3-dev python3-matplotlib python3-numpy
+
+mkdir -p ~/src/gimli
+<span class="nb">cd</span> ~/src/gimli
+git clone https://github.com/gimli-org/gimli.git
+
+mkdir -p build
+<span class="nb">cd</span> build
+cmake ../gimli
+make -j <span class="m">4</span> gimli
+make pygimli <span class="nv">J</span><span class="o">=</span><span class="m">4</span>
+</pre></div>
+</div>
+</section>
+<section id="troubleshooting">
+<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"></a></h3>
+<p>If you experience runtime problems on starting pygimli like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ImportError: /usr/lib/libboost_python.so: undefined symbol: PyClass_Type
+</pre></div>
+</div>
+<p>It may happen that CMake estimates the wrong libboost_python version by choosing py2 version instead of py3.
+You can force cmake to select the correct version with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../gimli -DBoost_PYTHON_LIBRARY<span class="o">=</span>/usr/lib64/libboost_python3.so
+</pre></div>
+</div>
+<p>If the build misses libedit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/usr/bin/ld: cannot find -ledit
+</pre></div>
+</div>
+<p>Install <em>libedit</em>, e.g. ‘apt-get install libedit’ on Debian/Ubuntu.</p>
+</section>
+<section id="castxml">
+<h3>castXML<a class="headerlink" href="#castxml" title="Permalink to this headline"></a></h3>
+<p>castXML (<a class="reference external" href="https://github.com/CastXML/CastXML/">https://github.com/CastXML/CastXML/</a>) is needed to generate the code for the python bindings.
+Some systems provide castxml binary so the build system should detect it if installed.
+As fallback solution the build system tries to install castxml binaries or try to compile there own if the binaries don’t work.
+You can enforce the local binary installation with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../../src/castXML/ -DCASTXML_LOCAL<span class="o">=</span><span class="m">1</span>
+make
+</pre></div>
+</div>
+<p>or the local binary compilation with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../../src/castXML/ -DCASTXML_LOCALSRC<span class="o">=</span><span class="m">1</span>
+make
+</pre></div>
+</div>
+<p>If castXML build complains about missing clang or llvm command, please go into
+$(GIMLISRC)/../thirdParty/build-XXX-XXX/castXML and try configure and build cmake manually</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CC</span><span class="o">=</span>clang-3.6 <span class="nv">CXX</span><span class="o">=</span>clang++-3.6 cmake ../../src/castXML/
+make
+</pre></div>
+</div>
+<p>If you build castXML manually you can provide this binary to cmake via</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../gimli -DCASTER_EXECUTABLE<span class="o">=</span><span class="k">$(</span>PATH_TO_CASTXML<span class="k">)</span>
+</pre></div>
+</div>
+</section>
+<section id="useful-cmake-settings">
+<h3>Useful cmake settings<a class="headerlink" href="#useful-cmake-settings" title="Permalink to this headline"></a></h3>
+<p>You can rebuild and update all local generated third party software by setting
+the CLEAN environment variable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CLEAN</span><span class="o">=</span><span class="m">1</span> cmake ../gimli
+</pre></div>
+</div>
+<p>Use alternative c++ compiler.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CC</span><span class="o">=</span>clang <span class="nv">CXX</span><span class="o">=</span>clang++ cmake ../gimli
+</pre></div>
+</div>
+<p>Define alternative python version. On default the version of your active python
+version will be chosen. You will need numpy and boost-python builds with your
+desired python version.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../gimli -DPYVERSION<span class="o">=</span><span class="m">3</span>.6
+</pre></div>
+</div>
+<p>Build the library with debug and profiling flags</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../gimli -DCMAKE_BUILD_TYPE<span class="o">=</span>Debug
+</pre></div>
+</div>
+<p>Build the library with gcc build.in sanity check</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../gimli -DCMAKE_BUILD_TYPE<span class="o">=</span>Debug -DASAN<span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+</section>
+<section id="useful-make-commands">
+<h3>Useful make commands<a class="headerlink" href="#useful-make-commands" title="Permalink to this headline"></a></h3>
+<p>More verbose build output to view the complete command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">VERBOSE</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div role="tabpanel" class="tab-pane" id="install_mac">
+<div>
+<div></section>
+</section>
+<section id="building-on-mac-os">
+<span id="sec-install-mac"></span><h2>Building on MAC OS<a class="headerlink" href="#building-on-mac-os" title="Permalink to this headline"></a></h2>
+<p>These installation instructions were proposed by Claudio Jordi (ETH Zurich) in a
+<a class="reference external" href="https://github.com/gimli-org/gimli/issues/46#issuecomment-357735129">GitHub issue</a>. Since
+we do not have access to Macs, this has not been tested thorougly. Please
+comment in the issue and let us know if it works.
+know it works in the corresponding GitHub issue.
+For installation instructions for MacOS, please refer to:</p>
+<p>In most cases, the following will suffice to compile pyGIMLi in the current
+directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#========================================</span>
+<span class="c1"># First install:</span>
+<span class="c1"># - Xcode (AppStore)</span>
+<span class="c1"># - XQuartz (https://www.xquartz.org)</span>
+<span class="c1"># - homebrew (https://brew.sh)</span>
+<span class="c1">#========================================</span>
+
+<span class="c1"># Install python3</span>
+
+brew install python3
+
+brew install boost --with-python3
+
+brew install boost-python --with-python3
+
+<span class="c1"># install some prerequisites that are not yet installed (might be more than what is here…)</span>
+
+brew install mercurial
+brew install wget
+
+<span class="c1"># install matplotlib, … using pip3 (for python3)</span>
+
+pip3 install scipy
+pip3 install numpy
+pip3 install matplotlib
+
+<span class="c1"># follow installation instructions from pygimli.org</span>
+
+mkdir -p ~/src
+<span class="nb">cd</span> src
+mkdir -p gimli
+<span class="nb">cd</span> gimli
+git clone https://github.com/gimli-org/gimli.git
+mkdir -p build
+
+<span class="nb">cd</span> build
+
+<span class="c1"># The version (here 3.6.4_2) needs to be set to the installed python3 version</span>
+
+cmake ../gimli -DPYTHON_EXECUTABLE<span class="o">=</span>/usr/local/bin/python3 -DPYTHON_INCLUDE_DIR<span class="o">=</span>/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/include/python3.6m -DPYTHON_LIBRARY<span class="o">=</span>/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/lib/libpython3.6.dylib -DPY_NUMPY<span class="o">=</span>/usr/local/lib/python3.6/site-packages/numpy
+
+<span class="c1"># This was needed for the compilation of some c++ stuff</span>
+<span class="nb">export</span> <span class="nv">CPLUS_INCLUDE_PATH</span><span class="o">=</span>/usr/local/Cellar/python3/3.6.4_2/Frameworks/Python.framework/Versions/3.6/Headers
+
+make -j <span class="m">8</span>
+
+make pygimli
+
+curl -Ls install.pygimli.org <span class="p">|</span> bash
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Conda packages for Mac OS will follow soon.</p>
+</div>
+</div>
+</div>
+<div role="tabpanel" class="tab-pane" id="install_pre">
+<div></section>
+<section id="prerequisites">
+<span id="sec-install-pre"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline"></a></h2>
+<p>To build pyGIMLi from source, the following tools are required:</p>
+<ul>
+<li><p>subversion, git, mercurial, wget, tar</p></li>
+<li><p>cmake &gt;= 2.8.10</p></li>
+<li><p>gcc &gt;= 4.4</p></li>
+<li><p>&gt;=Python-3.5 | &gt;=Python-2.7</p></li>
+<li><p>numpy-dev</p></li>
+<li><p>&gt;=matplotlib-3.0</p></li>
+<li><p>&gt;=clang++-3.6.0 (3.7.0, 3.8.0)</p></li>
+<li><p>libclang-3.7-dev</p></li>
+<li><p>&gt;=llvm-3.6.0 (3.7.0, 3.8.0)</p></li>
+<li><p>libz-dev</p></li>
+<li><p>python-setuptools</p>
+<blockquote>
+<div><p>tested on:</p>
+<ul class="simple">
+<li><p>gentoo x86_64: gcc-4.4.5, gcc-4.5.3, gcc-4.5.4, gcc-4.9.2 gcc-5.3.0</p></li>
+<li><p>Debian 3.2.46-1 x86_64: gcc-4.7.2</p></li>
+<li><p>Ubuntu 16.04 LTS with gcc-5.4.0</p></li>
+<li><p>Arch Linux gcc-5.2.0</p></li>
+<li><p>CentOS</p></li>
+<li><p>MinGW32: gcc-4.6.2/4, gcc-4.7.2, gcc-5.2.0</p></li>
+<li><p>MinGW64: gcc-4.5.4, gcc-5.2.0, gcc-6.3.0, gcc-7.1.0</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<section id="optional-prerequisites">
+<h3>Optional Prerequisites<a class="headerlink" href="#optional-prerequisites" title="Permalink to this headline"></a></h3>
+<p>These tools can be installed system-wide with your native package manager (i.e.
+apt-get). If not found, the provided build scripts will automatically download
+and compile the necessary components.</p>
+<ul class="simple">
+<li><p>libboost &gt;=1.46 (python) (1.46, 1.48, 1.49, 1.51, 1.52, 1.53, 1.57)</p></li>
+<li><p>blas and lapack for suitesparse (system or auto via cmake)</p></li>
+<li><p>SuiteSparse (<a class="reference external" href="http://faculty.cse.tamu.edu/davis/suitesparse.html">http://faculty.cse.tamu.edu/davis/suitesparse.html</a>)</p></li>
+<li><p>cppunit</p></li>
+<li><p>procps</p></li>
+<li><p>triangle (<a class="reference external" href="http://www.cs.cmu.edu/~quake/triangle.html">http://www.cs.cmu.edu/~quake/triangle.html</a>)</p></li>
+</ul>
+</section>
+<section id="prerequisites-automatically-installed-by-the-installer">
+<h3>Prerequisites automatically installed by the installer<a class="headerlink" href="#prerequisites-automatically-installed-by-the-installer" title="Permalink to this headline"></a></h3>
+<p>These tools are required to create the Python bindings and are likely to be
+outdated in your distribution and should therefore not be installed
+system-wide. The build scripts will install them automatically.</p>
+<ul class="simple">
+<li><p>castxml</p></li>
+<li><p>pygccxml</p></li>
+<li><p>pyplusplus</p></li>
+</ul>
+</div>
+</div></section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

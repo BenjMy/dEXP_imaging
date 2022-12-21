@@ -1,6 +1,6 @@
 """
-Sensitivity analysis of DEXP to anomaly width on Mise-Ã -la-masse 
------------------------------------------------------------------
+Sensitivity analysis of DEXP to anomaly width
+---------------------------------------------
 
 This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of electrical sources positions and depth using the dEXP tranformation method.
 dEXP method implementation from Fedi et al. 2012. 
@@ -119,7 +119,7 @@ for fi in filenames:
     #                                       method_peak='find_peaks')  
     
     # or  find_peaks or peakdet or spline_roots
-    dfI,dfII, dfIII = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
+    dfI,dfII, dfIII, ax = dEXP.ridges_minmax(xp, yp, mesh, p1, p2,
                                           label=label_prop,
                                           fix_peak_nb=2,
                                           method_peak='find_peaks',
@@ -176,6 +176,7 @@ plt, cmap = pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax1, Xaxis='y',
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
 ax2 = pEXP.plot_ridges_sources(DF_FIT[i], ax=ax1, z_max_source=-max_elevation*1.2,
                       ridge_type=[0,1,2],ridge_nb=None)
+plt.tight_layout()
 
 
 #%% 
@@ -190,3 +191,4 @@ plt, cmap = pEXP.plot_xy(MESH[i], label=LABEL[i], ax=ax1, Xaxis='y',
 pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax1,label=True)
 ax2 = pEXP.plot_ridges_sources(DF_FIT[i], ax=ax1, z_max_source=-max_elevation*1.2,
                       ridge_type=[0,1,2],ridge_nb=None)
+plt.tight_layout()

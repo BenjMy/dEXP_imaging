@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API reference: The pydEXP package &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Preprocessing of MALM for dEXP" href="../../auto_examples/malm/clearB.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-plot_dEXP"><code class="docutils literal notranslate"><span class="pre">plot_dEXP</span></code>: plotter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils_dEXP"><code class="docutils literal notranslate"><span class="pre">utils_dexp</span></code>: utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/content/api_core/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-dEXP">
+<span id="api-reference-the-pydexp-package"></span><h1>API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package<a class="headerlink" href="#module-dEXP" title="Permalink to this headline"></a></h1>
+<p>Imaging methods for potential fields.</p>
+<p>Implements the DEXP method described in Fedi and Pilkington (2012).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is part of a larger project aiming at inverting current sources density (see more at: <a class="reference external" href="https://icsd-dev.readthedocs.io/en/latest/">https://icsd-dev.readthedocs.io/en/latest/</a>)</p>
+</div>
+<p><strong>References</strong></p>
+<p>Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential
+field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1</p>
+<hr class="docutils" />
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.dEXP">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">dEXP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlayers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SI</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#dEXP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.dEXP" title="Permalink to this definition"></a></dt>
+<dd><p>DEXP model (Fedi, 2012). (NOT YET TESTED)</p>
+<p>Calculates a physical property distribution given potential field data on a
+<strong>regular grid</strong>. Uses depth weights.
+Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>x, y<span class="classifier">1D-arrays</span></dt><dd><p>The x and y coordinates of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>z<span class="classifier">float or 1D-array</span></dt><dd><p>The z coordinate of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>data<span class="classifier">1D-array</span></dt><dd><p>The potential field at the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>shape<span class="classifier">tuple = (ny, nx)</span></dt><dd><p>The shape of the grid</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>zmin, zmax<span class="classifier">float</span></dt><dd><p>The top and bottom, respectively, of the region where the physical
+property distribution is calculated</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>nlayers<span class="classifier">int</span></dt><dd><p>The number of layers used to divide the region where the physical
+property distribution is calculated</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>qorder<span class="classifier">float</span></dt><dd><p>The order of the vertical derivative</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>SI<span class="classifier">float</span></dt><dd><p>The structural index</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li><dl>
+<dt>mesh<span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">fatiando.mesher.PrismMesh</span></code></span></dt><dd><p>The estimated physical property distribution set in a prism mesh (for
+easy 3D plotting)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.dEXP_ratio">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">dEXP_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlayers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qorders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnField</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#dEXP_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.dEXP_ratio" title="Permalink to this definition"></a></dt>
+<dd><p>DEXP ratio model (NOT YET validated)
+Abbas, M. A., and Fedi, M. (2014). Automatic DEXP
+imaging of potential fields independent of the structural index. Geophysical Journal
+International, 199 (3), 1625-1632.</p>
+<p>Calculates a physical property distribution given potential field data on a
+<strong>regular grid</strong>. Uses depth weights.
+Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>x, y<span class="classifier">1D-arrays</span></dt><dd><p>The x and y coordinates of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>z<span class="classifier">float or 1D-array</span></dt><dd><p>The z coordinate of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>data<span class="classifier">1D-array</span></dt><dd><p>The potential field at the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>shape<span class="classifier">tuple = (ny, nx)</span></dt><dd><p>The shape of the grid</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>zmin, zmax<span class="classifier">float</span></dt><dd><p>The top and bottom, respectively, of the region where the physical
+property distribution is calculated</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>nlayers<span class="classifier">int</span></dt><dd><p>The number of layers used to divide the region where the physical
+property distribution is calculated</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>qorders<span class="classifier">1D-array</span></dt><dd><p>The order of the derivatives for the ratio calculation</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li><dl>
+<dt>mesh<span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">fatiando.mesher.PrismMesh</span></code></span></dt><dd><p>The estimated physical property distribution set in a prism mesh (for
+easy 3D plotting)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.filter_ridges">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">filter_ridges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dfIf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dfIIf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dfIIIf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minDepth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxDepth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minlength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmvNaN</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#filter_ridges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.filter_ridges" title="Permalink to this definition"></a></dt>
+<dd><p>Filter non-rectiligne ridges (denoising)</p>
+<p>Parameters:
+dfI: dataframe</p>
+<blockquote>
+<div><p>contains ridges of type I</p>
+</div></blockquote>
+<dl class="simple">
+<dt>dfII: dataframe</dt><dd><p>contains ridges of type II</p>
+</dd>
+<dt>dfIII: dataframe</dt><dd><p>contains ridges of type III</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><dl class="simple">
+<dt>minDepth</dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+<li><p>maxDepth</p></li>
+<li><p>kwargs</p></li>
+</ul>
+<dl class="simple">
+<dt>heights: dataframe</dt><dd><p>contains heights of ridges of type I</p>
+</dd>
+</dl>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>BB :</dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.fit_ridges">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">fit_ridges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmvOutliers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#fit_ridges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.fit_ridges" title="Permalink to this definition"></a></dt>
+<dd><p>Fit ridges and return points and fit equations to plot</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>df</dt><dd><p>dataframe including all tree types of ridges</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>BB :</dt><dd><p>points and fit equations to plot</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.peakdet">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">peakdet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#peakdet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.peakdet" title="Permalink to this definition"></a></dt>
+<dd><p>Converted from MATLAB script at <a class="reference external" href="http://billauer.co.il/peakdet.html">http://billauer.co.il/peakdet.html</a></p>
+<p>Returns two arrays</p>
+<p>function [maxtab, mintab]=peakdet(v, delta, x)
+%PEAKDET Detect peaks in a vector
+%        [MAXTAB, MINTAB] = PEAKDET(V, DELTA) finds the local
+%        maxima and minima (“peaks”) in the vector V.
+%        MAXTAB and MINTAB consists of two columns. Column 1
+%        contains indices in V, and column 2 the found values.
+%
+%        With [MAXTAB, MINTAB] = PEAKDET(V, DELTA, X) the indices
+%        in MAXTAB and MINTAB are replaced with the corresponding
+%        X-values.
+%
+%        A point is considered a maximum peak if it has the maximal
+%        value, and was preceded (to the left) by a value lower by
+%        DELTA.</p>
+<p>% Eli Billauer, 3.4.05 (Explicitly not copyrighted).
+% This function is released to the public domain; Any use is allowed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.profile_extra">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">profile_extra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cubic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#profile_extra"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.profile_extra" title="Permalink to this definition"></a></dt>
+<dd><p>Extract a profile between 2 points from spacial data.</p>
+<p>Uses interpolation to calculate the data values at the profile points.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>x, y<span class="classifier">1D arrays</span></dt><dd><p>Arrays with the x and y coordinates of the data points.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>v<span class="classifier">1D array</span></dt><dd><p>Array with the scalar value assigned to the data points.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>point1, point2<span class="classifier">lists = [x, y]</span></dt><dd><p>Lists the x, y coordinates of the 2 points between which the profile
+will be extracted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>size<span class="classifier">int</span></dt><dd><p>Number of points along the profile.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>algorithm<span class="classifier">string</span></dt><dd><p>Interpolation algorithm. Either <code class="docutils literal notranslate"><span class="pre">'cubic'</span></code>, <code class="docutils literal notranslate"><span class="pre">'nearest'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'linear'</span></code> (see scipy.interpolate.griddata).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>[xp, yp, distances, vp]<span class="classifier">1d arrays</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">xp</span></code> and <code class="docutils literal notranslate"><span class="pre">yp</span></code> are the x, y coordinates of the points along the
+profile. <code class="docutils literal notranslate"><span class="pre">distances</span></code> are the distances of the profile points from
+<code class="docutils literal notranslate"><span class="pre">point1</span></code>. <code class="docutils literal notranslate"><span class="pre">vp</span></code> are the data points along the profile.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.profile_noInter">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">profile_noInter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#profile_noInter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.profile_noInter" title="Permalink to this definition"></a></dt>
+<dd><p>Extract a profile between 2 points from spacial data.</p>
+<p>NO interpolation to calculate the data values at the profile points (find nearest point).</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>x, y<span class="classifier">1D arrays</span></dt><dd><p>Arrays with the x and y coordinates of the data points.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>v<span class="classifier">1D array</span></dt><dd><p>Array with the scalar value assigned to the data points.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>point1, point2<span class="classifier">lists = [x, y]</span></dt><dd><p>Lists the x, y coordinates of the 2 points between which the profile
+will be extracted.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>size<span class="classifier">int</span></dt><dd><p>Number of points along the profile.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>[xp, yp, distances, vp]<span class="classifier">1d arrays</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">xp</span></code> and <code class="docutils literal notranslate"><span class="pre">yp</span></code> are the x, y coordinates of the points along the
+profile. <code class="docutils literal notranslate"><span class="pre">distances</span></code> are the distances of the profile points from
+<code class="docutils literal notranslate"><span class="pre">point1</span></code>. <code class="docutils literal notranslate"><span class="pre">vp</span></code> are the data points along the profile.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.ridges_intersection_Z0">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">ridges_intersection_Z0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ridge_nb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#ridges_intersection_Z0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.ridges_intersection_Z0" title="Permalink to this definition"></a></dt>
+<dd><p>Find intersection of ridges (NOT YET IMPLEMENTED)</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>a</dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>BB :</dt><dd><p>return intersection by pairs</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.ridges_minmax">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">ridges_minmax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'upwc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_peak_nb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#ridges_minmax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.ridges_minmax" title="Permalink to this definition"></a></dt>
+<dd><p>Form a multiridge set
+RI and RII : zeros of the first horizontal and first vertical derivatives of the potential field
+RIII :zeros of the potential field itself</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ridges generated by isolated simple sources point, line, sheet, and contact are straight lines defined by the zeros of a potential</p>
+</div>
+<p>field and its horizontal and vertical derivatives at all measured or computed levels</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>x, y<span class="classifier">1D-arrays</span></dt><dd><p>The x and y coordinates of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>mesh<span class="classifier">fatiando.mesher.PrismMesh</span></dt><dd><p>The estimated physical property distribution set in a prism mesh (for easy 3D plotting). The upward continuated field mesh (of order-q derivative).
+Read the property label ‘upwc’ of the mesh by default</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>p1, p2<span class="classifier">1D-arrays</span></dt><dd><p>The p1 and p2 coordinates of the extracted profile end points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>qorder<span class="classifier">int</span></dt><dd><p>The derivative order</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>z<span class="classifier">float or 1D-array</span></dt><dd><p>The z coordinate of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>label<span class="classifier">string</span></dt><dd><p>Label of the estimated physical property distribution</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>fix_peak_nb<span class="classifier">int</span></dt><dd><p>The maximum number of peak to identify</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>interp<span class="classifier">True or False</span></dt><dd><p>If True, will interpolate values between the data points.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>smooth<span class="classifier">True or False</span></dt><dd><p>If True, will apply a low-pass filter values.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>showfig<span class="classifier">True or False</span></dt><dd><p>If True, will display the figure.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="simple">
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs</dt><dd><p>prominence for peak detection
+reverse: start peak analysis from bottom to top</p>
+</dd>
+</dl>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>MinMax_peaks :</dt><dd><p>Panda dataframe containing ridges RI, RII and RII</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.ridges_minmax_plot">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">ridges_minmax_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_peak_nb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'upwc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#ridges_minmax_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.ridges_minmax_plot" title="Permalink to this definition"></a></dt>
+<dd><ul class="simple">
+<li><dl class="simple">
+<dt>x, y<span class="classifier">1D-arrays</span></dt><dd><p>The x and y coordinates of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>mesh<span class="classifier">fatiando.mesher.PrismMesh</span></dt><dd><p>The estimated physical property distribution set in a prism mesh (for easy 3D plotting)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>p1, p2<span class="classifier">1D-arrays</span></dt><dd><p>The p1 and p2 coordinates of the extracted profile end points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>qorder<span class="classifier">int</span></dt><dd><p>The derivative order</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>z<span class="classifier">float or 1D-array</span></dt><dd><p>The z coordinate of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>fix_peak_nb<span class="classifier">int</span></dt><dd><p>The maximum number of peak to identify</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>label<span class="classifier">string</span></dt><dd><p>Label of the estimated physical property distribution</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>interp<span class="classifier">True or False</span></dt><dd><p>If True, will interpolate values between the data points.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>smooth<span class="classifier">True or False</span></dt><dd><p>If True, will apply a low-pass filter values.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>showfig<span class="classifier">True or False</span></dt><dd><p>If True, will display the figure.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.scalEULER">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">scalEULER</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">EXTnb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#scalEULER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.scalEULER" title="Permalink to this definition"></a></dt>
+<dd><p>Analysis (Euler deconvolution of ridges, Fedi 2019) (NOT YET IMPLEMENTED)</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>a</dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>BB :</dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.scalFUN">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">scalFUN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">EXTnb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#scalFUN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.scalFUN" title="Permalink to this definition"></a></dt>
+<dd><p>Analysis of ridges (NOT YET IMPLEMENTED)</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>a</dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>BB :</dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dEXP.upwc">
+<span class="sig-prename descclassname"><span class="pre">dEXP.</span></span><span class="sig-name descname"><span class="pre">upwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlayers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/dEXP.html#upwc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dEXP.upwc" title="Permalink to this definition"></a></dt>
+<dd><p>Upward continuation model (Fedi, 2012).</p>
+<p>Calculates the upward continuation for given potential field data on a
+<strong>regular grid</strong>.
+Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>x, y<span class="classifier">1D-arrays</span></dt><dd><p>The x and y coordinates of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>z<span class="classifier">float or 1D-array</span></dt><dd><p>The z coordinate of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>data<span class="classifier">1D-array</span></dt><dd><p>The potential field at the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>shape<span class="classifier">tuple = (ny, nx)</span></dt><dd><p>The shape of the grid</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>zmin, zmax<span class="classifier">float</span></dt><dd><p>The top and bottom, respectively, of the region where the physical
+property distribution is calculated</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>nlayers<span class="classifier">int</span></dt><dd><p>The number of layers used to divide the region where the physical
+property distribution is calculated</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>qorder<span class="classifier">float</span></dt><dd><p>The order of the vertical derivative</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li><dl>
+<dt>mesh<span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">fatiando.mesher.PrismMesh</span></code></span></dt><dd><p>The estimated physical property distribution set in a prism mesh (for
+easy 3D plotting)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<section id="module-plot_dEXP">
+<span id="plot-dexp-plotter"></span><h2><code class="docutils literal notranslate"><span class="pre">plot_dEXP</span></code>: plotter<a class="headerlink" href="#module-plot_dEXP" title="Permalink to this headline"></a></h2>
+<p>Some functions to plot results from DEXP transformation</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="plot_dEXP.label2unit">
+<span class="sig-prename descclassname"><span class="pre">plot_dEXP.</span></span><span class="sig-name descname"><span class="pre">label2unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/plot_dEXP.html#label2unit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plot_dEXP.label2unit" title="Permalink to this definition"></a></dt>
+<dd><p>Convert label name to unit</p>
+<p>label : str</p>
+<p>unit : str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plot_dEXP.plot_line">
+<span class="sig-prename descclassname"><span class="pre">plot_dEXP.</span></span><span class="sig-name descname"><span class="pre">plot_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/plot_dEXP.html#plot_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plot_dEXP.plot_line" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>x<span class="classifier">TYPE</span></dt><dd><p>x coords of the 2d map.</p>
+</dd>
+<dt>y<span class="classifier">TYPE</span></dt><dd><p>y coords of the 2d map..</p>
+</dd>
+<dt>data<span class="classifier">TYPE</span></dt><dd><p>2d map dataset.</p>
+</dd>
+<dt>p1<span class="classifier">list</span></dt><dd><p>initial point coordinate (x,y) of the extracted profile.</p>
+</dd>
+<dt>p2<span class="classifier">list</span></dt><dd><p>final point coordinate (x,y) of the extracted profile.</p>
+</dd>
+</dl>
+<p><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs</p>
+<dl class="simple">
+<dt>xx<span class="classifier">np.array</span></dt><dd><p>interpolated x.</p>
+</dd>
+<dt>yy<span class="classifier">np.array</span></dt><dd><p>interpolated y.</p>
+</dd>
+<dt>distance<span class="classifier">np.array</span></dt><dd><p>profile distance.</p>
+</dd>
+<dt>profile<span class="classifier">TYPE</span></dt><dd><p>data values along the profile.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plot_dEXP.plot_ridges_harmonic">
+<span class="sig-prename descclassname"><span class="pre">plot_dEXP.</span></span><span class="sig-name descname"><span class="pre">plot_ridges_harmonic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">RI</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RII</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RIII</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/plot_dEXP.html#plot_ridges_harmonic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plot_dEXP.plot_ridges_harmonic" title="Permalink to this definition"></a></dt>
+<dd><p>Plot ridges in the harmonic domain</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>a</dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>BB<span class="classifier"></span></dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plot_dEXP.plot_ridges_sources">
+<span class="sig-prename descclassname"><span class="pre">plot_dEXP.</span></span><span class="sig-name descname"><span class="pre">plot_ridges_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_fit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ridge_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ridge_nb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_max_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/plot_dEXP.html#plot_ridges_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plot_dEXP.plot_ridges_sources" title="Permalink to this definition"></a></dt>
+<dd><p>Plot ridges in the source domain and observe intersection point</p>
+<p>Parameters:
+* df_fit</p>
+<blockquote>
+<div><p>dataframe fit</p>
+</div></blockquote>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>BB<span class="classifier"></span></dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plot_dEXP.plot_scalFUN">
+<span class="sig-prename descclassname"><span class="pre">plot_dEXP.</span></span><span class="sig-name descname"><span class="pre">plot_scalFUN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/plot_dEXP.html#plot_scalFUN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plot_dEXP.plot_scalFUN" title="Permalink to this definition"></a></dt>
+<dd><p>Plot scalfun function analysis</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>a</dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>BB<span class="classifier"></span></dt><dd><p>Text here</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plot_dEXP.plot_xy">
+<span class="sig-prename descclassname"><span class="pre">plot_dEXP.</span></span><span class="sig-name descname"><span class="pre">plot_xy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markerMax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/plot_dEXP.html#plot_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plot_dEXP.plot_xy" title="Permalink to this definition"></a></dt>
+<dd><p>Get vertical xy section of the mesh at max/2 and plot it</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>mesh</dt><dd><p>Fatiando mesh type</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>scaled</dt><dd><p>ratio for plot visualisation</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>label</dt><dd><p>legend label</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>ax</dt><dd><p>plot axis</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>markerMax</dt><dd><p>show marker max</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plot_dEXP.plot_z">
+<span class="sig-prename descclassname"><span class="pre">plot_dEXP.</span></span><span class="sig-name descname"><span class="pre">plot_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/plot_dEXP.html#plot_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plot_dEXP.plot_z" title="Permalink to this definition"></a></dt>
+<dd><p>Get horizontal sections at z levels and plot it</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>mesh</dt><dd><p>Fatiando mesh type</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plot_dEXP.slice_mesh">
+<span class="sig-prename descclassname"><span class="pre">plot_dEXP.</span></span><span class="sig-name descname"><span class="pre">slice_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/plot_dEXP.html#slice_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#plot_dEXP.slice_mesh" title="Permalink to this definition"></a></dt>
+<dd><p>Get vertical xy section of the mesh at max/2 and plot it</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>mesh</dt><dd><p>Fatiando mesh type</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>scaled</dt><dd><p>Txt here</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>label</dt><dd><p>Txt here
+Txt here</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>markerMax</dt><dd><p>Txt here</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+</section>
+<section id="module-utils_dEXP">
+<span id="utils-dexp-utils"></span><h2><code class="docutils literal notranslate"><span class="pre">utils_dexp</span></code>: utils<a class="headerlink" href="#module-utils_dEXP" title="Permalink to this headline"></a></h2>
+<p>Miscellaneous utility functions.</p>
+<p>&#64;author: Benjamin</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils_dEXP.cor_field_B">
+<span class="sig-prename descclassname"><span class="pre">utils_dEXP.</span></span><span class="sig-name descname"><span class="pre">cor_field_B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/utils_dEXP.html#cor_field_B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils_dEXP.cor_field_B" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the potential field (electric) produced by a current injection in B (return electrode) for a
+given homogeneous electrical resistivity rho.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>x, y<span class="classifier">1D-arrays</span></dt><dd><p>The x and y coordinates of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>z<span class="classifier">float or 1D-array</span></dt><dd><p>The z coordinate of the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>u<span class="classifier">1D-array</span></dt><dd><p>The potential field at the grid points</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Bu<span class="classifier">1D-array</span></dt><dd><p>The position of the return electrode B</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>rho<span class="classifier">int</span></dt><dd><p>The estimated electrical resistivity of the medium</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="simple">
+<dt>u_cor<span class="classifier">1D-arrays</span></dt><dd><p>The corrected from the B return electrode influence potential field at the grid points</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils_dEXP.load_surfer">
+<span class="sig-prename descclassname"><span class="pre">utils_dEXP.</span></span><span class="sig-name descname"><span class="pre">load_surfer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float64'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/utils_dEXP.html#load_surfer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils_dEXP.load_surfer" title="Permalink to this definition"></a></dt>
+<dd><p>Read data from a Surfer ASCII grid file.</p>
+<p>Surfer is a contouring, griding and surface mapping software
+from GoldenSoftware. The names and logos for Surfer and Golden
+Software are registered trademarks of Golden Software, Inc.</p>
+<p><a class="reference external" href="http://www.goldensoftware.com/products/surfer">http://www.goldensoftware.com/products/surfer</a></p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>fname<span class="classifier">str</span></dt><dd><p>Name of the Surfer grid file</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>dtype<span class="classifier">numpy dtype object or string</span></dt><dd><p>The type of variable used for the data. Default is numpy.float64. Use
+numpy.float32 if the data are large and precision is not an issue.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>data<span class="classifier">dict</span></dt><dd><p>The data in a dictionary with some metadata:</p>
+<ul>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'file'</span></code><span class="classifier">string</span></dt><dd><p>The name of the original data file</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'shape'</span></code><span class="classifier">tuple</span></dt><dd><p>(nx, ny), the number of grid points in x (North) and y (East)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'area'</span></code><span class="classifier">tuple</span></dt><dd><p>(x1, x2, y1, y2), the spacial limits of the grid.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'x'</span></code><span class="classifier">1d-array</span></dt><dd><p>Value of the North-South coordinate of each grid point.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'y'</span></code><span class="classifier">1d-array</span></dt><dd><p>Value of the East-West coordinate of each grid point.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'data'</span></code><span class="classifier">1d-array</span></dt><dd><p>Values of the field in each grid point. Field can be for example
+topography, gravity anomaly, etc. If any field values are &gt;=
+1.70141e+38 (Surfers way of marking NaN values), the array will be
+masked at those values (i.e., <code class="docutils literal notranslate"><span class="pre">'data'</span></code> will be a numpy masked
+array).</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../auto_examples/malm/clearB.html" class="btn btn-neutral float-left" title="Preprocessing of MALM for dEXP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Example of gravimetric potential field data analysis using pyDEXP &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Magnetic field data analysis using pyDEXP: a 2-sources case" href="../magnetic/run_mag_2sources_DEXP.html" />
+    <link rel="prev" title="Introduction" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html#gravimetric-potential-field-data">Gravimetric potential field data</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example of gravimetric potential field data analysis using pyDEXP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Introduction</a> &raquo;</li>
+      <li>Example of gravimetric potential field data analysis using pyDEXP</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/auto_examples/gravimetry/run_grav.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-gravimetry-run-grav-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="example-of-gravimetric-potential-field-data-analysis-using-pydexp">
+<span id="sphx-glr-auto-examples-gravimetry-run-grav-py"></span><h1>Example of gravimetric potential field data analysis using pyDEXP<a class="headerlink" href="#example-of-gravimetric-potential-field-data-analysis-using-pydexp" title="Permalink to this headline"></a></h1>
+<p>This code shows a step-by-step processing of potential field imaging aiming at giving an estimate of the depth of the anomaly depth using the dEXP tranformation method.
+dEXP method implementation from Fedi et al. 2012.
+Calculations used <a class="reference internal" href="../../content/api_core/api.html#module-dEXP" title="dEXP"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dEXP</span></code></a>, while plotting use the <a class="reference internal" href="../../content/api_core/api.html#module-plot_dEXP" title="plot_dEXP"><code class="xref py py-mod docutils literal notranslate"><span class="pre">plot_dEXP</span></code></a> module.</p>
+<p>The gravimetric model data was created using geometric objects from <code class="xref py py-mod docutils literal notranslate"><span class="pre">fatiando.mesher</span></code>. The forward simulation of the data was done using <code class="xref py py-mod docutils literal notranslate"><span class="pre">fatiando.gravmag</span></code> module.</p>
+<dl class="simple">
+<dt>Sources locations:</dt><dd><p>Center of mass = [,,] # xyz coordinates
+l.w.h = ,,, # length, width, height (in m)</p>
+</dd>
+<dt>Sources properties:</dt><dd><p>density contrast= ?</p>
+</dd>
+</dl>
+<p>Implements the DEXP method described in Fedi and Pilkington (2012). Application on a anomaly of density  (gravimetry).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is part of a larger project aiming at inverting current sources density (see more at: <a class="reference external" href="https://icsd-dev.readthedocs.io/en/latest/">https://icsd-dev.readthedocs.io/en/latest/</a>)</p>
+</div>
+<p><strong>References</strong></p>
+<p>Uieda, L., V. C. Oliveira Jr, and V. C. F. Barbosa (2013), Modeling the Earth with Fatiando a Terra, Proceedings of the 12th Python in Science Conference, pp. 91 - 98.</p>
+<p>Uieda, L. (2018). Verde: Processing and gridding spatial data using Green’s functions. Journal of Open Source Software, 3(29), 957. doi:10.21105/joss.00957</p>
+<p>Fedi, M., and M. Pilkington (2012), Understanding imaging methods for potential
+field data, Geophysics, 77(1), G13, doi:10.1190/geo2011-0078.1</p>
+<hr class="docutils" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">fatiando.vis</span> <span class="kn">import</span> <span class="n">mpl</span> <span class="c1">#, myv</span>
+<span class="kn">from</span> <span class="nn">fatiando</span> <span class="kn">import</span> <span class="n">gridder</span><span class="p">,</span> <span class="n">mesher</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">fatiando.gravmag</span> <span class="kn">import</span> <span class="n">prism</span><span class="p">,</span> <span class="n">imaging</span><span class="p">,</span> <span class="n">transform</span>
+<span class="kn">from</span> <span class="nn">fatiando.vis.mpl</span> <span class="kn">import</span> <span class="n">square</span>
+
+<span class="c1"># my own functions</span>
+<span class="kn">import</span> <span class="nn">lib.dEXP</span> <span class="k">as</span> <span class="nn">dEXP</span>
+<span class="kn">from</span> <span class="nn">lib.dEXP</span> <span class="kn">import</span> <span class="n">_fit</span>
+<span class="kn">import</span> <span class="nn">lib.plot_dEXP</span> <span class="k">as</span> <span class="nn">pEXP</span>
+<span class="kn">import</span> <span class="nn">lib.set_parameters</span> <span class="k">as</span> <span class="nn">para</span>
+
+<span class="c1"># exemples</span>
+<span class="kn">import</span> <span class="nn">examples.gravimetry.loadgrav.grav_models</span> <span class="k">as</span> <span class="nn">grav</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">ticker</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15</span>
+</pre></div>
+</div>
+<p>load model previously generated using Fatiando a terra package</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="n">data_struct</span> <span class="o">=</span> <span class="n">grav</span><span class="o">.</span><span class="n">load_grav_fatiando</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;loadgrav/za3000_zb3500_l500_ofs0_dens1200.pkl&#39;</span><span class="p">)</span>
+
+<span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">,</span><span class="n">zp</span><span class="p">,</span><span class="n">U</span> <span class="o">=</span> <span class="n">data_struct</span><span class="p">[</span><span class="s1">&#39;xyzg&#39;</span><span class="p">]</span>
+<span class="n">shape</span> <span class="o">=</span> <span class="n">data_struct</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">data_struct</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span>
+<span class="n">dens</span>  <span class="o">=</span> <span class="n">data_struct</span><span class="p">[</span><span class="s1">&#39;density&#39;</span><span class="p">]</span>
+<span class="c1"># scaled, SI, zp, qorder, nlay, minAlt_ridge, maxAlt_ridge = para.set_par(shape=shape,max_elevation=max_elevation)</span>
+
+<span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_bounds</span><span class="p">())</span>
+
+<span class="n">p1</span> <span class="o">=</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">yp</span><span class="p">),</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">p2</span> <span class="o">=</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">yp</span><span class="p">),</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">max_elevation</span><span class="o">=</span><span class="n">z2</span><span class="o">*</span><span class="mf">1.2</span>
+<span class="n">scaled</span><span class="p">,</span> <span class="n">SI</span><span class="p">,</span> <span class="n">zp</span><span class="p">,</span> <span class="n">qorder</span><span class="p">,</span> <span class="n">nlay</span><span class="p">,</span> <span class="n">minAlt_ridge</span><span class="p">,</span> <span class="n">maxAlt_ridge</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">set_par</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span><span class="n">max_elevation</span><span class="o">=</span><span class="n">max_elevation</span><span class="p">)</span>
+<span class="n">interp</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">qorder</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">x_axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span>
+</pre></div>
+</div>
+<p>Plot the data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pEXP</span><span class="o">.</span><span class="n">plot_line</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="n">interp</span><span class="p">,</span><span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_grav_001.png" srcset="../../_images/sphx_glr_run_grav_001.png" alt="Original data" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(array([-6000.        , -5987.98798799, -5975.97597598, -5963.96396396,
+       -5951.95195195, -5939.93993994, -5927.92792793, -5915.91591592,
+       -5903.9039039 , -5891.89189189, -5879.87987988, -5867.86786787,
+       -5855.85585586, -5843.84384384, -5831.83183183, -5819.81981982,
+       -5807.80780781, -5795.7957958 , -5783.78378378, -5771.77177177,
+       -5759.75975976, -5747.74774775, -5735.73573574, -5723.72372372,
+       -5711.71171171, -5699.6996997 , -5687.68768769, -5675.67567568,
+       -5663.66366366, -5651.65165165, -5639.63963964, -5627.62762763,
+       -5615.61561562, -5603.6036036 , -5591.59159159, -5579.57957958,
+       -5567.56756757, -5555.55555556, -5543.54354354, -5531.53153153,
+       -5519.51951952, -5507.50750751, -5495.4954955 , -5483.48348348,
+       -5471.47147147, -5459.45945946, -5447.44744745, -5435.43543544,
+       -5423.42342342, -5411.41141141, -5399.3993994 , -5387.38738739,
+       -5375.37537538, -5363.36336336, -5351.35135135, -5339.33933934,
+       -5327.32732733, -5315.31531532, -5303.3033033 , -5291.29129129,
+       -5279.27927928, -5267.26726727, -5255.25525526, -5243.24324324,
+       -5231.23123123, -5219.21921922, -5207.20720721, -5195.1951952 ,
+       -5183.18318318, -5171.17117117, -5159.15915916, -5147.14714715,
+       -5135.13513514, -5123.12312312, -5111.11111111, -5099.0990991 ,
+       -5087.08708709, -5075.07507508, -5063.06306306, -5051.05105105,
+       -5039.03903904, -5027.02702703, -5015.01501502, -5003.003003  ,
+       -4990.99099099, -4978.97897898, -4966.96696697, -4954.95495495,
+       -4942.94294294, -4930.93093093, -4918.91891892, -4906.90690691,
+       -4894.89489489, -4882.88288288, -4870.87087087, -4858.85885886,
+       -4846.84684685, -4834.83483483, -4822.82282282, -4810.81081081,
+       -4798.7987988 , -4786.78678679, -4774.77477477, -4762.76276276,
+       -4750.75075075, -4738.73873874, -4726.72672673, -4714.71471471,
+       -4702.7027027 , -4690.69069069, -4678.67867868, -4666.66666667,
+       -4654.65465465, -4642.64264264, -4630.63063063, -4618.61861862,
+       -4606.60660661, -4594.59459459, -4582.58258258, -4570.57057057,
+       -4558.55855856, -4546.54654655, -4534.53453453, -4522.52252252,
+       -4510.51051051, -4498.4984985 , -4486.48648649, -4474.47447447,
+       -4462.46246246, -4450.45045045, -4438.43843844, -4426.42642643,
+       -4414.41441441, -4402.4024024 , -4390.39039039, -4378.37837838,
+       -4366.36636637, -4354.35435435, -4342.34234234, -4330.33033033,
+       -4318.31831832, -4306.30630631, -4294.29429429, -4282.28228228,
+       -4270.27027027, -4258.25825826, -4246.24624625, -4234.23423423,
+       -4222.22222222, -4210.21021021, -4198.1981982 , -4186.18618619,
+       -4174.17417417, -4162.16216216, -4150.15015015, -4138.13813814,
+       -4126.12612613, -4114.11411411, -4102.1021021 , -4090.09009009,
+       -4078.07807808, -4066.06606607, -4054.05405405, -4042.04204204,
+       -4030.03003003, -4018.01801802, -4006.00600601, -3993.99399399,
+       -3981.98198198, -3969.96996997, -3957.95795796, -3945.94594595,
+       -3933.93393393, -3921.92192192, -3909.90990991, -3897.8978979 ,
+       -3885.88588589, -3873.87387387, -3861.86186186, -3849.84984985,
+       -3837.83783784, -3825.82582583, -3813.81381381, -3801.8018018 ,
+       -3789.78978979, -3777.77777778, -3765.76576577, -3753.75375375,
+       -3741.74174174, -3729.72972973, -3717.71771772, -3705.70570571,
+       -3693.69369369, -3681.68168168, -3669.66966967, -3657.65765766,
+       -3645.64564565, -3633.63363363, -3621.62162162, -3609.60960961,
+       -3597.5975976 , -3585.58558559, -3573.57357357, -3561.56156156,
+       -3549.54954955, -3537.53753754, -3525.52552553, -3513.51351351,
+       -3501.5015015 , -3489.48948949, -3477.47747748, -3465.46546547,
+       -3453.45345345, -3441.44144144, -3429.42942943, -3417.41741742,
+       -3405.40540541, -3393.39339339, -3381.38138138, -3369.36936937,
+       -3357.35735736, -3345.34534535, -3333.33333333, -3321.32132132,
+       -3309.30930931, -3297.2972973 , -3285.28528529, -3273.27327327,
+       -3261.26126126, -3249.24924925, -3237.23723724, -3225.22522523,
+       -3213.21321321, -3201.2012012 , -3189.18918919, -3177.17717718,
+       -3165.16516517, -3153.15315315, -3141.14114114, -3129.12912913,
+       -3117.11711712, -3105.10510511, -3093.09309309, -3081.08108108,
+       -3069.06906907, -3057.05705706, -3045.04504505, -3033.03303303,
+       -3021.02102102, -3009.00900901, -2996.996997  , -2984.98498498,
+       -2972.97297297, -2960.96096096, -2948.94894895, -2936.93693694,
+       -2924.92492492, -2912.91291291, -2900.9009009 , -2888.88888889,
+       -2876.87687688, -2864.86486486, -2852.85285285, -2840.84084084,
+       -2828.82882883, -2816.81681682, -2804.8048048 , -2792.79279279,
+       -2780.78078078, -2768.76876877, -2756.75675676, -2744.74474474,
+       -2732.73273273, -2720.72072072, -2708.70870871, -2696.6966967 ,
+       -2684.68468468, -2672.67267267, -2660.66066066, -2648.64864865,
+       -2636.63663664, -2624.62462462, -2612.61261261, -2600.6006006 ,
+       -2588.58858859, -2576.57657658, -2564.56456456, -2552.55255255,
+       -2540.54054054, -2528.52852853, -2516.51651652, -2504.5045045 ,
+       -2492.49249249, -2480.48048048, -2468.46846847, -2456.45645646,
+       -2444.44444444, -2432.43243243, -2420.42042042, -2408.40840841,
+       -2396.3963964 , -2384.38438438, -2372.37237237, -2360.36036036,
+       -2348.34834835, -2336.33633634, -2324.32432432, -2312.31231231,
+       -2300.3003003 , -2288.28828829, -2276.27627628, -2264.26426426,
+       -2252.25225225, -2240.24024024, -2228.22822823, -2216.21621622,
+       -2204.2042042 , -2192.19219219, -2180.18018018, -2168.16816817,
+       -2156.15615616, -2144.14414414, -2132.13213213, -2120.12012012,
+       -2108.10810811, -2096.0960961 , -2084.08408408, -2072.07207207,
+       -2060.06006006, -2048.04804805, -2036.03603604, -2024.02402402,
+       -2012.01201201, -2000.        , -1987.98798799, -1975.97597598,
+       -1963.96396396, -1951.95195195, -1939.93993994, -1927.92792793,
+       -1915.91591592, -1903.9039039 , -1891.89189189, -1879.87987988,
+       -1867.86786787, -1855.85585586, -1843.84384384, -1831.83183183,
+       -1819.81981982, -1807.80780781, -1795.7957958 , -1783.78378378,
+       -1771.77177177, -1759.75975976, -1747.74774775, -1735.73573574,
+       -1723.72372372, -1711.71171171, -1699.6996997 , -1687.68768769,
+       -1675.67567568, -1663.66366366, -1651.65165165, -1639.63963964,
+       -1627.62762763, -1615.61561562, -1603.6036036 , -1591.59159159,
+       -1579.57957958, -1567.56756757, -1555.55555556, -1543.54354354,
+       -1531.53153153, -1519.51951952, -1507.50750751, -1495.4954955 ,
+       -1483.48348348, -1471.47147147, -1459.45945946, -1447.44744745,
+       -1435.43543544, -1423.42342342, -1411.41141141, -1399.3993994 ,
+       -1387.38738739, -1375.37537538, -1363.36336336, -1351.35135135,
+       -1339.33933934, -1327.32732733, -1315.31531532, -1303.3033033 ,
+       -1291.29129129, -1279.27927928, -1267.26726727, -1255.25525526,
+       -1243.24324324, -1231.23123123, -1219.21921922, -1207.20720721,
+       -1195.1951952 , -1183.18318318, -1171.17117117, -1159.15915916,
+       -1147.14714715, -1135.13513514, -1123.12312312, -1111.11111111,
+       -1099.0990991 , -1087.08708709, -1075.07507508, -1063.06306306,
+       -1051.05105105, -1039.03903904, -1027.02702703, -1015.01501502,
+       -1003.003003  ,  -990.99099099,  -978.97897898,  -966.96696697,
+        -954.95495495,  -942.94294294,  -930.93093093,  -918.91891892,
+        -906.90690691,  -894.89489489,  -882.88288288,  -870.87087087,
+        -858.85885886,  -846.84684685,  -834.83483483,  -822.82282282,
+        -810.81081081,  -798.7987988 ,  -786.78678679,  -774.77477477,
+        -762.76276276,  -750.75075075,  -738.73873874,  -726.72672673,
+        -714.71471471,  -702.7027027 ,  -690.69069069,  -678.67867868,
+        -666.66666667,  -654.65465465,  -642.64264264,  -630.63063063,
+        -618.61861862,  -606.60660661,  -594.59459459,  -582.58258258,
+        -570.57057057,  -558.55855856,  -546.54654655,  -534.53453453,
+        -522.52252252,  -510.51051051,  -498.4984985 ,  -486.48648649,
+        -474.47447447,  -462.46246246,  -450.45045045,  -438.43843844,
+        -426.42642643,  -414.41441441,  -402.4024024 ,  -390.39039039,
+        -378.37837838,  -366.36636637,  -354.35435435,  -342.34234234,
+        -330.33033033,  -318.31831832,  -306.30630631,  -294.29429429,
+        -282.28228228,  -270.27027027,  -258.25825826,  -246.24624625,
+        -234.23423423,  -222.22222222,  -210.21021021,  -198.1981982 ,
+        -186.18618619,  -174.17417417,  -162.16216216,  -150.15015015,
+        -138.13813814,  -126.12612613,  -114.11411411,  -102.1021021 ,
+         -90.09009009,   -78.07807808,   -66.06606607,   -54.05405405,
+         -42.04204204,   -30.03003003,   -18.01801802,    -6.00600601,
+           6.00600601,    18.01801802,    30.03003003,    42.04204204,
+          54.05405405,    66.06606607,    78.07807808,    90.09009009,
+         102.1021021 ,   114.11411411,   126.12612613,   138.13813814,
+         150.15015015,   162.16216216,   174.17417417,   186.18618619,
+         198.1981982 ,   210.21021021,   222.22222222,   234.23423423,
+         246.24624625,   258.25825826,   270.27027027,   282.28228228,
+         294.29429429,   306.30630631,   318.31831832,   330.33033033,
+         342.34234234,   354.35435435,   366.36636637,   378.37837838,
+         390.39039039,   402.4024024 ,   414.41441441,   426.42642643,
+         438.43843844,   450.45045045,   462.46246246,   474.47447447,
+         486.48648649,   498.4984985 ,   510.51051051,   522.52252252,
+         534.53453453,   546.54654655,   558.55855856,   570.57057057,
+         582.58258258,   594.59459459,   606.60660661,   618.61861862,
+         630.63063063,   642.64264264,   654.65465465,   666.66666667,
+         678.67867868,   690.69069069,   702.7027027 ,   714.71471471,
+         726.72672673,   738.73873874,   750.75075075,   762.76276276,
+         774.77477477,   786.78678679,   798.7987988 ,   810.81081081,
+         822.82282282,   834.83483483,   846.84684685,   858.85885886,
+         870.87087087,   882.88288288,   894.89489489,   906.90690691,
+         918.91891892,   930.93093093,   942.94294294,   954.95495495,
+         966.96696697,   978.97897898,   990.99099099,  1003.003003  ,
+        1015.01501502,  1027.02702703,  1039.03903904,  1051.05105105,
+        1063.06306306,  1075.07507508,  1087.08708709,  1099.0990991 ,
+        1111.11111111,  1123.12312312,  1135.13513514,  1147.14714715,
+        1159.15915916,  1171.17117117,  1183.18318318,  1195.1951952 ,
+        1207.20720721,  1219.21921922,  1231.23123123,  1243.24324324,
+        1255.25525526,  1267.26726727,  1279.27927928,  1291.29129129,
+        1303.3033033 ,  1315.31531532,  1327.32732733,  1339.33933934,
+        1351.35135135,  1363.36336336,  1375.37537538,  1387.38738739,
+        1399.3993994 ,  1411.41141141,  1423.42342342,  1435.43543544,
+        1447.44744745,  1459.45945946,  1471.47147147,  1483.48348348,
+        1495.4954955 ,  1507.50750751,  1519.51951952,  1531.53153153,
+        1543.54354354,  1555.55555556,  1567.56756757,  1579.57957958,
+        1591.59159159,  1603.6036036 ,  1615.61561562,  1627.62762763,
+        1639.63963964,  1651.65165165,  1663.66366366,  1675.67567568,
+        1687.68768769,  1699.6996997 ,  1711.71171171,  1723.72372372,
+        1735.73573574,  1747.74774775,  1759.75975976,  1771.77177177,
+        1783.78378378,  1795.7957958 ,  1807.80780781,  1819.81981982,
+        1831.83183183,  1843.84384384,  1855.85585586,  1867.86786787,
+        1879.87987988,  1891.89189189,  1903.9039039 ,  1915.91591592,
+        1927.92792793,  1939.93993994,  1951.95195195,  1963.96396396,
+        1975.97597598,  1987.98798799,  2000.        ,  2012.01201201,
+        2024.02402402,  2036.03603604,  2048.04804805,  2060.06006006,
+        2072.07207207,  2084.08408408,  2096.0960961 ,  2108.10810811,
+        2120.12012012,  2132.13213213,  2144.14414414,  2156.15615616,
+        2168.16816817,  2180.18018018,  2192.19219219,  2204.2042042 ,
+        2216.21621622,  2228.22822823,  2240.24024024,  2252.25225225,
+        2264.26426426,  2276.27627628,  2288.28828829,  2300.3003003 ,
+        2312.31231231,  2324.32432432,  2336.33633634,  2348.34834835,
+        2360.36036036,  2372.37237237,  2384.38438438,  2396.3963964 ,
+        2408.40840841,  2420.42042042,  2432.43243243,  2444.44444444,
+        2456.45645646,  2468.46846847,  2480.48048048,  2492.49249249,
+        2504.5045045 ,  2516.51651652,  2528.52852853,  2540.54054054,
+        2552.55255255,  2564.56456456,  2576.57657658,  2588.58858859,
+        2600.6006006 ,  2612.61261261,  2624.62462462,  2636.63663664,
+        2648.64864865,  2660.66066066,  2672.67267267,  2684.68468468,
+        2696.6966967 ,  2708.70870871,  2720.72072072,  2732.73273273,
+        2744.74474474,  2756.75675676,  2768.76876877,  2780.78078078,
+        2792.79279279,  2804.8048048 ,  2816.81681682,  2828.82882883,
+        2840.84084084,  2852.85285285,  2864.86486486,  2876.87687688,
+        2888.88888889,  2900.9009009 ,  2912.91291291,  2924.92492492,
+        2936.93693694,  2948.94894895,  2960.96096096,  2972.97297297,
+        2984.98498498,  2996.996997  ,  3009.00900901,  3021.02102102,
+        3033.03303303,  3045.04504505,  3057.05705706,  3069.06906907,
+        3081.08108108,  3093.09309309,  3105.10510511,  3117.11711712,
+        3129.12912913,  3141.14114114,  3153.15315315,  3165.16516517,
+        3177.17717718,  3189.18918919,  3201.2012012 ,  3213.21321321,
+        3225.22522523,  3237.23723724,  3249.24924925,  3261.26126126,
+        3273.27327327,  3285.28528529,  3297.2972973 ,  3309.30930931,
+        3321.32132132,  3333.33333333,  3345.34534535,  3357.35735736,
+        3369.36936937,  3381.38138138,  3393.39339339,  3405.40540541,
+        3417.41741742,  3429.42942943,  3441.44144144,  3453.45345345,
+        3465.46546547,  3477.47747748,  3489.48948949,  3501.5015015 ,
+        3513.51351351,  3525.52552553,  3537.53753754,  3549.54954955,
+        3561.56156156,  3573.57357357,  3585.58558559,  3597.5975976 ,
+        3609.60960961,  3621.62162162,  3633.63363363,  3645.64564565,
+        3657.65765766,  3669.66966967,  3681.68168168,  3693.69369369,
+        3705.70570571,  3717.71771772,  3729.72972973,  3741.74174174,
+        3753.75375375,  3765.76576577,  3777.77777778,  3789.78978979,
+        3801.8018018 ,  3813.81381381,  3825.82582583,  3837.83783784,
+        3849.84984985,  3861.86186186,  3873.87387387,  3885.88588589,
+        3897.8978979 ,  3909.90990991,  3921.92192192,  3933.93393393,
+        3945.94594595,  3957.95795796,  3969.96996997,  3981.98198198,
+        3993.99399399,  4006.00600601,  4018.01801802,  4030.03003003,
+        4042.04204204,  4054.05405405,  4066.06606607,  4078.07807808,
+        4090.09009009,  4102.1021021 ,  4114.11411411,  4126.12612613,
+        4138.13813814,  4150.15015015,  4162.16216216,  4174.17417417,
+        4186.18618619,  4198.1981982 ,  4210.21021021,  4222.22222222,
+        4234.23423423,  4246.24624625,  4258.25825826,  4270.27027027,
+        4282.28228228,  4294.29429429,  4306.30630631,  4318.31831832,
+        4330.33033033,  4342.34234234,  4354.35435435,  4366.36636637,
+        4378.37837838,  4390.39039039,  4402.4024024 ,  4414.41441441,
+        4426.42642643,  4438.43843844,  4450.45045045,  4462.46246246,
+        4474.47447447,  4486.48648649,  4498.4984985 ,  4510.51051051,
+        4522.52252252,  4534.53453453,  4546.54654655,  4558.55855856,
+        4570.57057057,  4582.58258258,  4594.59459459,  4606.60660661,
+        4618.61861862,  4630.63063063,  4642.64264264,  4654.65465465,
+        4666.66666667,  4678.67867868,  4690.69069069,  4702.7027027 ,
+        4714.71471471,  4726.72672673,  4738.73873874,  4750.75075075,
+        4762.76276276,  4774.77477477,  4786.78678679,  4798.7987988 ,
+        4810.81081081,  4822.82282282,  4834.83483483,  4846.84684685,
+        4858.85885886,  4870.87087087,  4882.88288288,  4894.89489489,
+        4906.90690691,  4918.91891892,  4930.93093093,  4942.94294294,
+        4954.95495495,  4966.96696697,  4978.97897898,  4990.99099099,
+        5003.003003  ,  5015.01501502,  5027.02702703,  5039.03903904,
+        5051.05105105,  5063.06306306,  5075.07507508,  5087.08708709,
+        5099.0990991 ,  5111.11111111,  5123.12312312,  5135.13513514,
+        5147.14714715,  5159.15915916,  5171.17117117,  5183.18318318,
+        5195.1951952 ,  5207.20720721,  5219.21921922,  5231.23123123,
+        5243.24324324,  5255.25525526,  5267.26726727,  5279.27927928,
+        5291.29129129,  5303.3033033 ,  5315.31531532,  5327.32732733,
+        5339.33933934,  5351.35135135,  5363.36336336,  5375.37537538,
+        5387.38738739,  5399.3993994 ,  5411.41141141,  5423.42342342,
+        5435.43543544,  5447.44744745,  5459.45945946,  5471.47147147,
+        5483.48348348,  5495.4954955 ,  5507.50750751,  5519.51951952,
+        5531.53153153,  5543.54354354,  5555.55555556,  5567.56756757,
+        5579.57957958,  5591.59159159,  5603.6036036 ,  5615.61561562,
+        5627.62762763,  5639.63963964,  5651.65165165,  5663.66366366,
+        5675.67567568,  5687.68768769,  5699.6996997 ,  5711.71171171,
+        5723.72372372,  5735.73573574,  5747.74774775,  5759.75975976,
+        5771.77177177,  5783.78378378,  5795.7957958 ,  5807.80780781,
+        5819.81981982,  5831.83183183,  5843.84384384,  5855.85585586,
+        5867.86786787,  5879.87987988,  5891.89189189,  5903.9039039 ,
+        5915.91591592,  5927.92792793,  5939.93993994,  5951.95195195,
+        5963.96396396,  5975.97597598,  5987.98798799,  6000.        ]), array([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]), array([    0.        ,    12.01201201,    24.02402402,    36.03603604,
+          48.04804805,    60.06006006,    72.07207207,    84.08408408,
+          96.0960961 ,   108.10810811,   120.12012012,   132.13213213,
+         144.14414414,   156.15615616,   168.16816817,   180.18018018,
+         192.19219219,   204.2042042 ,   216.21621622,   228.22822823,
+         240.24024024,   252.25225225,   264.26426426,   276.27627628,
+         288.28828829,   300.3003003 ,   312.31231231,   324.32432432,
+         336.33633634,   348.34834835,   360.36036036,   372.37237237,
+         384.38438438,   396.3963964 ,   408.40840841,   420.42042042,
+         432.43243243,   444.44444444,   456.45645646,   468.46846847,
+         480.48048048,   492.49249249,   504.5045045 ,   516.51651652,
+         528.52852853,   540.54054054,   552.55255255,   564.56456456,
+         576.57657658,   588.58858859,   600.6006006 ,   612.61261261,
+         624.62462462,   636.63663664,   648.64864865,   660.66066066,
+         672.67267267,   684.68468468,   696.6966967 ,   708.70870871,
+         720.72072072,   732.73273273,   744.74474474,   756.75675676,
+         768.76876877,   780.78078078,   792.79279279,   804.8048048 ,
+         816.81681682,   828.82882883,   840.84084084,   852.85285285,
+         864.86486486,   876.87687688,   888.88888889,   900.9009009 ,
+         912.91291291,   924.92492492,   936.93693694,   948.94894895,
+         960.96096096,   972.97297297,   984.98498498,   996.996997  ,
+        1009.00900901,  1021.02102102,  1033.03303303,  1045.04504505,
+        1057.05705706,  1069.06906907,  1081.08108108,  1093.09309309,
+        1105.10510511,  1117.11711712,  1129.12912913,  1141.14114114,
+        1153.15315315,  1165.16516517,  1177.17717718,  1189.18918919,
+        1201.2012012 ,  1213.21321321,  1225.22522523,  1237.23723724,
+        1249.24924925,  1261.26126126,  1273.27327327,  1285.28528529,
+        1297.2972973 ,  1309.30930931,  1321.32132132,  1333.33333333,
+        1345.34534535,  1357.35735736,  1369.36936937,  1381.38138138,
+        1393.39339339,  1405.40540541,  1417.41741742,  1429.42942943,
+        1441.44144144,  1453.45345345,  1465.46546547,  1477.47747748,
+        1489.48948949,  1501.5015015 ,  1513.51351351,  1525.52552553,
+        1537.53753754,  1549.54954955,  1561.56156156,  1573.57357357,
+        1585.58558559,  1597.5975976 ,  1609.60960961,  1621.62162162,
+        1633.63363363,  1645.64564565,  1657.65765766,  1669.66966967,
+        1681.68168168,  1693.69369369,  1705.70570571,  1717.71771772,
+        1729.72972973,  1741.74174174,  1753.75375375,  1765.76576577,
+        1777.77777778,  1789.78978979,  1801.8018018 ,  1813.81381381,
+        1825.82582583,  1837.83783784,  1849.84984985,  1861.86186186,
+        1873.87387387,  1885.88588589,  1897.8978979 ,  1909.90990991,
+        1921.92192192,  1933.93393393,  1945.94594595,  1957.95795796,
+        1969.96996997,  1981.98198198,  1993.99399399,  2006.00600601,
+        2018.01801802,  2030.03003003,  2042.04204204,  2054.05405405,
+        2066.06606607,  2078.07807808,  2090.09009009,  2102.1021021 ,
+        2114.11411411,  2126.12612613,  2138.13813814,  2150.15015015,
+        2162.16216216,  2174.17417417,  2186.18618619,  2198.1981982 ,
+        2210.21021021,  2222.22222222,  2234.23423423,  2246.24624625,
+        2258.25825826,  2270.27027027,  2282.28228228,  2294.29429429,
+        2306.30630631,  2318.31831832,  2330.33033033,  2342.34234234,
+        2354.35435435,  2366.36636637,  2378.37837838,  2390.39039039,
+        2402.4024024 ,  2414.41441441,  2426.42642643,  2438.43843844,
+        2450.45045045,  2462.46246246,  2474.47447447,  2486.48648649,
+        2498.4984985 ,  2510.51051051,  2522.52252252,  2534.53453453,
+        2546.54654655,  2558.55855856,  2570.57057057,  2582.58258258,
+        2594.59459459,  2606.60660661,  2618.61861862,  2630.63063063,
+        2642.64264264,  2654.65465465,  2666.66666667,  2678.67867868,
+        2690.69069069,  2702.7027027 ,  2714.71471471,  2726.72672673,
+        2738.73873874,  2750.75075075,  2762.76276276,  2774.77477477,
+        2786.78678679,  2798.7987988 ,  2810.81081081,  2822.82282282,
+        2834.83483483,  2846.84684685,  2858.85885886,  2870.87087087,
+        2882.88288288,  2894.89489489,  2906.90690691,  2918.91891892,
+        2930.93093093,  2942.94294294,  2954.95495495,  2966.96696697,
+        2978.97897898,  2990.99099099,  3003.003003  ,  3015.01501502,
+        3027.02702703,  3039.03903904,  3051.05105105,  3063.06306306,
+        3075.07507508,  3087.08708709,  3099.0990991 ,  3111.11111111,
+        3123.12312312,  3135.13513514,  3147.14714715,  3159.15915916,
+        3171.17117117,  3183.18318318,  3195.1951952 ,  3207.20720721,
+        3219.21921922,  3231.23123123,  3243.24324324,  3255.25525526,
+        3267.26726727,  3279.27927928,  3291.29129129,  3303.3033033 ,
+        3315.31531532,  3327.32732733,  3339.33933934,  3351.35135135,
+        3363.36336336,  3375.37537538,  3387.38738739,  3399.3993994 ,
+        3411.41141141,  3423.42342342,  3435.43543544,  3447.44744745,
+        3459.45945946,  3471.47147147,  3483.48348348,  3495.4954955 ,
+        3507.50750751,  3519.51951952,  3531.53153153,  3543.54354354,
+        3555.55555556,  3567.56756757,  3579.57957958,  3591.59159159,
+        3603.6036036 ,  3615.61561562,  3627.62762763,  3639.63963964,
+        3651.65165165,  3663.66366366,  3675.67567568,  3687.68768769,
+        3699.6996997 ,  3711.71171171,  3723.72372372,  3735.73573574,
+        3747.74774775,  3759.75975976,  3771.77177177,  3783.78378378,
+        3795.7957958 ,  3807.80780781,  3819.81981982,  3831.83183183,
+        3843.84384384,  3855.85585586,  3867.86786787,  3879.87987988,
+        3891.89189189,  3903.9039039 ,  3915.91591592,  3927.92792793,
+        3939.93993994,  3951.95195195,  3963.96396396,  3975.97597598,
+        3987.98798799,  4000.        ,  4012.01201201,  4024.02402402,
+        4036.03603604,  4048.04804805,  4060.06006006,  4072.07207207,
+        4084.08408408,  4096.0960961 ,  4108.10810811,  4120.12012012,
+        4132.13213213,  4144.14414414,  4156.15615616,  4168.16816817,
+        4180.18018018,  4192.19219219,  4204.2042042 ,  4216.21621622,
+        4228.22822823,  4240.24024024,  4252.25225225,  4264.26426426,
+        4276.27627628,  4288.28828829,  4300.3003003 ,  4312.31231231,
+        4324.32432432,  4336.33633634,  4348.34834835,  4360.36036036,
+        4372.37237237,  4384.38438438,  4396.3963964 ,  4408.40840841,
+        4420.42042042,  4432.43243243,  4444.44444444,  4456.45645646,
+        4468.46846847,  4480.48048048,  4492.49249249,  4504.5045045 ,
+        4516.51651652,  4528.52852853,  4540.54054054,  4552.55255255,
+        4564.56456456,  4576.57657658,  4588.58858859,  4600.6006006 ,
+        4612.61261261,  4624.62462462,  4636.63663664,  4648.64864865,
+        4660.66066066,  4672.67267267,  4684.68468468,  4696.6966967 ,
+        4708.70870871,  4720.72072072,  4732.73273273,  4744.74474474,
+        4756.75675676,  4768.76876877,  4780.78078078,  4792.79279279,
+        4804.8048048 ,  4816.81681682,  4828.82882883,  4840.84084084,
+        4852.85285285,  4864.86486486,  4876.87687688,  4888.88888889,
+        4900.9009009 ,  4912.91291291,  4924.92492492,  4936.93693694,
+        4948.94894895,  4960.96096096,  4972.97297297,  4984.98498498,
+        4996.996997  ,  5009.00900901,  5021.02102102,  5033.03303303,
+        5045.04504505,  5057.05705706,  5069.06906907,  5081.08108108,
+        5093.09309309,  5105.10510511,  5117.11711712,  5129.12912913,
+        5141.14114114,  5153.15315315,  5165.16516517,  5177.17717718,
+        5189.18918919,  5201.2012012 ,  5213.21321321,  5225.22522523,
+        5237.23723724,  5249.24924925,  5261.26126126,  5273.27327327,
+        5285.28528529,  5297.2972973 ,  5309.30930931,  5321.32132132,
+        5333.33333333,  5345.34534535,  5357.35735736,  5369.36936937,
+        5381.38138138,  5393.39339339,  5405.40540541,  5417.41741742,
+        5429.42942943,  5441.44144144,  5453.45345345,  5465.46546547,
+        5477.47747748,  5489.48948949,  5501.5015015 ,  5513.51351351,
+        5525.52552553,  5537.53753754,  5549.54954955,  5561.56156156,
+        5573.57357357,  5585.58558559,  5597.5975976 ,  5609.60960961,
+        5621.62162162,  5633.63363363,  5645.64564565,  5657.65765766,
+        5669.66966967,  5681.68168168,  5693.69369369,  5705.70570571,
+        5717.71771772,  5729.72972973,  5741.74174174,  5753.75375375,
+        5765.76576577,  5777.77777778,  5789.78978979,  5801.8018018 ,
+        5813.81381381,  5825.82582583,  5837.83783784,  5849.84984985,
+        5861.86186186,  5873.87387387,  5885.88588589,  5897.8978979 ,
+        5909.90990991,  5921.92192192,  5933.93393393,  5945.94594595,
+        5957.95795796,  5969.96996997,  5981.98198198,  5993.99399399,
+        6006.00600601,  6018.01801802,  6030.03003003,  6042.04204204,
+        6054.05405405,  6066.06606607,  6078.07807808,  6090.09009009,
+        6102.1021021 ,  6114.11411411,  6126.12612613,  6138.13813814,
+        6150.15015015,  6162.16216216,  6174.17417417,  6186.18618619,
+        6198.1981982 ,  6210.21021021,  6222.22222222,  6234.23423423,
+        6246.24624625,  6258.25825826,  6270.27027027,  6282.28228228,
+        6294.29429429,  6306.30630631,  6318.31831832,  6330.33033033,
+        6342.34234234,  6354.35435435,  6366.36636637,  6378.37837838,
+        6390.39039039,  6402.4024024 ,  6414.41441441,  6426.42642643,
+        6438.43843844,  6450.45045045,  6462.46246246,  6474.47447447,
+        6486.48648649,  6498.4984985 ,  6510.51051051,  6522.52252252,
+        6534.53453453,  6546.54654655,  6558.55855856,  6570.57057057,
+        6582.58258258,  6594.59459459,  6606.60660661,  6618.61861862,
+        6630.63063063,  6642.64264264,  6654.65465465,  6666.66666667,
+        6678.67867868,  6690.69069069,  6702.7027027 ,  6714.71471471,
+        6726.72672673,  6738.73873874,  6750.75075075,  6762.76276276,
+        6774.77477477,  6786.78678679,  6798.7987988 ,  6810.81081081,
+        6822.82282282,  6834.83483483,  6846.84684685,  6858.85885886,
+        6870.87087087,  6882.88288288,  6894.89489489,  6906.90690691,
+        6918.91891892,  6930.93093093,  6942.94294294,  6954.95495495,
+        6966.96696697,  6978.97897898,  6990.99099099,  7003.003003  ,
+        7015.01501502,  7027.02702703,  7039.03903904,  7051.05105105,
+        7063.06306306,  7075.07507508,  7087.08708709,  7099.0990991 ,
+        7111.11111111,  7123.12312312,  7135.13513514,  7147.14714715,
+        7159.15915916,  7171.17117117,  7183.18318318,  7195.1951952 ,
+        7207.20720721,  7219.21921922,  7231.23123123,  7243.24324324,
+        7255.25525526,  7267.26726727,  7279.27927928,  7291.29129129,
+        7303.3033033 ,  7315.31531532,  7327.32732733,  7339.33933934,
+        7351.35135135,  7363.36336336,  7375.37537538,  7387.38738739,
+        7399.3993994 ,  7411.41141141,  7423.42342342,  7435.43543544,
+        7447.44744745,  7459.45945946,  7471.47147147,  7483.48348348,
+        7495.4954955 ,  7507.50750751,  7519.51951952,  7531.53153153,
+        7543.54354354,  7555.55555556,  7567.56756757,  7579.57957958,
+        7591.59159159,  7603.6036036 ,  7615.61561562,  7627.62762763,
+        7639.63963964,  7651.65165165,  7663.66366366,  7675.67567568,
+        7687.68768769,  7699.6996997 ,  7711.71171171,  7723.72372372,
+        7735.73573574,  7747.74774775,  7759.75975976,  7771.77177177,
+        7783.78378378,  7795.7957958 ,  7807.80780781,  7819.81981982,
+        7831.83183183,  7843.84384384,  7855.85585586,  7867.86786787,
+        7879.87987988,  7891.89189189,  7903.9039039 ,  7915.91591592,
+        7927.92792793,  7939.93993994,  7951.95195195,  7963.96396396,
+        7975.97597598,  7987.98798799,  8000.        ,  8012.01201201,
+        8024.02402402,  8036.03603604,  8048.04804805,  8060.06006006,
+        8072.07207207,  8084.08408408,  8096.0960961 ,  8108.10810811,
+        8120.12012012,  8132.13213213,  8144.14414414,  8156.15615616,
+        8168.16816817,  8180.18018018,  8192.19219219,  8204.2042042 ,
+        8216.21621622,  8228.22822823,  8240.24024024,  8252.25225225,
+        8264.26426426,  8276.27627628,  8288.28828829,  8300.3003003 ,
+        8312.31231231,  8324.32432432,  8336.33633634,  8348.34834835,
+        8360.36036036,  8372.37237237,  8384.38438438,  8396.3963964 ,
+        8408.40840841,  8420.42042042,  8432.43243243,  8444.44444444,
+        8456.45645646,  8468.46846847,  8480.48048048,  8492.49249249,
+        8504.5045045 ,  8516.51651652,  8528.52852853,  8540.54054054,
+        8552.55255255,  8564.56456456,  8576.57657658,  8588.58858859,
+        8600.6006006 ,  8612.61261261,  8624.62462462,  8636.63663664,
+        8648.64864865,  8660.66066066,  8672.67267267,  8684.68468468,
+        8696.6966967 ,  8708.70870871,  8720.72072072,  8732.73273273,
+        8744.74474474,  8756.75675676,  8768.76876877,  8780.78078078,
+        8792.79279279,  8804.8048048 ,  8816.81681682,  8828.82882883,
+        8840.84084084,  8852.85285285,  8864.86486486,  8876.87687688,
+        8888.88888889,  8900.9009009 ,  8912.91291291,  8924.92492492,
+        8936.93693694,  8948.94894895,  8960.96096096,  8972.97297297,
+        8984.98498498,  8996.996997  ,  9009.00900901,  9021.02102102,
+        9033.03303303,  9045.04504505,  9057.05705706,  9069.06906907,
+        9081.08108108,  9093.09309309,  9105.10510511,  9117.11711712,
+        9129.12912913,  9141.14114114,  9153.15315315,  9165.16516517,
+        9177.17717718,  9189.18918919,  9201.2012012 ,  9213.21321321,
+        9225.22522523,  9237.23723724,  9249.24924925,  9261.26126126,
+        9273.27327327,  9285.28528529,  9297.2972973 ,  9309.30930931,
+        9321.32132132,  9333.33333333,  9345.34534535,  9357.35735736,
+        9369.36936937,  9381.38138138,  9393.39339339,  9405.40540541,
+        9417.41741742,  9429.42942943,  9441.44144144,  9453.45345345,
+        9465.46546547,  9477.47747748,  9489.48948949,  9501.5015015 ,
+        9513.51351351,  9525.52552553,  9537.53753754,  9549.54954955,
+        9561.56156156,  9573.57357357,  9585.58558559,  9597.5975976 ,
+        9609.60960961,  9621.62162162,  9633.63363363,  9645.64564565,
+        9657.65765766,  9669.66966967,  9681.68168168,  9693.69369369,
+        9705.70570571,  9717.71771772,  9729.72972973,  9741.74174174,
+        9753.75375375,  9765.76576577,  9777.77777778,  9789.78978979,
+        9801.8018018 ,  9813.81381381,  9825.82582583,  9837.83783784,
+        9849.84984985,  9861.86186186,  9873.87387387,  9885.88588589,
+        9897.8978979 ,  9909.90990991,  9921.92192192,  9933.93393393,
+        9945.94594595,  9957.95795796,  9969.96996997,  9981.98198198,
+        9993.99399399, 10006.00600601, 10018.01801802, 10030.03003003,
+       10042.04204204, 10054.05405405, 10066.06606607, 10078.07807808,
+       10090.09009009, 10102.1021021 , 10114.11411411, 10126.12612613,
+       10138.13813814, 10150.15015015, 10162.16216216, 10174.17417417,
+       10186.18618619, 10198.1981982 , 10210.21021021, 10222.22222222,
+       10234.23423423, 10246.24624625, 10258.25825826, 10270.27027027,
+       10282.28228228, 10294.29429429, 10306.30630631, 10318.31831832,
+       10330.33033033, 10342.34234234, 10354.35435435, 10366.36636637,
+       10378.37837838, 10390.39039039, 10402.4024024 , 10414.41441441,
+       10426.42642643, 10438.43843844, 10450.45045045, 10462.46246246,
+       10474.47447447, 10486.48648649, 10498.4984985 , 10510.51051051,
+       10522.52252252, 10534.53453453, 10546.54654655, 10558.55855856,
+       10570.57057057, 10582.58258258, 10594.59459459, 10606.60660661,
+       10618.61861862, 10630.63063063, 10642.64264264, 10654.65465465,
+       10666.66666667, 10678.67867868, 10690.69069069, 10702.7027027 ,
+       10714.71471471, 10726.72672673, 10738.73873874, 10750.75075075,
+       10762.76276276, 10774.77477477, 10786.78678679, 10798.7987988 ,
+       10810.81081081, 10822.82282282, 10834.83483483, 10846.84684685,
+       10858.85885886, 10870.87087087, 10882.88288288, 10894.89489489,
+       10906.90690691, 10918.91891892, 10930.93093093, 10942.94294294,
+       10954.95495495, 10966.96696697, 10978.97897898, 10990.99099099,
+       11003.003003  , 11015.01501502, 11027.02702703, 11039.03903904,
+       11051.05105105, 11063.06306306, 11075.07507508, 11087.08708709,
+       11099.0990991 , 11111.11111111, 11123.12312312, 11135.13513514,
+       11147.14714715, 11159.15915916, 11171.17117117, 11183.18318318,
+       11195.1951952 , 11207.20720721, 11219.21921922, 11231.23123123,
+       11243.24324324, 11255.25525526, 11267.26726727, 11279.27927928,
+       11291.29129129, 11303.3033033 , 11315.31531532, 11327.32732733,
+       11339.33933934, 11351.35135135, 11363.36336336, 11375.37537538,
+       11387.38738739, 11399.3993994 , 11411.41141141, 11423.42342342,
+       11435.43543544, 11447.44744745, 11459.45945946, 11471.47147147,
+       11483.48348348, 11495.4954955 , 11507.50750751, 11519.51951952,
+       11531.53153153, 11543.54354354, 11555.55555556, 11567.56756757,
+       11579.57957958, 11591.59159159, 11603.6036036 , 11615.61561562,
+       11627.62762763, 11639.63963964, 11651.65165165, 11663.66366366,
+       11675.67567568, 11687.68768769, 11699.6996997 , 11711.71171171,
+       11723.72372372, 11735.73573574, 11747.74774775, 11759.75975976,
+       11771.77177177, 11783.78378378, 11795.7957958 , 11807.80780781,
+       11819.81981982, 11831.83183183, 11843.84384384, 11855.85585586,
+       11867.86786787, 11879.87987988, 11891.89189189, 11903.9039039 ,
+       11915.91591592, 11927.92792793, 11939.93993994, 11951.95195195,
+       11963.96396396, 11975.97597598, 11987.98798799, 12000.        ]), array([0.04110633, 0.04110633, 0.04110633, 0.04207942, 0.04207942,
+       0.04207942, 0.04207942, 0.04207942, 0.04308104, 0.04308104,
+       0.04308104, 0.04308104, 0.04308104, 0.04411214, 0.04411214,
+       0.04411214, 0.04411214, 0.04411214, 0.04517369, 0.04517369,
+       0.04517369, 0.04517369, 0.04517369, 0.04626672, 0.04626672,
+       0.04626672, 0.04626672, 0.04626672, 0.04739227, 0.04739227,
+       0.04739227, 0.04739227, 0.04739227, 0.04855141, 0.04855141,
+       0.04855141, 0.04855141, 0.04855141, 0.04974526, 0.04974526,
+       0.04974526, 0.04974526, 0.04974526, 0.05097498, 0.05097498,
+       0.05097498, 0.05097498, 0.05097498, 0.05224176, 0.05224176,
+       0.05224176, 0.05224176, 0.05224176, 0.05354682, 0.05354682,
+       0.05354682, 0.05354682, 0.05354682, 0.05489144, 0.05489144,
+       0.05489144, 0.05489144, 0.05489144, 0.05627692, 0.05627692,
+       0.05627692, 0.05627692, 0.05627692, 0.05770461, 0.05770461,
+       0.05770461, 0.05770461, 0.05770461, 0.05917591, 0.05917591,
+       0.05917591, 0.05917591, 0.05917591, 0.06069223, 0.06069223,
+       0.06069223, 0.06069223, 0.06069223, 0.06225506, 0.06225506,
+       0.06225506, 0.06225506, 0.06225506, 0.06386591, 0.06386591,
+       0.06386591, 0.06386591, 0.06386591, 0.06552634, 0.06552634,
+       0.06552634, 0.06552634, 0.06552634, 0.06723795, 0.06723795,
+       0.06723795, 0.06723795, 0.06723795, 0.06900238, 0.06900238,
+       0.06900238, 0.06900238, 0.06900238, 0.07082131, 0.07082131,
+       0.07082131, 0.07082131, 0.07082131, 0.07269648, 0.07269648,
+       0.07269648, 0.07269648, 0.07269648, 0.07462966, 0.07462966,
+       0.07462966, 0.07462966, 0.07462966, 0.07662264, 0.07662264,
+       0.07662264, 0.07662264, 0.07662264, 0.07662264, 0.07867727,
+       0.07867727, 0.07867727, 0.07867727, 0.07867727, 0.08079545,
+       0.08079545, 0.08079545, 0.08079545, 0.08079545, 0.08297909,
+       0.08297909, 0.08297909, 0.08297909, 0.08297909, 0.08523013,
+       0.08523013, 0.08523013, 0.08523013, 0.08523013, 0.08755057,
+       0.08755057, 0.08755057, 0.08755057, 0.08755057, 0.08994242,
+       0.08994242, 0.08994242, 0.08994242, 0.08994242, 0.09240769,
+       0.09240769, 0.09240769, 0.09240769, 0.09240769, 0.09494846,
+       0.09494846, 0.09494846, 0.09494846, 0.09494846, 0.09756677,
+       0.09756677, 0.09756677, 0.09756677, 0.09756677, 0.10026471,
+       0.10026471, 0.10026471, 0.10026471, 0.10026471, 0.10304434,
+       0.10304434, 0.10304434, 0.10304434, 0.10304434, 0.10590775,
+       0.10590775, 0.10590775, 0.10590775, 0.10590775, 0.10885697,
+       0.10885697, 0.10885697, 0.10885697, 0.10885697, 0.11189405,
+       0.11189405, 0.11189405, 0.11189405, 0.11189405, 0.11502099,
+       0.11502099, 0.11502099, 0.11502099, 0.11502099, 0.11823975,
+       0.11823975, 0.11823975, 0.11823975, 0.11823975, 0.12155222,
+       0.12155222, 0.12155222, 0.12155222, 0.12155222, 0.12496024,
+       0.12496024, 0.12496024, 0.12496024, 0.12496024, 0.12846555,
+       0.12846555, 0.12846555, 0.12846555, 0.12846555, 0.13206981,
+       0.13206981, 0.13206981, 0.13206981, 0.13206981, 0.13577455,
+       0.13577455, 0.13577455, 0.13577455, 0.13577455, 0.13958115,
+       0.13958115, 0.13958115, 0.13958115, 0.13958115, 0.14349086,
+       0.14349086, 0.14349086, 0.14349086, 0.14349086, 0.14750474,
+       0.14750474, 0.14750474, 0.14750474, 0.14750474, 0.15162364,
+       0.15162364, 0.15162364, 0.15162364, 0.15162364, 0.15584819,
+       0.15584819, 0.15584819, 0.15584819, 0.15584819, 0.16017878,
+       0.16017878, 0.16017878, 0.16017878, 0.16017878, 0.16461548,
+       0.16461548, 0.16461548, 0.16461548, 0.16461548, 0.16915809,
+       0.16915809, 0.16915809, 0.16915809, 0.16915809, 0.17380603,
+       0.17380603, 0.17380603, 0.17380603, 0.17380603, 0.17855838,
+       0.17855838, 0.17855838, 0.17855838, 0.17855838, 0.18341379,
+       0.18341379, 0.18341379, 0.18341379, 0.18341379, 0.18837046,
+       0.18837046, 0.18837046, 0.18837046, 0.18837046, 0.19342613,
+       0.19342613, 0.19342613, 0.19342613, 0.19342613, 0.19857801,
+       0.19857801, 0.19857801, 0.19857801, 0.19857801, 0.20382276,
+       0.20382276, 0.20382276, 0.20382276, 0.20382276, 0.20915647,
+       0.20915647, 0.20915647, 0.20915647, 0.20915647, 0.21457458,
+       0.21457458, 0.21457458, 0.21457458, 0.21457458, 0.22007189,
+       0.22007189, 0.22007189, 0.22007189, 0.22007189, 0.22564251,
+       0.22564251, 0.22564251, 0.22564251, 0.22564251, 0.23127983,
+       0.23127983, 0.23127983, 0.23127983, 0.23127983, 0.2369765 ,
+       0.2369765 , 0.2369765 , 0.2369765 , 0.2369765 , 0.24272438,
+       0.24272438, 0.24272438, 0.24272438, 0.24272438, 0.24851456,
+       0.24851456, 0.24851456, 0.24851456, 0.24851456, 0.25433732,
+       0.25433732, 0.25433732, 0.25433732, 0.25433732, 0.26018213,
+       0.26018213, 0.26018213, 0.26018213, 0.26018213, 0.26603763,
+       0.26603763, 0.26603763, 0.26603763, 0.26603763, 0.27189168,
+       0.27189168, 0.27189168, 0.27189168, 0.27189168, 0.27773131,
+       0.27773131, 0.27773131, 0.27773131, 0.27773131, 0.28354282,
+       0.28354282, 0.28354282, 0.28354282, 0.28354282, 0.28354282,
+       0.28931173, 0.28931173, 0.28931173, 0.28931173, 0.28931173,
+       0.29502289, 0.29502289, 0.29502289, 0.29502289, 0.29502289,
+       0.30066049, 0.30066049, 0.30066049, 0.30066049, 0.30066049,
+       0.30620816, 0.30620816, 0.30620816, 0.30620816, 0.30620816,
+       0.311649  , 0.311649  , 0.311649  , 0.311649  , 0.311649  ,
+       0.31696571, 0.31696571, 0.31696571, 0.31696571, 0.31696571,
+       0.32214066, 0.32214066, 0.32214066, 0.32214066, 0.32214066,
+       0.32715601, 0.32715601, 0.32715601, 0.32715601, 0.32715601,
+       0.33199381, 0.33199381, 0.33199381, 0.33199381, 0.33199381,
+       0.33663615, 0.33663615, 0.33663615, 0.33663615, 0.33663615,
+       0.34106527, 0.34106527, 0.34106527, 0.34106527, 0.34106527,
+       0.34526371, 0.34526371, 0.34526371, 0.34526371, 0.34526371,
+       0.34921444, 0.34921444, 0.34921444, 0.34921444, 0.34921444,
+       0.35290103, 0.35290103, 0.35290103, 0.35290103, 0.35290103,
+       0.35630778, 0.35630778, 0.35630778, 0.35630778, 0.35630778,
+       0.35941985, 0.35941985, 0.35941985, 0.35941985, 0.35941985,
+       0.36222343, 0.36222343, 0.36222343, 0.36222343, 0.36222343,
+       0.36470585, 0.36470585, 0.36470585, 0.36470585, 0.36470585,
+       0.36685574, 0.36685574, 0.36685574, 0.36685574, 0.36685574,
+       0.36866309, 0.36866309, 0.36866309, 0.36866309, 0.36866309,
+       0.37011942, 0.37011942, 0.37011942, 0.37011942, 0.37011942,
+       0.37121781, 0.37121781, 0.37121781, 0.37121781, 0.37121781,
+       0.37195301, 0.37195301, 0.37195301, 0.37195301, 0.37195301,
+       0.3723215 , 0.3723215 , 0.3723215 , 0.3723215 , 0.3723215 ,
+       0.3723215 , 0.3723215 , 0.3723215 , 0.3723215 , 0.3723215 ,
+       0.37195301, 0.37195301, 0.37195301, 0.37195301, 0.37195301,
+       0.37121781, 0.37121781, 0.37121781, 0.37121781, 0.37121781,
+       0.37011942, 0.37011942, 0.37011942, 0.37011942, 0.37011942,
+       0.36866309, 0.36866309, 0.36866309, 0.36866309, 0.36866309,
+       0.36685574, 0.36685574, 0.36685574, 0.36685574, 0.36685574,
+       0.36470585, 0.36470585, 0.36470585, 0.36470585, 0.36470585,
+       0.36222343, 0.36222343, 0.36222343, 0.36222343, 0.36222343,
+       0.35941985, 0.35941985, 0.35941985, 0.35941985, 0.35941985,
+       0.35630778, 0.35630778, 0.35630778, 0.35630778, 0.35630778,
+       0.35290103, 0.35290103, 0.35290103, 0.35290103, 0.35290103,
+       0.34921444, 0.34921444, 0.34921444, 0.34921444, 0.34921444,
+       0.34526371, 0.34526371, 0.34526371, 0.34526371, 0.34526371,
+       0.34106527, 0.34106527, 0.34106527, 0.34106527, 0.34106527,
+       0.33663615, 0.33663615, 0.33663615, 0.33663615, 0.33663615,
+       0.33199381, 0.33199381, 0.33199381, 0.33199381, 0.33199381,
+       0.32715601, 0.32715601, 0.32715601, 0.32715601, 0.32715601,
+       0.32214066, 0.32214066, 0.32214066, 0.32214066, 0.32214066,
+       0.31696571, 0.31696571, 0.31696571, 0.31696571, 0.31696571,
+       0.311649  , 0.311649  , 0.311649  , 0.311649  , 0.311649  ,
+       0.30620816, 0.30620816, 0.30620816, 0.30620816, 0.30620816,
+       0.30066049, 0.30066049, 0.30066049, 0.30066049, 0.30066049,
+       0.29502289, 0.29502289, 0.29502289, 0.29502289, 0.29502289,
+       0.28931173, 0.28931173, 0.28931173, 0.28931173, 0.28931173,
+       0.28354282, 0.28354282, 0.28354282, 0.28354282, 0.28354282,
+       0.28354282, 0.27773131, 0.27773131, 0.27773131, 0.27773131,
+       0.27773131, 0.27189168, 0.27189168, 0.27189168, 0.27189168,
+       0.27189168, 0.26603763, 0.26603763, 0.26603763, 0.26603763,
+       0.26603763, 0.26018213, 0.26018213, 0.26018213, 0.26018213,
+       0.26018213, 0.25433732, 0.25433732, 0.25433732, 0.25433732,
+       0.25433732, 0.24851456, 0.24851456, 0.24851456, 0.24851456,
+       0.24851456, 0.24272438, 0.24272438, 0.24272438, 0.24272438,
+       0.24272438, 0.2369765 , 0.2369765 , 0.2369765 , 0.2369765 ,
+       0.2369765 , 0.23127983, 0.23127983, 0.23127983, 0.23127983,
+       0.23127983, 0.22564251, 0.22564251, 0.22564251, 0.22564251,
+       0.22564251, 0.22007189, 0.22007189, 0.22007189, 0.22007189,
+       0.22007189, 0.21457458, 0.21457458, 0.21457458, 0.21457458,
+       0.21457458, 0.20915647, 0.20915647, 0.20915647, 0.20915647,
+       0.20915647, 0.20382276, 0.20382276, 0.20382276, 0.20382276,
+       0.20382276, 0.19857801, 0.19857801, 0.19857801, 0.19857801,
+       0.19857801, 0.19342613, 0.19342613, 0.19342613, 0.19342613,
+       0.19342613, 0.18837046, 0.18837046, 0.18837046, 0.18837046,
+       0.18837046, 0.18341379, 0.18341379, 0.18341379, 0.18341379,
+       0.18341379, 0.17855838, 0.17855838, 0.17855838, 0.17855838,
+       0.17855838, 0.17380603, 0.17380603, 0.17380603, 0.17380603,
+       0.17380603, 0.16915809, 0.16915809, 0.16915809, 0.16915809,
+       0.16915809, 0.16461548, 0.16461548, 0.16461548, 0.16461548,
+       0.16461548, 0.16017878, 0.16017878, 0.16017878, 0.16017878,
+       0.16017878, 0.15584819, 0.15584819, 0.15584819, 0.15584819,
+       0.15584819, 0.15162364, 0.15162364, 0.15162364, 0.15162364,
+       0.15162364, 0.14750474, 0.14750474, 0.14750474, 0.14750474,
+       0.14750474, 0.14349086, 0.14349086, 0.14349086, 0.14349086,
+       0.14349086, 0.13958115, 0.13958115, 0.13958115, 0.13958115,
+       0.13958115, 0.13577455, 0.13577455, 0.13577455, 0.13577455,
+       0.13577455, 0.13206981, 0.13206981, 0.13206981, 0.13206981,
+       0.13206981, 0.12846555, 0.12846555, 0.12846555, 0.12846555,
+       0.12846555, 0.12496024, 0.12496024, 0.12496024, 0.12496024,
+       0.12496024, 0.12155222, 0.12155222, 0.12155222, 0.12155222,
+       0.12155222, 0.11823975, 0.11823975, 0.11823975, 0.11823975,
+       0.11823975, 0.11502099, 0.11502099, 0.11502099, 0.11502099,
+       0.11502099, 0.11189405, 0.11189405, 0.11189405, 0.11189405,
+       0.11189405, 0.10885697, 0.10885697, 0.10885697, 0.10885697,
+       0.10885697, 0.10590775, 0.10590775, 0.10590775, 0.10590775,
+       0.10590775, 0.10304434, 0.10304434, 0.10304434, 0.10304434,
+       0.10304434, 0.10026471, 0.10026471, 0.10026471, 0.10026471,
+       0.10026471, 0.09756677, 0.09756677, 0.09756677, 0.09756677,
+       0.09756677, 0.09494846, 0.09494846, 0.09494846, 0.09494846,
+       0.09494846, 0.09240769, 0.09240769, 0.09240769, 0.09240769,
+       0.09240769, 0.08994242, 0.08994242, 0.08994242, 0.08994242,
+       0.08994242, 0.08755057, 0.08755057, 0.08755057, 0.08755057,
+       0.08755057, 0.08523013, 0.08523013, 0.08523013, 0.08523013,
+       0.08523013, 0.08297909, 0.08297909, 0.08297909, 0.08297909,
+       0.08297909, 0.08079545, 0.08079545, 0.08079545, 0.08079545,
+       0.08079545, 0.07867727, 0.07867727, 0.07867727, 0.07867727,
+       0.07867727, 0.07662264, 0.07662264, 0.07662264, 0.07662264,
+       0.07662264, 0.07662264, 0.07462966, 0.07462966, 0.07462966,
+       0.07462966, 0.07462966, 0.07269648, 0.07269648, 0.07269648,
+       0.07269648, 0.07269648, 0.07082131, 0.07082131, 0.07082131,
+       0.07082131, 0.07082131, 0.06900238, 0.06900238, 0.06900238,
+       0.06900238, 0.06900238, 0.06723795, 0.06723795, 0.06723795,
+       0.06723795, 0.06723795, 0.06552634, 0.06552634, 0.06552634,
+       0.06552634, 0.06552634, 0.06386591, 0.06386591, 0.06386591,
+       0.06386591, 0.06386591, 0.06225506, 0.06225506, 0.06225506,
+       0.06225506, 0.06225506, 0.06069223, 0.06069223, 0.06069223,
+       0.06069223, 0.06069223, 0.05917591, 0.05917591, 0.05917591,
+       0.05917591, 0.05917591, 0.05770461, 0.05770461, 0.05770461,
+       0.05770461, 0.05770461, 0.05627692, 0.05627692, 0.05627692,
+       0.05627692, 0.05627692, 0.05489144, 0.05489144, 0.05489144,
+       0.05489144, 0.05489144, 0.05354682, 0.05354682, 0.05354682,
+       0.05354682, 0.05354682, 0.05224176, 0.05224176, 0.05224176,
+       0.05224176, 0.05224176, 0.05097498, 0.05097498, 0.05097498,
+       0.05097498, 0.05097498, 0.04974526, 0.04974526, 0.04974526,
+       0.04974526, 0.04974526, 0.04855141, 0.04855141, 0.04855141,
+       0.04855141, 0.04855141, 0.04739227, 0.04739227, 0.04739227,
+       0.04739227, 0.04739227, 0.04626672, 0.04626672, 0.04626672,
+       0.04626672, 0.04626672, 0.04517369, 0.04517369, 0.04517369,
+       0.04517369, 0.04517369, 0.04411214, 0.04411214, 0.04411214,
+       0.04411214, 0.04411214, 0.04308104, 0.04308104, 0.04308104,
+       0.04308104, 0.04308104, 0.04207942, 0.04207942, 0.04207942,
+       0.04207942, 0.04207942, 0.04110633, 0.04110633, 0.04110633]), None, &lt;module &#39;matplotlib.pyplot&#39; from &#39;/home/ben/miniconda3/lib/python3.9/site-packages/matplotlib/pyplot.py&#39;&gt;)
+</pre></div>
+</div>
+<p>Pad the edges of grids (if necessary)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5</span>
+<span class="c1"># p1 =[min(yp),0]</span>
+<span class="c1"># p2 =[max(yp),0]</span>
+
+<span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_line</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span><span class="n">U</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="n">interp</span><span class="p">,</span><span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_grav_002.png" srcset="../../_images/sphx_glr_run_grav_002.png" alt="Original data" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># p1 =[0,-6000]</span>
+<span class="c1"># p2 =[0,6000]</span>
+
+<span class="n">zderiv</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">derivz</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_line</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">zderiv</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;zderiv&#39;</span><span class="p">,</span><span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_grav_003.png" srcset="../../_images/sphx_glr_run_grav_003.png" alt="zderiv" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot field against its 1st vertical derivative</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;tab:red&#39;</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x(m)&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude of the</span><span class="se">\n</span><span class="s1"> potential field (V)&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mf">.5</span><span class="p">])</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>  <span class="c1"># instantiate a second axes that shares the same x-axis</span>
+
+<span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;tab:blue&#39;</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$1^</span><span class="si">{st}</span><span class="s1">$ derivative</span><span class="se">\n</span><span class="s1">($V.m^2$)&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>  <span class="c1"># we already handled the x-label with ax1</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="c1"># ax2.set_ylim([-0.0001,3e-4])</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">FormatStrFormatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%1.0e</span><span class="s1">&#39;</span><span class="p">))</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">5000</span><span class="p">,</span><span class="mi">5000</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>  <span class="c1"># otherwise the right y-label is slightly clipped</span>
+<span class="c1"># ax2.set_aspect(aspect=1e-2)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_grav_004.png" srcset="../../_images/sphx_glr_run_grav_004.png" alt="run grav" class = "sphx-glr-single-img"/><p>Upward continuation of the field data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span><span class="p">,</span> <span class="n">label_prop</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">upwc</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">zp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span>
+                 <span class="n">zmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">max_elevation</span><span class="p">,</span> <span class="n">nlayers</span><span class="o">=</span><span class="n">nlay</span><span class="p">,</span>
+                 <span class="n">qorder</span><span class="o">=</span><span class="n">qorder</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span><span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_grav_005.png" srcset="../../_images/sphx_glr_run_grav_005.png" alt="run grav" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/fatiando/gravmag/transform.py:182: UserWarning: Using &#39;height&#39; &lt;= 0 means downward continuation, which is known to be unstable.
+  warnings.warn(&quot;Using &#39;height&#39; &lt;= 0 means downward continuation, &quot; +
+
+&lt;matplotlib.colorbar.Colorbar object at 0x7f7f28726f70&gt;
+</pre></div>
+</div>
+<p>ridges identification
+dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,</p>
+<blockquote>
+<div><p>label=label_prop,
+fix_peak_nb=2,
+method_peak=’find_peaks’)</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># or  find_peaks or peakdet or spline_roots</span>
+<span class="n">dfI</span><span class="p">,</span><span class="n">dfII</span><span class="p">,</span> <span class="n">dfIII</span><span class="p">,</span> <span class="n">_</span>  <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">ridges_minmax</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span>
+                                      <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span>
+                                      <span class="n">fix_peak_nb</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                      <span class="n">method_peak</span><span class="o">=</span><span class="s1">&#39;find_peaks&#39;</span><span class="p">,</span>
+                                      <span class="n">showfig</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_grav_006.png" srcset="../../_images/sphx_glr_run_grav_006.png" alt="run grav" class = "sphx-glr-single-img"/><p>Plot ridges over continuated section</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_harmonic</span><span class="p">(</span><span class="n">dfI</span><span class="p">,</span><span class="n">dfII</span><span class="p">,</span><span class="n">dfIII</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_grav_007.png" srcset="../../_images/sphx_glr_run_grav_007.png" alt="run grav" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:xlabel=&#39;EX_xpos1&#39;, ylabel=&#39;Elevation (m)&#39;&gt;
+</pre></div>
+</div>
+<p>Filter ridges regionally constrainsted)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dfI_f</span><span class="p">,</span><span class="n">dfII_f</span><span class="p">,</span> <span class="n">dfIII_f</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">filter_ridges</span><span class="p">(</span><span class="n">dfI</span><span class="p">,</span><span class="n">dfII</span><span class="p">,</span><span class="n">dfIII</span><span class="p">,</span>
+                                            <span class="n">minDepth</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                            <span class="n">maxDepth</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
+                                            <span class="n">minlength</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">rmvNaN</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_f</span> <span class="o">=</span> <span class="n">dfI_f</span><span class="p">,</span> <span class="n">dfII_f</span><span class="p">,</span> <span class="n">dfIII_f</span>
+<span class="c1"># df_f = dfI, dfII, dfIII</span>
+</pre></div>
+</div>
+<p>Plot ridges fitted over continuated section</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span> <span class="c1">#, ldg=)</span>
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_harmonic</span><span class="p">(</span><span class="n">dfI_f</span><span class="p">,</span><span class="n">dfII_f</span><span class="p">,</span><span class="n">dfIII_f</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df_fit</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">fit_ridges</span><span class="p">(</span><span class="n">df_f</span><span class="p">,</span> <span class="n">rmvOutliers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># fit ridges on filtered data</span>
+
+<span class="c1"># pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.2,</span>
+<span class="c1">#                           ridge_type=[0,1,2],ridge_nb=None)</span>
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_sources</span><span class="p">(</span><span class="n">df_fit</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">z_max_source</span><span class="o">=-</span><span class="mi">6000</span><span class="p">,</span>
+                          <span class="n">ridge_type</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">ridge_nb</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">square</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="o">-</span><span class="n">z1</span><span class="p">,</span> <span class="o">-</span><span class="n">z2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">dens</span><span class="p">,[(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">z1</span><span class="o">+</span><span class="n">z2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_grav_008.png" srcset="../../_images/sphx_glr_run_grav_008.png" alt="run grav" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/miniconda3/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+  warnings.warn(&#39;Covariance of the parameters could not be estimated&#39;,
+
+Text(0.0, -3250.0, &#39;1200&#39;)
+</pre></div>
+</div>
+<p>ridges analysis</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#z0 = -2000</span>
+<span class="c1">#points, fit, SI, EXTnb = dEXP.scalFUN(dfI_f,EXTnb=[1],z0=z0)</span>
+<span class="c1">#pEXP.plot_scalFUN(points, fit, z0=z0)</span>
+
+
+<span class="c1"># z0 = -2000</span>
+<span class="c1"># points, fit, SI, EXTnb = dEXP.scalFUN(dfI_f,EXTnb=[3],z0=z0)</span>
+<span class="c1"># pEXP.plot_scalFUN(points, fit, z0=z0)</span>
+</pre></div>
+</div>
+<p>ridges analysis</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mesh_dexp</span><span class="p">,</span> <span class="n">label_dexp</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">dEXP</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">zp</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span>
+                 <span class="n">zmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">max_elevation</span><span class="p">,</span> <span class="n">nlayers</span><span class="o">=</span><span class="n">nlay</span><span class="p">,</span>
+                 <span class="n">qorder</span><span class="o">=</span><span class="n">qorder</span><span class="p">,</span>
+                 <span class="n">SI</span><span class="o">=</span><span class="n">SI</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">mesh_dexp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_dexp</span><span class="p">,</span><span class="n">markerMax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">SI</span><span class="o">=</span><span class="n">SI</span><span class="p">,</span>
+             <span class="n">p1p2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">]),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span> <span class="c1">#, ldg=)</span>
+<span class="n">square</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="o">-</span><span class="n">z1</span><span class="p">,</span> <span class="o">-</span><span class="n">z2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">dens</span><span class="p">,[(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">z1</span><span class="o">+</span><span class="n">z2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_run_grav_009.png" srcset="../../_images/sphx_glr_run_grav_009.png" alt="slice at x=0 m" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/fatiando/gravmag/transform.py:182: UserWarning: Using &#39;height&#39; &lt;= 0 means downward continuation, which is known to be unstable.
+  warnings.warn(&quot;Using &#39;height&#39; &lt;= 0 means downward continuation, &quot; +
+need to rotate first?
+dexp_q0doesnt match any label unit
+Markermax_z=4032.0
+Markermax_x=0.0
+
+Text(0.0, -3250.0, &#39;1200&#39;)
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  4.682 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-gravimetry-run-grav-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ab42864120924cbc51f0090e2373dafa/run_grav.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_grav.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/3b45227f084ff386099ef3d24c3ca7df/run_grav.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_grav.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../magnetic/run_mag_2sources_DEXP.html" class="btn btn-neutral float-right" title="Magnetic field data analysis using pyDEXP: a 2-sources case" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

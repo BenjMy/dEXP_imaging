@@ -20,8 +20,8 @@ from lib.dEXP import _fit
 import lib.plot_dEXP as pEXP
 import lib.utils_dEXP as uEXP
 
-import notebooks_GRL.load_MALM_model as MALMmod
-import notebooks_GRL.load_MALM_real as MALMreal
+import load_MALM_model as MALMmod
+import load_MALM_real as MALMreal
 from mpl_axes_aligner import align
 
 import lib.set_parameters as para

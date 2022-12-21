@@ -21,8 +21,8 @@ import lib.plot_dEXP as pEXP
 import lib.utils_dEXP as uEXP
 
 # import exemples.fwd_mag_sphere as magfwd
-import notebooks_GRL.load_MALM_model as MALMmod
-import notebooks_GRL.load_MALM_real as MALMreal
+import load_MALM_model as MALMmod
+import load_MALM_real as MALMreal
 
 import lib.set_parameters as para
 
@@ -189,13 +189,20 @@ for i, file in enumerate(file):
     ax, plt = pEXP.plot_field(Xs,Ys,U, shape,
                     Vminmax=[0,0.35])
     ax.plot(coords_liner_s[2:5,0],coords_liner_s[2:5,1],'k')
+    
+    plt.axvline(x=377, color='r',marker='.',linestyle='dashed')
+
     # ax.plot(p1_s,p2_s,'r')
     # # ax.plot(coords_liner[2:5,0],coords_liner[2:5,1],'k')
     # plt.axis('square')
     # # plt.xlim(min(xint_scipy),max(xint_scipy))
     # # plt.ylim(min(yint_scipy),max(yint_scipy))
+    # plt.xlim(200,600)
+    # plt.ylim(200,600)
+
     plt.xlim(300,500)
     plt.ylim(300,500)
+
 
     if i==1:
         plt.savefig('fig2b.eps', dpi=450)

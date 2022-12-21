@@ -1,0 +1,56 @@
+﻿pygimli.testing
+===============
+
+.. currentmodule:: pygimli.testing
+
+.. automodule:: pygimli.testing
+
+Overview
+--------
+
+
+
+
+.. rubric:: Functions
+
+.. autosummary::
+
+
+  test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Functions
+---------
+
+
+.. rubric:: test
+
+.. autofunction:: test
+
+.. include:: pygimli.testing.test.examples
+    :end-line: 3
+
+.. include:: pygimli.testing.test.examples
+    :start-line: 4
+
+.. raw:: html
+
+     <div style='clear:both'></div>
+
+
+
+
+

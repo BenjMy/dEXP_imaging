@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub notes for pyGIMLi developers &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>GitHub notes for pyGIMLi developers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/gimli/doc/dev.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="github-notes-for-pygimli-developers">
+<span id="sec-coding-guidelines"></span><h1>GitHub notes for pyGIMLi developers<a class="headerlink" href="#github-notes-for-pygimli-developers" title="Permalink to this headline"></a></h1>
+<section id="contributing-to-the-code">
+<h2>Contributing to the code<a class="headerlink" href="#contributing-to-the-code" title="Permalink to this headline"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These steps are only relevant, if you have write privileges to the main
+GitHub repository. The general contribution guidlines can be found in _sec:contributing:.</p>
+</div>
+<ol class="arabic">
+<li><p>Clone the GIMLi repository:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/gimli-org/gimli gimli-src <span class="o">&amp;&amp;</span> <span class="nb">cd</span> gimli-src
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<p>You should be on the master branch by default. Check by calling <em>git status</em>.
+GIMLi encourages developers to keep the <em>master branch</em> clean. So please use
+the default development branch called <em>dev</em>. Save <a class="reference external" href="https://gist.github.com/florian-wagner/0be0b09bbabec6791ed3">this script</a> in .git/hooks
+for automatic warnings in case you are about to push to the master branch.</p>
+<ol class="arabic" start="2">
+<li><p>Checkout the dev branch:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git checkout dev
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Make changes in your favorite editor.</p></li>
+<li><p>Add new files to the staging area:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git add new_file1 new_file2
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Make a commit with a <em>meaningful</em> message:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git commit -a -m <span class="s2">&quot;Added important new feature.&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Pull the latest developments from GitHub using automatic rebase:</p></li>
+</ol>
+<blockquote>
+<div><p>For more info see: <a class="reference external" href="http://kernowsoul.com/blog/2012/06/20/4-ways-to-avoid-merge-commits-in-git/">http://kernowsoul.com/blog/2012/06/20/4-ways-to-avoid-merge-commits-in-git/</a></p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git pull --rebase
+</pre></div>
+</div>
+</div></blockquote>
+</div></blockquote>
+<p>You can set the rebase behavior on default with:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git config --global branch.autosetuprebase always
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic" start="7">
+<li><p>Push to the origin development branch:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git push origin dev
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<p>Note that if you are on the <cite>dev</cite> branch, a <cite>git push</cite> should suffice, but the
+command above is more explicit about the branch which should be pushed.</p>
+<ol class="arabic" start="8">
+<li><p>Show available tags and branches:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git tag
+git branch
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>If you plan bigger changes or developments create an own branch for it:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git branch my_new_test_branch
+git checkout my_new_test_branch
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<p>Work on your code in branch <cite>my_new_test_branch</cite> and test it.
+If you are happy with your results merge them back
+into the dev branch and delete the branch.</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git checkout dev
+git merge my_new_test_branch
+git branch -d my_new_test_branch
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="branches">
+<h2>Branches<a class="headerlink" href="#branches" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 4%" />
+<col style="width: 33%" />
+<col style="width: 27%" />
+<col style="width: 18%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Branch name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Purpose</p></th>
+<th class="head"><p>CI (Jenkins) Current behavior</p></th>
+<th class="head"><p>CI (Jenkins) Wishlist</p></th>
+<th class="head"><p>Rules</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dev</p></td>
+<td><p>Main development branch</p></td>
+<td><p>This is where new versions are developed and pull requests are merged to.</p></td>
+<td><p>Runs build, documentation and tests after each push to GitHub. Update <a class="reference external" href="http://dev.pygimli.org">http://dev.pygimli.org</a></p></td>
+<td><p>Test pull requests, build nightly conda packages for test channel</p></td>
+<td><p>Run pg.test() and make doc before pushing. Tag related issues in commit message.</p></td>
+</tr>
+<tr class="row-odd"><td><p>release</p></td>
+<td><p>Latest release</p></td>
+<td><p>This is where releases are “staged”. This usually means creating a git tag and manually merging dev into release. Hot fixes and website typos can be directly commited here.</p></td>
+<td><p>Starts in empty workspace, runs build, documentation and tests after each push to GitHub. If the build is successful, release is merged into master and <a class="reference external" href="http://www.pygimli.org">http://www.pygimli.org</a> is updated.</p></td>
+<td><p>Test “backward compatibility” (e.g., run example scripts from last release with this version). Test on Mac and Windows, too.</p></td>
+<td><p>Make sure the tag is annotated and the version string is following the principles described below.</p></td>
+</tr>
+<tr class="row-even"><td><p>master</p></td>
+<td><p>Latest and tested release</p></td>
+<td><p>Make sure that if people checkout the repository, they always have a working version.</p></td>
+<td></td>
+<td><p>Build pgcore (if necessary) and pygimli conda packages for release.</p></td>
+<td><p>Never push anything to master!</p></td>
+</tr>
+<tr class="row-odd"><td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>Feature branches</p></td>
+<td><p>Larger endeavors and major restructuring should happen in dedicated feature branches (or forks), which are eventually merged to dev. This can also be useful if you want to give write access to others to jointly work on a feature.</p></td>
+<td><p>Automatic testing can be requested (<a class="reference external" href="mailto:florian&#37;&#52;&#48;pygimli&#46;org">florian<span>&#64;</span>pygimli<span>&#46;</span>org</a>).</p></td>
+<td></td>
+<td><p>Start feature branch from dev. Inform other developers about your develpment (to avoid conflicts and redundant work).</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="version-numbering">
+<h2>Version numbering<a class="headerlink" href="#version-numbering" title="Permalink to this headline"></a></h2>
+<p>Following the PEP conventions, pygimli holds a <cite>__version__</cite> string.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygimli</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="n">v0</span><span class="mf">.9</span><span class="o">-</span><span class="mi">0</span><span class="o">-</span><span class="n">gf5a6772</span><span class="o">-</span><span class="n">modified</span>
+</pre></div>
+</div>
+<p>This string consists of:</p>
+<blockquote>
+<div><p><em>Last git tag</em>-<em>Number of commits since last tag</em>-<em>last commit hash</em></p>
+</div></blockquote>
+<p>The string has a <em>-modified</em> suffix if pygimli has uncommitted changes.</p>
+<p>To produce a new version, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git tag -a -m <span class="s2">&quot;First official release&quot;</span> <span class="s2">&quot;v1.0.x&quot;</span> <span class="c1"># tags last commit as v1.0.x</span>
+git push --tags <span class="c1"># pushes tags to GitHub</span>
+</pre></div>
+</div>
+</section>
+<section id="testing">
+<span id="sec-testing"></span><span id="id1"></span><h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline"></a></h2>
+<p>Run specific API examples from shell:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s2">&quot;import pygimli as pg; pg.test(pg.meshtools.createCircle, show=True)&quot;</span>
+</pre></div>
+</div>
+<p>Run a specific test from shell.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s2">&quot;import pygimli; from pygimli.physics.petro.resistivity import *; test_Archie()&quot;</span>
+</pre></div>
+</div>
+<p>Run all tests</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s2">&quot;import pygimli; pygimli.test(show=True)&quot;</span>
+</pre></div>
+</div>
+<p>Run pylint from shell to check code:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pylint --rcfile <span class="nv">$GIMLIROOT</span>/.pylintrc file.py
+</pre></div>
+</div>
+<p>Run prospector to check code like landscape.io do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>prospector --profile<span class="o">=</span><span class="nv">$GIMLIROOT</span>/.prospector.yml file.py
+</pre></div>
+</div>
+<p>Read api documentation from shell:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s2">&quot;import pygimli as pg; help(pg.test)&quot;</span>
+</pre></div>
+</div>
+<p>More information on pygimli’s native testing function:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pygimli.test">
+<span class="sig-prename descclassname"><span class="pre">pygimli.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onlydoctests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">htmlreport</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pygimli/testing.html#test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pygimli.test" title="Permalink to this definition"></a></dt>
+<dd><p>Run docstring examples and additional tests.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pygimli</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># You can test everything with pg.test() or test a single function:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pg</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="s2">&quot;pg.utils.boxprint&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The target argument can also be the function directly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygimli.utils</span> <span class="kn">import</span> <span class="n">boxprint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pg</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">boxprint</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>target<span class="classifier">function or string, optional</span></dt><dd><p>Function or method to test. By default everything is tested.</p>
+</dd>
+<dt>show<span class="classifier">boolean, optional</span></dt><dd><p>Show matplotlib windows during test run. They will be closed
+automatically.</p>
+</dd>
+<dt>onlydoctests<span class="classifier">boolean, optional</span></dt><dd><p>Run test files in ../tests as well.</p>
+</dd>
+<dt>coverage<span class="classifier">boolean, optional</span></dt><dd><p>Create a coverage report. Requires the pytest-cov plugin.</p>
+</dd>
+<dt>htmlreport<span class="classifier">str, optional</span></dt><dd><p>Filename for HTML report such as www.pygimli.org/build_tests.html.
+Requires pytest-html plugin.</p>
+</dd>
+<dt>abort<span class="classifier">boolean, optional</span></dt><dd><p>Return correct exit code, e.g. abort documentation build when a test
+fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="adding-an-example-to-the-paper-carousel">
+<h3>Adding an example to the paper carousel<a class="headerlink" href="#adding-an-example-to-the-paper-carousel" title="Permalink to this headline"></a></h3>
+<ol class="arabic simple">
+<li><p>Put a catchy figure in <em>doc/_static/usecases</em>. It should be 750X380 px. You can use this command:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p converted
+mogrify -path converted -format jpg -resize <span class="s2">&quot;750x380^&quot;</span> -gravity North -crop 750x380+0+0 +repage -quality <span class="m">95</span> *.jpg
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Add a new dictionary with additional information into <em>doc/paper_carousel.py</em>. The format should be like this:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">dict</span><span class="p">(</span><span class="n">img</span><span class="o">=</span><span class="s2">&quot;jordi2018.jpg&quot;</span><span class="p">,</span>
+     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Improved geophysical images through geostatistical regularization&quot;</span><span class="p">,</span>
+     <span class="n">subtitle</span><span class="o">=</span><span class="s2">&quot;Jordi et al. (2018), Geophysical Journal International&quot;</span><span class="p">,</span>
+     <span class="n">link</span><span class="o">=</span><span class="s2">&quot;https://doi.org/10.1093/gji/ggy055&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

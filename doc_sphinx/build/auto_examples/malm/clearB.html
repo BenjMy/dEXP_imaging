@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preprocessing of MALM for dEXP &mdash; pydEXP v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="API reference: The pydEXP package" href="../../content/api_core/api.html" />
+    <link rel="prev" title="Sensitivity analysis of DEXP to noise level" href="run_sens_noise_MALM.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> pydEXP
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">pydEXP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html">Which Python?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/started/install.html#optionnal-third-party-packages">Optionnal Third party packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/licence.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/authors.html">Authors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Thematic examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html#gravimetric-potential-field-data">Gravimetric potential field data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html#magnetic-potential-field-data">Magnetic potential field data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html#mise-a-la-masse-analysis-using-the-dexp-theory">Mise-à-la-masse analysis using the dEXP theory</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_sens_depth_MALM_dexpratio.html">Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_sens_depth_MALM_dexpratio_q12.html">Sensitivity analysis of DEXP to anomaly depth on Mise-a-la-masse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_sens_sigma_MALM_dexpratio.html">Sensitivity analysis of DEXP to depth on Mise-a-la-masse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_sens_MALM.html">Sensitivity analysis of DEXP to contrast of resistivity on Mise-a-la-masse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_sens_noise_MALM.html">Sensitivity analysis of DEXP to noise level</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Preprocessing of MALM for dEXP</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/api_core/api.html">API reference: The <code class="docutils literal notranslate"><span class="pre">pydEXP</span></code> package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydEXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Introduction</a> &raquo;</li>
+      <li>Preprocessing of MALM for dEXP</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/auto_examples/malm/clearB.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-malm-clearb-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="preprocessing-of-malm-for-dexp">
+<span id="sphx-glr-auto-examples-malm-clearb-py"></span><h1>Preprocessing of MALM for dEXP<a class="headerlink" href="#preprocessing-of-malm-for-dexp" title="Permalink to this headline"></a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This code shows how to remove the influence of the return electrode B and correct as much as it is possible the field before dEXP analysis.
+Calculations uses <a class="reference internal" href="../../content/api_core/api.html#module-utils_dEXP" title="utils_dEXP"><code class="xref py py-mod docutils literal notranslate"><span class="pre">utils_dEXP</span></code></a>, while plotting uses the <a class="reference internal" href="../../content/api_core/api.html#module-plot_dEXP" title="plot_dEXP"><code class="xref py py-mod docutils literal notranslate"><span class="pre">plot_dEXP</span></code></a> module.</p>
+<p>Application on a anomaly of electrical resistivity (1000 <span class="math notranslate nohighlight">\(Omega.m^{-1}\)</span> of contrast).
+The model data was created using geometric objects from <a class="reference internal" href="../../gimli/doc/pygimliapi/_generated/pygimli.meshtools.html#module-pygimli.meshtools" title="pygimli.meshtools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygimli.meshtools</span></code></a>. The forward simulation of the data was done using <code class="xref py py-mod docutils literal notranslate"><span class="pre">pygimli.ERTsimulate</span></code> module.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>This is part of a larger project aiming at inverting current sources density (see more at: <a class="reference external" href="https://icsd-dev.readthedocs.io/en/latest/">https://icsd-dev.readthedocs.io/en/latest/</a>)</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>See getting-started in order to use pyDEXP and reproduce the results. Forward simulation data are available on the Github.</p>
+</div>
+<p><strong>References</strong></p>
+<p>Rucker, C., Gunther, T., Wagner, F.M., 2017. pyGIMLi: An open-source library for modelling and inversion in geophysics, Computers and Geosciences, 109, 106-123, doi: 10.1016/j.cageo.2017.07.011</p>
+<hr class="docutils" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">lib.utils_dEXP</span> <span class="k">as</span> <span class="nn">uEXP</span>
+<span class="kn">import</span> <span class="nn">lib.dEXP</span> <span class="k">as</span> <span class="nn">dEXP</span>
+<span class="kn">import</span> <span class="nn">lib.plot_dEXP</span> <span class="k">as</span> <span class="nn">pEXP</span>
+<span class="kn">import</span> <span class="nn">lib.set_parameters</span> <span class="k">as</span> <span class="nn">para</span>
+
+<span class="kn">from</span> <span class="nn">fatiando.vis.mpl</span> <span class="kn">import</span> <span class="n">square</span>
+<span class="kn">from</span> <span class="nn">fatiando</span> <span class="kn">import</span> <span class="n">gridder</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_axes_aligner</span> <span class="kn">import</span> <span class="n">align</span>
+
+
+<span class="kn">import</span> <span class="nn">loadmalm.Load_sens_MALM</span> <span class="k">as</span> <span class="nn">MALM</span>
+</pre></div>
+</div>
+<p>Import MALM data total field U_{T} = U{a} - U{b}
+The total voltage is the superposition of the injection +I on electrode A (masse) and injection -I on the return (and remote) electrode B</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># filenames = [&#39;MSoilR1000.0AnoR1Z-13.75W15H2.5L5S0Noise0&#39;, # Ratio = 1000</span>
+<span class="c1">#               &#39;MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0&#39;]</span>
+
+<span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MSoilR1000.0AnoR1Z-13.75W15H2.5L5S0Noise0&#39;</span><span class="p">]</span>
+<span class="c1">#filenames = [&#39;MSoilR1AnoR1Z-13.75W15H2.5L5S0Noise0&#39;]</span>
+
+<span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+    <span class="c1"># Load data</span>
+    <span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">maxdepth</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">SimName</span><span class="p">,</span> <span class="n">model_prop</span><span class="o">=</span> <span class="n">MALM</span><span class="o">.</span><span class="n">load_MALM_sens3d</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;./loadmalm/&#39;</span> <span class="o">+</span>
+                                                                <span class="n">fi</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span><span class="p">)</span>
+
+
+
+    <span class="n">Bpos</span><span class="o">=</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;EA_EB_EN&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">uT_elecs</span><span class="o">=</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;u_elecs&#39;</span><span class="p">]</span>
+    <span class="n">xyzs</span> <span class="o">=</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;elecs&#39;</span><span class="p">]</span>
+
+    <span class="n">uA</span> <span class="o">=</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;uAz0_grid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">uT</span> <span class="o">=</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;uTz0_grid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">zp</span> <span class="o">=</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;uTz0_grid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">set_par</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span><span class="n">max_elevation</span><span class="o">=</span><span class="n">maxdepth</span><span class="p">)</span>
+
+    <span class="n">zp</span><span class="p">,</span> <span class="n">qorder</span><span class="p">,</span> <span class="n">nlay</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+    <span class="c1"># minAlt_ridge, maxAlt_ridge = parameters[5:7]</span>
+    <span class="n">max_elevation</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">minAlt_ridge</span> <span class="o">=</span> <span class="n">max_elevation</span><span class="o">*</span><span class="mf">0.05</span>
+    <span class="n">maxAlt_ridge</span> <span class="o">=</span> <span class="n">max_elevation</span><span class="o">*</span><span class="mf">0.65</span>
+
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;HWD&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">xxzz</span> <span class="o">=</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">]</span>
+    <span class="n">CT</span> <span class="o">=</span> <span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;SoilR&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;AnoR&#39;</span><span class="p">]</span>
+
+
+    <span class="n">fix_peak_nb</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">smooth</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">interp</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1">#%%</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">uA</span> <span class="o">=</span> <span class="n">gridder</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">,</span><span class="n">uA</span><span class="p">,</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">,</span><span class="n">uT</span> <span class="o">=</span> <span class="n">gridder</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">,</span><span class="n">uT</span><span class="p">,</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># remove B return electrode effects using :mod:`uEXP.cor_field_B` using a resistivity of 1 Ohm.m</span>
+
+    <span class="n">U_cor</span> <span class="o">=</span> <span class="n">uEXP</span><span class="o">.</span><span class="n">cor_field_B</span><span class="p">(</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">uT_elecs</span><span class="p">,</span><span class="n">Bpos</span><span class="p">,</span>
+                             <span class="n">rho</span><span class="o">=</span><span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;SoilR&#39;</span><span class="p">])</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Compare the voltage seen by the surface electrode using 2d plot over a line</span>
+    <span class="n">p1_elecs</span><span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">]),(</span><span class="nb">max</span><span class="p">(</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="nb">min</span><span class="p">(</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">p2_elecs</span><span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">]),(</span><span class="nb">max</span><span class="p">(</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="nb">min</span><span class="p">(</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">gridder</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">uT_elecs</span><span class="p">,</span> <span class="n">p1_elecs</span><span class="p">,</span> <span class="n">p2_elecs</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="c1"># plt.title(strname + &#39;_data&#39; + str(ZZ), fontsize=15)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;.k&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Raw&#39;</span><span class="p">)</span>
+
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">gridder</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">xyzs</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">U_cor</span><span class="p">,</span> <span class="n">p1_elecs</span><span class="p">,</span> <span class="n">p2_elecs</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;.r&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Corrected&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x (m)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;u (V)&#39;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Compare with numerical solution</span>
+    <span class="n">uT_field_cor</span> <span class="o">=</span> <span class="n">uEXP</span><span class="o">.</span><span class="n">cor_field_B</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">,</span><span class="n">zp</span><span class="p">,</span><span class="n">uT</span><span class="p">,</span><span class="n">Bpos</span><span class="p">,</span><span class="n">rho</span><span class="o">=</span><span class="n">model_prop</span><span class="p">[</span><span class="s1">&#39;SoilR&#39;</span><span class="p">])</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Compare plot over a line</span>
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">puT</span> <span class="o">=</span> <span class="n">gridder</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">,</span> <span class="n">uT</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">puT</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;U_</span><span class="si">{T}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">puA</span> <span class="o">=</span> <span class="n">gridder</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">,</span> <span class="n">uA</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">puA</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;U_</span><span class="si">{A}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">puT_field_cor</span> <span class="o">=</span> <span class="n">gridder</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">,</span> <span class="n">uT_field_cor</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">puT_field_cor</span><span class="p">,</span>  <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;U_</span><span class="si">{cor}</span><span class="s1"> = U_</span><span class="si">{T}</span><span class="s1"> - U_</span><span class="si">{B}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x (m)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;u (V)&#39;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">diff1</span> <span class="o">=</span> <span class="n">puT</span> <span class="o">-</span> <span class="n">puA</span>
+    <span class="n">diff2</span> <span class="o">=</span> <span class="n">puA</span> <span class="o">-</span> <span class="n">puT_field_cor</span>
+    <span class="c1"># plt.plot(xx, diff1, &#39;.b&#39;, label=&#39;U_{T} - U_{A}&#39;)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">diff2</span><span class="p">,</span> <span class="s1">&#39;.g&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;U_</span><span class="si">{A}</span><span class="s1"> - U_</span><span class="si">{cor}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x (m)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;u (V)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_clearB_001.png" srcset="../../_images/sphx_glr_clearB_001.png" alt="clearB" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_clearB_002.png" srcset="../../_images/sphx_glr_clearB_002.png" alt="clearB" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_clearB_003.png" srcset="../../_images/sphx_glr_clearB_003.png" alt="clearB" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_clearB_004.png" srcset="../../_images/sphx_glr_clearB_004.png" alt="clearB" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_clearB_005.png" srcset="../../_images/sphx_glr_clearB_005.png" alt="clearB" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_clearB_006.png" srcset="../../_images/sphx_glr_clearB_006.png" alt="clearB" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p>Run dEXP over clear and raw field data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">U</span> <span class="o">=</span> <span class="p">[</span><span class="n">uT</span><span class="p">,</span><span class="n">uA</span><span class="p">]</span>
+
+<span class="c1"># MALM DATA synthetic anomaly: analysis of sensitivity</span>
+
+<span class="n">MESH</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">LABEL</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">DF_F</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">DF_FIT</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">XXZZ</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">CTm</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ui</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">U</span><span class="p">):</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Plot the data</span>
+    <span class="c1"># pEXP.plot_line(xp, yp, ui,p1,p2, interp=interp, Xaxis=&#39;y&#39;)</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Pad the edges of grids (if necessary)</span>
+    <span class="c1"># xp,yp,U, shape = dEXP.pad_edges(xp,yp,U,shape,pad_type=0) # reflexion=5</span>
+    <span class="c1"># pEXP.plot_line(xp, yp,ui,p1,p2, interp=interp)</span>
+
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Upward continuation of the field data</span>
+
+    <span class="n">mesh</span><span class="p">,</span> <span class="n">label_prop</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">upwc</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">zp</span><span class="p">,</span> <span class="n">ui</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span>
+                     <span class="n">zmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">max_elevation</span><span class="p">,</span> <span class="n">nlayers</span><span class="o">=</span><span class="n">nlay</span><span class="p">,</span>
+                     <span class="n">qorder</span><span class="o">=</span><span class="n">qorder</span><span class="p">)</span>
+
+    <span class="c1"># plt, cmap = pEXP.plot_xy(mesh, label=label_prop, Xaxis=&#39;y&#39;)</span>
+    <span class="c1"># plt.colorbar(cmap)</span>
+
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Ridges identification</span>
+    <span class="c1"># dEXP.ridges_minmax_plot(xp, yp, mesh, p1, p2,</span>
+    <span class="c1">#                                       label=label_prop,</span>
+    <span class="c1">#                                       fix_peak_nb=2,</span>
+    <span class="c1">#                                       Xaxis=&#39;y&#39;,</span>
+    <span class="c1">#                                       method_peak=&#39;find_peaks&#39;,</span>
+    <span class="c1">#                                       showfig=False)</span>
+
+    <span class="c1"># or  find_peaks or peakdet or spline_roots</span>
+    <span class="n">D</span>  <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">ridges_minmax</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span>
+                                          <span class="n">label</span><span class="o">=</span><span class="n">label_prop</span><span class="p">,</span>
+                                          <span class="n">fix_peak_nb</span><span class="o">=</span><span class="n">fix_peak_nb</span><span class="p">,</span>
+                                          <span class="n">method_peak</span><span class="o">=</span><span class="s1">&#39;find_peaks&#39;</span><span class="p">,</span>
+                                          <span class="n">Xaxis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
+                                          <span class="n">smooth</span><span class="o">=</span><span class="n">smooth</span><span class="p">,</span>
+                                          <span class="n">returnAmp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                          <span class="n">showfig</span><span class="o">=</span><span class="kc">True</span>
+                                          <span class="p">)</span>
+    <span class="n">dfI</span><span class="p">,</span> <span class="n">dfII</span><span class="p">,</span> <span class="n">dfIII</span> <span class="o">=</span>  <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">dfI</span><span class="p">,</span> <span class="n">dfII</span><span class="p">,</span> <span class="n">dfIII</span>
+    <span class="n">hI</span><span class="p">,</span> <span class="n">hII</span><span class="p">,</span> <span class="n">hIII</span>  <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="n">heights</span>  <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+
+    <span class="c1">#%%</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax_list</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">([])</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">([])</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (m)&#39;</span><span class="p">)</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">ax_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;voltage u  </span><span class="se">\n</span><span class="s1"> (V)&#39;</span><span class="p">)</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;voltage</span><span class="se">\n</span><span class="s1"> ($V.m^{-2}$)&#39;</span><span class="p">)</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;voltage  </span><span class="se">\n</span><span class="s1"> ($V.m^{-2}$)&#39;</span><span class="p">)</span>
+
+    <span class="c1">#ax = plt.gca()</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+    <span class="n">ax_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+    <span class="n">fig</span>
+
+    <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+       <span class="n">savename</span><span class="o">=</span> <span class="s1">&#39;fig2a_SI&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+       <span class="n">savename</span><span class="o">=</span> <span class="s1">&#39;fig2b_SI&#39;</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">savename</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">savename</span><span class="o">+</span><span class="s1">&#39;.svg&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">savename</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Plot ridges over continuated section</span>
+
+    <span class="c1"># fig = plt.figure()</span>
+    <span class="c1"># ax = plt.gca()</span>
+    <span class="c1"># pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)</span>
+    <span class="c1"># pEXP.plot_ridges_harmonic(dfI,dfII,dfIII,ax=ax)</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># Filter ridges (regionally constrainsted)</span>
+
+    <span class="n">D_f</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">filter_ridges</span><span class="p">(</span><span class="n">dfI</span><span class="p">,</span><span class="n">dfII</span><span class="p">,</span><span class="n">dfIII</span><span class="p">,</span>
+                                        <span class="n">minDepth</span><span class="o">=</span><span class="n">minAlt_ridge</span><span class="p">,</span>
+                                        <span class="n">maxDepth</span><span class="o">=</span><span class="n">maxAlt_ridge</span><span class="p">,</span>
+                                        <span class="n">minlength</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">rmvNaN</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                        <span class="n">xmin</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                                        <span class="n">Xaxis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
+                                        <span class="n">heights</span><span class="o">=</span><span class="n">heights</span><span class="p">)</span>
+
+    <span class="c1"># df_f = dfI_f, dfII_f, dfIII_f</span>
+
+    <span class="n">dfI_f</span><span class="p">,</span> <span class="n">dfII_f</span><span class="p">,</span> <span class="n">dfIII_f</span> <span class="o">=</span>  <span class="n">D_f</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">hI_f</span><span class="p">,</span> <span class="n">hII_f</span><span class="p">,</span> <span class="n">hIII_f</span>  <span class="o">=</span> <span class="n">D_f</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="n">heights</span>  <span class="o">=</span> <span class="n">D_f</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+
+
+
+    <span class="c1"># dfI_f,dfII_f, dfIII_f = dEXP.filter_ridges(dfI,dfII,dfIII,</span>
+    <span class="c1">#                                            Xaxis=&#39;y&#39;,</span>
+    <span class="c1">#                                            minDepth=minAlt_ridge,</span>
+    <span class="c1">#                                            maxDepth=maxAlt_ridge,</span>
+    <span class="c1">#                                            minlength=7,rmvNaN=True)</span>
+    <span class="c1">#                                             #,</span>
+    <span class="c1">#                                             #xmin=100, xmax=300)</span>
+    <span class="n">df_f</span> <span class="o">=</span> <span class="n">dfI_f</span><span class="p">,</span> <span class="n">dfII_f</span><span class="p">,</span> <span class="n">dfIII_f</span>
+
+
+    <span class="c1">#%%</span>
+    <span class="c1"># plot ridges fitted over continuated section</span>
+
+    <span class="c1"># fig = plt.figure()</span>
+    <span class="c1"># ax = plt.gca()</span>
+
+    <span class="c1"># pEXP.plot_xy(mesh, label=label_prop, ax=ax) #, ldg=)</span>
+    <span class="c1"># pEXP.plot_ridges_harmonic(dfI_f,dfII_f,dfIII_f,ax=ax,label=True)</span>
+
+    <span class="n">df_fit</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">fit_ridges</span><span class="p">(</span><span class="n">df_f</span><span class="p">,</span> <span class="n">rmvOutliers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># fit ridges on filtered data</span>
+
+    <span class="c1"># pEXP.plot_ridges_sources(df_fit, ax=ax, z_max_source=-max_elevation*1.4,</span>
+    <span class="c1">#                           ridge_type=[0,1,2],ridge_nb=None)</span>
+    <span class="c1"># square([x1, x2, z1, z2])</span>
+    <span class="c1"># plt.annotate(CT,[(x1 + x2)/2, -(z1+z2)/2])</span>
+
+    <span class="c1">#%%</span>
+    <span class="c1"># save data loop</span>
+
+    <span class="n">MESH</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">LABEL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label_prop</span><span class="p">)</span>
+    <span class="n">DF_F</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_f</span><span class="p">)</span>
+    <span class="n">DF_FIT</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_fit</span><span class="p">)</span>
+    <span class="n">XXZZ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xxzz</span><span class="p">)</span>
+    <span class="n">CTm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CT</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_clearB_007.png" srcset="../../_images/sphx_glr_clearB_007.png" alt="clearB" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_clearB_008.png" srcset="../../_images/sphx_glr_clearB_008.png" alt="clearB" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/fatiando/gravmag/transform.py:183: UserWarning: Using &#39;height&#39; &lt;= 0 means downward continuation, which is known to be unstable.
+  &quot;which is known to be unstable.&quot;)
+NaN or Inf detected - trying to remove
+/home/ben/miniconda3/envs/DEXP/lib/python3.6/site-packages/scipy/optimize/minpack.py:829: OptimizeWarning: Covariance of the parameters could not be estimated
+  category=OptimizeWarning)
+/home/ben/Documents/GitHub/BenjMy/dEXP_imaging/fatiando/gravmag/transform.py:183: UserWarning: Using &#39;height&#39; &lt;= 0 means downward continuation, which is known to be unstable.
+  &quot;which is known to be unstable.&quot;)
+NaN or Inf detected - trying to remove
+/home/ben/miniconda3/envs/DEXP/lib/python3.6/site-packages/scipy/optimize/minpack.py:829: OptimizeWarning: Covariance of the parameters could not be estimated
+  category=OptimizeWarning)
+</pre></div>
+</div>
+<p>differences between ridges identified using the raw MALM and
+the preprocessed (having removed the current return electrode influence) MALM.
+Even though the effect on the graphs above seems minimal, so is not for the ridges.
+The black square defines the anomaly position and extension.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">dfI_f</span><span class="p">,</span><span class="n">dfII_f</span><span class="p">,</span><span class="n">dfIII_f</span> <span class="o">=</span> <span class="n">DF_F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">XXZZ</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">square</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">MESH</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">LABEL</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
+          <span class="n">Vminmax</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;upwc voltage</span><span class="se">\n</span><span class="s1">($V.m^2$)&#39;</span> <span class="p">)</span>
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_harmonic</span><span class="p">(</span><span class="n">dfI_f</span><span class="p">,</span><span class="n">dfII_f</span><span class="p">,</span><span class="n">dfIII_f</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df_fit</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">fit_ridges</span><span class="p">(</span><span class="n">df_f</span><span class="p">,</span> <span class="n">rmvOutliers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># fit ridges on filtered data</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_sources</span><span class="p">(</span><span class="n">DF_FIT</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">z_max_source</span><span class="o">=-</span><span class="n">max_elevation</span><span class="o">*</span><span class="mf">1.2</span><span class="p">,</span>
+                      <span class="n">ridge_type</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">ridge_nb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">xmin</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (m)&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fig2c_SI.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fig2c_SI.svg&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fig2c_SI.pdf&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_clearB_009.png" srcset="../../_images/sphx_glr_clearB_009.png" alt="clearB" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/miniconda3/envs/DEXP/lib/python3.6/site-packages/scipy/optimize/minpack.py:829: OptimizeWarning: Covariance of the parameters could not be estimated
+  category=OptimizeWarning)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">dfI_f</span><span class="p">,</span><span class="n">dfII_f</span><span class="p">,</span><span class="n">dfIII_f</span> <span class="o">=</span> <span class="n">DF_F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">XXZZ</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">square</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_xy</span><span class="p">(</span><span class="n">MESH</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">LABEL</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">Xaxis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
+          <span class="n">Vminmax</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;upwc voltage</span><span class="se">\n</span><span class="s1">($V.m^2$)&#39;</span> <span class="p">)</span>
+<span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_harmonic</span><span class="p">(</span><span class="n">dfI_f</span><span class="p">,</span><span class="n">dfII_f</span><span class="p">,</span><span class="n">dfIII_f</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df_fit</span> <span class="o">=</span> <span class="n">dEXP</span><span class="o">.</span><span class="n">fit_ridges</span><span class="p">(</span><span class="n">df_f</span><span class="p">,</span> <span class="n">rmvOutliers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># fit ridges on filtered data</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">pEXP</span><span class="o">.</span><span class="n">plot_ridges_sources</span><span class="p">(</span><span class="n">DF_FIT</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">z_max_source</span><span class="o">=-</span><span class="n">max_elevation</span><span class="o">*</span><span class="mf">1.2</span><span class="p">,</span>
+                      <span class="n">ridge_type</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">ridge_nb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                            <span class="n">xmin</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (m)&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fig2d_SI.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fig2d_SI.svg&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fig2d_SI.pdf&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_clearB_010.png" srcset="../../_images/sphx_glr_clearB_010.png" alt="clearB" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ben/miniconda3/envs/DEXP/lib/python3.6/site-packages/scipy/optimize/minpack.py:829: OptimizeWarning: Covariance of the parameters could not be estimated
+  category=OptimizeWarning)
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  3.017 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-malm-clearb-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/4ba201eb1a12ed8ce708c645d145e231/clearB.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">clearB.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/7577d0d41fe91c98033afca4bfc35772/clearB.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">clearB.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="run_sens_noise_MALM.html" class="btn btn-neutral float-left" title="Sensitivity analysis of DEXP to noise level" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../content/api_core/api.html" class="btn btn-neutral float-right" title="API reference: The pydEXP package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Benjamin Mary.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

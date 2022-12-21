@@ -53,7 +53,14 @@ conda env update --file environment.yml --prune
 
 ### Dependencies
 * pygimli (for the ERT and MALM forward modelling)
+
+Pinned to the version 1.1.0: conda install -c gimli -c conda-forge pygimli=1.1.0
+
 * fatiando 0.5 (for derivation of the potential field and upward continuation)
+
+Pinned to the version 0.5 (git clone the repo for dev purpose)
+
+Others dependencies are detailed in the requirements.txt file.
 
 ### Cite
 
